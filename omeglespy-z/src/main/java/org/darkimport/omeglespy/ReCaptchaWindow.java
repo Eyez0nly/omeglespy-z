@@ -63,7 +63,7 @@ public class ReCaptchaWindow extends JFrame implements KeyListener {
 				captchaGuess = instance.doOCR(bufferImage(image.getImage()));
 				log.debug("Captcha guess: " + captchaGuess);
 			} catch (final TesseractException e) {
-				System.err.println(e.getMessage());
+				log.warn("Captcha failed.", e);
 			}
 		}
 		final Dimension d = new Dimension(image.getIconWidth(), image.getIconHeight());

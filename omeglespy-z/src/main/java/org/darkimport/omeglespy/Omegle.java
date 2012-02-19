@@ -110,8 +110,8 @@ public class Omegle implements Runnable {
 			dispatch(eventr);
 		}
 		if (chatId != null) {
-			System.err.println("** Fuck... An event check returned a null - This is a session destroyer. **");
-			System.err.println("** Restart OmegleSpyX and hope Omegle didnt ban your ass. (symptoms of a ban). **");
+			log.warn("** Fuck... An event check returned a null - This is a session destroyer. **");
+			log.warn("** Restart OmegleSpyX and hope Omegle didnt ban your ass. (symptoms of a ban). **");
 			chatId = null;
 		}
 	}
@@ -190,7 +190,7 @@ public class Omegle implements Runnable {
 		if (b) {
 			dead = true;
 		} else {
-			System.err.println("Disconnection Error - Rolling Back...");
+			log.warn("Disconnection Error - Rolling Back...");
 			chatId = oldChatId;
 		}
 		return b;
@@ -245,13 +245,12 @@ public class Omegle implements Runnable {
 			try {
 				m.appendReplacement(sb, "" + c);
 			} catch (final Exception ex) {
-				System.err.println("[" + new Date() + "]:");
-				System.err.println("sb = " + sb.toString());
-				System.err.println("e = " + e);
-				System.err.println("c = " + c);
-				System.err.println("escaped = " + escaped);
-				System.err.println("m.group(0) = " + m.group(0));
-				ex.printStackTrace();
+				log.warn("[" + new Date() + "]:");
+				log.warn("sb = " + sb.toString());
+				log.warn("e = " + e);
+				log.warn("c = " + c);
+				log.warn("escaped = " + escaped);
+				log.warn("m.group(0) = " + m.group(0), ex);
 			}
 		}
 		m.appendTail(sb);

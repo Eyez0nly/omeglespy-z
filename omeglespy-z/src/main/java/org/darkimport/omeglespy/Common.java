@@ -16,8 +16,12 @@ import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class Common {
+	private static final Log			log						= LogFactory.getLog(Common.class);
+
 	// might as well make the 'common' file hold 'common' settings. here are
 	// some global app settings
 	public static final String			APP_VERSION				= "1.8";
@@ -62,7 +66,7 @@ public class Common {
 			});
 		} catch (final Exception ex) {
 			jfc = null;
-			System.err.println("Could not create a file selector window");
+			log.warn("Could not create a file selector window", ex);
 		}
 		fc = jfc;
 	}
@@ -156,7 +160,7 @@ public class Common {
 			return true;
 		} catch (final Exception ex) {
 			possibleNames = new String[0];
-			System.err.println("Could not load names file: " + ex.getMessage());
+			log.warn("Could not load names file: " + ex.getMessage());
 			return false;
 		}
 	}

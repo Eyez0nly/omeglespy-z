@@ -54,6 +54,14 @@ public class OmegleSpy implements OmegleListener {
 		return name;
 	}
 
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(final String name) {
+		this.name = name;
+	}
+
 	public void setBlocking(final boolean b) {
 		blocking = b;
 		if (blocking) {
