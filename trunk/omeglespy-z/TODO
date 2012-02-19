@@ -1,0 +1,9 @@
+config file instead of Common
+
+buffer messages sent while waiting for second stranger
+swap in new stranger when one disconnects
+fix recaptcha issue on swap
+investigate commons-httpclient
+collect recaptchas for training (crowd source)
+implement autoswap when banned phrases appear
+use swing java builder for UI
