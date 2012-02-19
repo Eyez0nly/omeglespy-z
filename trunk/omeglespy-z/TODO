@@ -1,8 +1,3 @@
-
-
-
-
-fix recaptcha issue on swap
 investigate commons-httpclient
 collect recaptchas for training (crowd source)
 
