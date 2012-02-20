@@ -17,12 +17,12 @@ import org.darkimport.util.NativeHelper;
 public class OmegleSpyWindow extends JFrame implements HyperlinkListener {
 	private static final Log	log					= LogFactory.getLog(OmegleSpyWindow.class);
 
-	private static final String	TESSDLL_DLL			= "tessdll.dll";
-
 	/**
 	 * 
 	 */
 	private static final long	serialVersionUID	= 7265092257783933165L;
+
+	private static final String	TESSDLL_DLL			= "tessdll.dll";
 
 	public void hyperlinkUpdate(final HyperlinkEvent ev) {
 		if (ev.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {

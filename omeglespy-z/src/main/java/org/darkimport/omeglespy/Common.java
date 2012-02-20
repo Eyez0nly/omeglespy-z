@@ -114,7 +114,7 @@ public class Common {
 		fos.write(text.getBytes());
 	}
 
-	public static void guiWriteHtmlFile(final String text, final Component p) throws IOException {
+	public static boolean guiWriteHtmlFile(final String text, final Component p) throws IOException {
 		if (fc.showSaveDialog(p) == JFileChooser.APPROVE_OPTION) {
 			File f = fc.getSelectedFile();
 			if (!f.getName().toLowerCase().endsWith(HTML_EXT)) {
@@ -123,8 +123,11 @@ public class Common {
 			if (!(f.exists() && !showWarning(p, "The file " + f.getName() + " already exists. "
 					+ "Are you sure you want to " + "overwrite it?"))) {
 				stringToFile(text, f);
+				return true;
 			}
 		}
+
+		return false;
 	}
 
 	public static void openURL(final String url) throws Exception {

@@ -204,16 +204,12 @@ public class OmegleSpy implements OmegleListener {
 
 	public void messageSent(final Omegle src, final String msg) {
 	}
-}
 
-interface OmegleSpyListener {
-	public void messageTransferred(OmegleSpy src, String msg);
+	public Omegle getChat() {
+		return chat;
+	}
 
-	public void messageBlocked(OmegleSpy src, String msg);
-
-	public void externalMessageSent(OmegleSpy src, String msg);
-
-	public void isTyping(OmegleSpy src);
-
-	public void stoppedTyping(OmegleSpy src);
+	public boolean isDisconnected() {
+		return disconnected;
+	}
 }
