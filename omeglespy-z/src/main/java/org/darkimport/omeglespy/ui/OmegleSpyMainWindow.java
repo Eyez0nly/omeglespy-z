@@ -447,6 +447,12 @@ public class OmegleSpyMainWindow extends JFrame implements Runnable {
 	}
 
 	// Controls the chat. When the thread exits, the chat is over.
+	// TODO This thread should just be a minder thread. Various signals can be
+	// passed to it to tell it to disconnect a stranger, swap a stranger, etc.
+	// TODO Also, the conversation should only be considered to be disconnected
+	// when the user explicitly presses the disconnect button. In that way, the
+	// conversation can sit in an idle state even when there are no active
+	// participants.
 	public void run() {
 		while (true) {
 			randomizeNames();
@@ -522,7 +528,7 @@ public class OmegleSpyMainWindow extends JFrame implements Runnable {
 			printStatusLog(currentConvo, "Finding two strangers...");
 			for (final OmegleSpy spy : spies) {
 				spy.startChat();
-				printStatusLog(currentConvo, spy.getName() + " connected");
+				printLabelledMsg(CLASS_NAMES[indexOf(spy)], "System", spy.getName() + " connected");
 			}
 
 			// CHAT ACTUALLY STARTS HERE
