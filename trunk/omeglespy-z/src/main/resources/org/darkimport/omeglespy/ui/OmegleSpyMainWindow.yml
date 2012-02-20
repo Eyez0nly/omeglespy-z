@@ -9,6 +9,7 @@ JFrame(name=frame, title=frame.main.title, size=packed, iconImage=/spyboticon.pn
     - JButton(name=btnViewLogs, text=button.viewLogs, font=Verdana plain 10pt, onAction=[viewLogs])
     - JButton(name=btnToggleConnectionState, text=button.connect, font=Verdana plain 10pt, onAction=[toggleConnectionState])
     - JCheckBox(name=cbxBlockMessage, onAction=[toggleStrangersBlocked])
+    - JCheckBox(name=cbxAutoScroll, selected=true)
     - MigLayout: |
         [grow]                              [grow]                  [grow]                                [grow]              [grow]           [grow]
         |^lblTitle+*                                                                                                                                                           [grow,30]

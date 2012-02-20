@@ -38,6 +38,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.darkimport.omeglespy.Common;
+import org.darkimport.omeglespy.DesperationWindow;
 import org.darkimport.omeglespy.OmegleSpy;
 import org.darkimport.omeglespy.OmegleSpyListener;
 import org.darkimport.omeglespy.constants.ControlNameConstants;
@@ -91,7 +92,7 @@ public class OmegleSpyMainWindow extends JFrame implements Runnable {
 	private final OmegleSpy[]			spies				= new OmegleSpy[2];								;
 	private final String[]				names				= new String[] { "Brent", "Melissa" };
 
-	private boolean						autoScrollEnabled;
+	private boolean						autoScrollEnabled	= true;
 	private final JScrollBar			autoScrollBar;
 
 	private boolean						autoReconnect;
@@ -100,7 +101,7 @@ public class OmegleSpyMainWindow extends JFrame implements Runnable {
 
 	private boolean						firstRun			= true;
 
-	private final LogViewerWindow		logViewer			= new LogViewerWindow();
+	private final DesperationWindow		logViewer			= new DesperationWindow();
 
 	public OmegleSpyMainWindow(final boolean useOcr) {
 		this.useOcr = useOcr;
@@ -397,7 +398,7 @@ public class OmegleSpyMainWindow extends JFrame implements Runnable {
 
 	public void viewLogs() {
 		log.debug("Preparing to display log viewer.");
-		// dw.setVisible(true);
+		logViewer.setVisible(true);
 	}
 
 	/**
@@ -457,7 +458,8 @@ public class OmegleSpyMainWindow extends JFrame implements Runnable {
 				final String n = names[k];
 				final OmegleSpy spy = spies[k] = new OmegleSpy(n, useOcr);
 				((JLabel) result.get(MessageFormat.format(ControlNameConstants.LBL_STRANGER_TYPING, String.valueOf(k))))
-						.setText(MessageFormat.format(ResourceConstants.LABEL_STRANGER_TYPING, String.valueOf(k)));
+						.setText(MessageFormat.format(
+								SwingJavaBuilder.getConfig().getResource(ResourceConstants.LABEL_STRANGER_TYPING), n));
 				final JButton targetedDisconnectButton = (JButton) result.get(MessageFormat.format(
 						ControlNameConstants.BTN_DISCONNECT_STRANGER, String.valueOf(k)));
 				targetedDisconnectButton.setText(MessageFormat.format(
