@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.darkimport</groupId>
-	<artifactId>omeglespy</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>omeglespy-z</artifactId>
+	<version>1.8.14</version>
 	<packaging>jar</packaging>
 
 	<name>omeglespy</name>
@@ -31,7 +31,7 @@
 				<configuration>
 					<programs>
 						<program>
-							<mainClass>org.darkimport.omeglespy.OmegleSpyWindow</mainClass>
+							<mainClass>org.darkimport.omeglespy.ui.OmegleSpyMainWindow</mainClass>
 							<name>omeglespyx</name>
 						</program>
 					</programs>
