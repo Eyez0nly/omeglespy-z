@@ -1,394 +1,436 @@
 /**
  * Copyright @ 2010 Quan Nguyen
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package net.sourceforge.tess4j;
 
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.awt.Image;
-import java.util.*;
-import java.io.*;
-import java.nio.*;
-import java.nio.channels.FileChannel.MapMode;
-import org.junit.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel.MapMode;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
+@Ignore
 public class TessDllAPITest {
 
-    public TessDllAPITest() {
-    }
+	public TessDllAPITest() {}
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
+	@BeforeClass
+	public static void setUpClass() throws Exception {}
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
+	@AfterClass
+	public static void tearDownClass() throws Exception {}
 
-    @Before
-    public void setUp() {
-    }
+	@Before
+	public void setUp() {}
 
-    @After
-    public void tearDown() {
-    }
+	@After
+	public void tearDown() {}
 
-    /**
-     * Test of TessDllBeginPage method, of class TessDllLibrary.
-     */
-    @Ignore
-    @Test
-    public void testTessDllBeginPage() {
-        System.out.println("TessDllBeginPage");
-        int xsize = 0;
-        int ysize = 0;
-        ByteBuffer buf = null;
-        TessDllAPI instance = new TessDllAPIImpl();
-        int expResult = 0;
-        int result = instance.TessDllBeginPage(xsize, ysize, buf);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+	/**
+	 * Test of TessDllBeginPage method, of class TessDllLibrary.
+	 */
+	@Ignore
+	@Test
+	public void testTessDllBeginPage() {
+		System.out.println("TessDllBeginPage");
+		final int xsize = 0;
+		final int ysize = 0;
+		final ByteBuffer buf = null;
+		final TessDllAPI instance = new TessDllAPIImpl();
+		final int expResult = 0;
+		final int result = instance.TessDllBeginPage(xsize, ysize, buf);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to
+		// fail.
+		fail("The test case is a prototype.");
+	}
 
-    /**
-     * Test of TessDllBeginPageLang method, of class TessDllLibrary.
-     */
-    @Ignore
-    @Test
-    public void testTessDllBeginPageLang() {
-        System.out.println("TessDllBeginPageLang");
-        int xsize = 0;
-        int ysize = 0;
-        ByteBuffer buf = null;
-        String lang = "";
-        TessDllAPI instance = new TessDllAPIImpl();
-        int expResult = 0;
-        int result = instance.TessDllBeginPageLang(xsize, ysize, buf, lang);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+	/**
+	 * Test of TessDllBeginPageLang method, of class TessDllLibrary.
+	 */
+	@Ignore
+	@Test
+	public void testTessDllBeginPageLang() {
+		System.out.println("TessDllBeginPageLang");
+		final int xsize = 0;
+		final int ysize = 0;
+		final ByteBuffer buf = null;
+		final String lang = "";
+		final TessDllAPI instance = new TessDllAPIImpl();
+		final int expResult = 0;
+		final int result = instance.TessDllBeginPageLang(xsize, ysize, buf, lang);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to
+		// fail.
+		fail("The test case is a prototype.");
+	}
 
-    /**
-     * Test of TessDllBeginPageUpright method, of class TessDllLibrary.
-     */
-    @Ignore
-    @Test
-    public void testTessDllBeginPageUpright() {
-        System.out.println("TessDllBeginPageUpright");
-        int xsize = 0;
-        int ysize = 0;
-        ByteBuffer buf = null;
-        String lang = "";
-        TessDllAPI instance = new TessDllAPIImpl();
-        int expResult = 0;
-        int result = instance.TessDllBeginPageUpright(xsize, ysize, buf, lang);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+	/**
+	 * Test of TessDllBeginPageUpright method, of class TessDllLibrary.
+	 */
+	@Ignore
+	@Test
+	public void testTessDllBeginPageUpright() {
+		System.out.println("TessDllBeginPageUpright");
+		final int xsize = 0;
+		final int ysize = 0;
+		final ByteBuffer buf = null;
+		final String lang = "";
+		final TessDllAPI instance = new TessDllAPIImpl();
+		final int expResult = 0;
+		final int result = instance.TessDllBeginPageUpright(xsize, ysize, buf, lang);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to
+		// fail.
+		fail("The test case is a prototype.");
+	}
 
-    /**
-     * Test of TessDllBeginPageBPP method, of class TessDllLibrary.
-     */
-    @Ignore
-    @Test
-    public void testTessDllBeginPageBPP() {
-        System.out.println("TessDllBeginPageBPP");
-        int xsize = 0;
-        int ysize = 0;
-        ByteBuffer buf = null;
-        byte bpp = 0;
-        TessDllAPI instance = new TessDllAPIImpl();
-        int expResult = 0;
-        int result = instance.TessDllBeginPageBPP(xsize, ysize, buf, bpp);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+	/**
+	 * Test of TessDllBeginPageBPP method, of class TessDllLibrary.
+	 */
+	@Ignore
+	@Test
+	public void testTessDllBeginPageBPP() {
+		System.out.println("TessDllBeginPageBPP");
+		final int xsize = 0;
+		final int ysize = 0;
+		final ByteBuffer buf = null;
+		final byte bpp = 0;
+		final TessDllAPI instance = new TessDllAPIImpl();
+		final int expResult = 0;
+		final int result = instance.TessDllBeginPageBPP(xsize, ysize, buf, bpp);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to
+		// fail.
+		fail("The test case is a prototype.");
+	}
 
-    /**
-     * Test of TessDllBeginPageLangBPP method, of class TessDllLibrary.
-     */
-    @Ignore
-    @Test
-    public void testTessDllBeginPageLangBPP() {
-        System.out.println("TessDllBeginPageLangBPP");
-        int xsize = 0;
-        int ysize = 0;
-        ByteBuffer buf = null;
-        String lang = "";
-        byte bpp = 0;
-        TessDllAPI instance = new TessDllAPIImpl();
-        int expResult = 0;
-        int result = instance.TessDllBeginPageLangBPP(xsize, ysize, buf, lang, bpp);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+	/**
+	 * Test of TessDllBeginPageLangBPP method, of class TessDllLibrary.
+	 */
+	@Ignore
+	@Test
+	public void testTessDllBeginPageLangBPP() {
+		System.out.println("TessDllBeginPageLangBPP");
+		final int xsize = 0;
+		final int ysize = 0;
+		final ByteBuffer buf = null;
+		final String lang = "";
+		final byte bpp = 0;
+		final TessDllAPI instance = new TessDllAPIImpl();
+		final int expResult = 0;
+		final int result = instance.TessDllBeginPageLangBPP(xsize, ysize, buf, lang, bpp);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to
+		// fail.
+		fail("The test case is a prototype.");
+	}
 
-    /**
-     * Test of TessDllBeginPageUprightBPP method, of class TessDllLibrary.
-     */
-    @Ignore
-    @Test
-    public void testTessDllBeginPageUprightBPP() {
-        System.out.println("TessDllBeginPageUprightBPP");
-        int xsize = 0;
-        int ysize = 0;
-        ByteBuffer buf = null;
-        String lang = "";
-        byte bpp = 0;
-        TessDllAPI instance = new TessDllAPIImpl();
-        int expResult = 0;
-        int result = instance.TessDllBeginPageUprightBPP(xsize, ysize, buf, lang, bpp);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+	/**
+	 * Test of TessDllBeginPageUprightBPP method, of class TessDllLibrary.
+	 */
+	@Ignore
+	@Test
+	public void testTessDllBeginPageUprightBPP() {
+		System.out.println("TessDllBeginPageUprightBPP");
+		final int xsize = 0;
+		final int ysize = 0;
+		final ByteBuffer buf = null;
+		final String lang = "";
+		final byte bpp = 0;
+		final TessDllAPI instance = new TessDllAPIImpl();
+		final int expResult = 0;
+		final int result = instance.TessDllBeginPageUprightBPP(xsize, ysize, buf, lang, bpp);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to
+		// fail.
+		fail("The test case is a prototype.");
+	}
 
-    /**
-     * Test of TessDllEndPage method, of class TessDllLibrary.
-     */
-    @Ignore
-    @Test
-    public void testTessDllEndPage() {
-        System.out.println("TessDllEndPage");
-        TessDllAPI instance = new TessDllAPIImpl();
-        instance.TessDllEndPage();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+	/**
+	 * Test of TessDllEndPage method, of class TessDllLibrary.
+	 */
+	@Ignore
+	@Test
+	public void testTessDllEndPage() {
+		System.out.println("TessDllEndPage");
+		final TessDllAPI instance = new TessDllAPIImpl();
+		instance.TessDllEndPage();
+		// TODO review the generated test code and remove the default call to
+		// fail.
+		fail("The test case is a prototype.");
+	}
 
-    /**
-     * Test of TessDllRecognize_a_Block method, of class TessDllLibrary.
-     */
-    @Test
-    public void testTessDllRecognize_a_Block() throws Exception {
-        System.out.println("TessDllRecognize_a_Block");
-        TessDllAPI api = new TessDllAPIImpl().getInstance();
-        String expResult = "The (quick) [brown] {fox} jumps!\nOver the $43,456.78 <lazy> #90 dog";
-        String lang = "eng";
-        File tiff = new File("eurotext.tif");
-        BufferedImage image = ImageIO.read(tiff); // require jai-imageio lib to read TIFF
-        MappedByteBuffer buf = new FileInputStream(tiff).getChannel().map(MapMode.READ_ONLY, 0, tiff.length());
-        int resultRead = api.TessDllBeginPageUpright(image.getWidth(), image.getHeight(), buf, lang);
-        ETEXT_DESC output = api.TessDllRecognize_a_Block(91, 91 + 832, 170, 170 + 614); // (left, right, top, bottom) specifies a rectangle enclosing the text
-        EANYCODE_CHAR[] text = (EANYCODE_CHAR[]) output.text[0].toArray(output.count);
+	/**
+	 * Test of TessDllRecognize_a_Block method, of class TessDllLibrary.
+	 */
+	@Test
+	public void testTessDllRecognize_a_Block() throws Exception {
+		System.out.println("TessDllRecognize_a_Block");
+		final TessDllAPI api = new TessDllAPIImpl().getInstance();
+		final String expResult = "The (quick) [brown] {fox} jumps!\nOver the $43,456.78 <lazy> #90 dog";
+		final String lang = "eng";
+		final File tiff = new File("eurotext.tif");
+		final BufferedImage image = ImageIO.read(tiff); // require jai-imageio
+														// lib to read TIFF
+		final MappedByteBuffer buf = new FileInputStream(tiff).getChannel().map(MapMode.READ_ONLY, 0, tiff.length());
+		final int resultRead = api.TessDllBeginPageUpright(image.getWidth(), image.getHeight(), buf, lang);
+		final ETEXT_DESC output = api.TessDllRecognize_a_Block(91, 91 + 832, 170, 170 + 614); // (left,
+																								// right,
+																								// top,
+																								// bottom)
+																								// specifies
+																								// a
+																								// rectangle
+																								// enclosing
+																								// the
+																								// text
+		final EANYCODE_CHAR[] text = (EANYCODE_CHAR[]) output.text[0].toArray(output.count);
 
-        List<Byte> unistr = new ArrayList<Byte>();
-        int j = 0;
+		final List<Byte> unistr = new ArrayList<Byte>();
+		int j = 0;
 
-        for (int i = 0; i < output.count; i = j) {
-            final EANYCODE_CHAR ch = text[i];
+		for (int i = 0; i < output.count; i = j) {
+			final EANYCODE_CHAR ch = text[i];
 
-            for (int b = 0; b < ch.blanks; ++b) {
-                unistr.add((byte) ' ');
-            }
+			for (int b = 0; b < ch.blanks; ++b) {
+				unistr.add((byte) ' ');
+			}
 
-            for (j = i; j < output.count; j++) {
-                final EANYCODE_CHAR unich = text[j];
+			for (j = i; j < output.count; j++) {
+				final EANYCODE_CHAR unich = text[j];
 
-                if (ch.left != unich.left || ch.right != unich.right || ch.top != unich.top || ch.bottom != unich.bottom) {
-                    break;
-                }
-                unistr.add(unich.char_code); //aggregate all the utf-8 bytes for all characters
-            }
+				if (ch.left != unich.left || ch.right != unich.right || ch.top != unich.top
+						|| ch.bottom != unich.bottom) {
+					break;
+				}
+				unistr.add(unich.char_code); // aggregate all the utf-8 bytes
+												// for all characters
+			}
 
-            if ((ch.formatting & 64) == 64) {
-                unistr.add((byte) '\n');
-            } else if ((ch.formatting & 128) == 128) {
-                unistr.add((byte) '\n');
-                unistr.add((byte) '\n');
-            }
-        }
+			if ((ch.formatting & 64) == 64) {
+				unistr.add((byte) '\n');
+			} else if ((ch.formatting & 128) == 128) {
+				unistr.add((byte) '\n');
+				unistr.add((byte) '\n');
+			}
+		}
 
-        byte[] bb = Tesseract.wrapperListToByteArray(unistr);
-        String result = new String(bb, "utf8"); // convert to a string
-        System.out.println(result);
-        assertEquals(expResult, result.substring(0, expResult.length()));
-    }
+		final byte[] bb = Tesseract.wrapperListToByteArray(unistr);
+		final String result = new String(bb, "utf8"); // convert to a string
+		System.out.println(result);
+		assertEquals(expResult, result.substring(0, expResult.length()));
+	}
 
-    /**
-     * Test of TessDllRecognize_all_Words method, of class TessDllLibrary.
-     */
-    @Test
-    public void testTessDllRecognize_all_Words() throws Exception {
-        System.out.println("TessDllRecognize_all_Words");
-        TessDllAPI api = new TessDllAPIImpl().getInstance();
-        String expResult = "The (quick) [brown] {fox} jumps!\nOver the $43,456.78 <lazy> #90 dog";
-        String lang = "eng";
-        File tiff = new File("eurotext.tif");
-        BufferedImage image = ImageIO.read(new FileInputStream(tiff)); // require jai-imageio lib to read TIFF
-        MappedByteBuffer buf = new FileInputStream(tiff).getChannel().map(MapMode.READ_ONLY, 0, tiff.length());
-        int resultRead = api.TessDllBeginPageUpright(image.getWidth(), image.getHeight(), buf, lang);
-        ETEXT_DESC output = api.TessDllRecognize_all_Words();
-        EANYCODE_CHAR[] text = (EANYCODE_CHAR[]) output.text[0].toArray(output.count);
+	/**
+	 * Test of TessDllRecognize_all_Words method, of class TessDllLibrary.
+	 */
+	@Test
+	public void testTessDllRecognize_all_Words() throws Exception {
+		System.out.println("TessDllRecognize_all_Words");
+		final TessDllAPI api = new TessDllAPIImpl().getInstance();
+		final String expResult = "The (quick) [brown] {fox} jumps!\nOver the $43,456.78 <lazy> #90 dog";
+		final String lang = "eng";
+		final File tiff = new File("eurotext.tif");
+		final BufferedImage image = ImageIO.read(new FileInputStream(tiff)); // require
+																				// jai-imageio
+																				// lib
+																				// to
+																				// read
+																				// TIFF
+		final MappedByteBuffer buf = new FileInputStream(tiff).getChannel().map(MapMode.READ_ONLY, 0, tiff.length());
+		final int resultRead = api.TessDllBeginPageUpright(image.getWidth(), image.getHeight(), buf, lang);
+		final ETEXT_DESC output = api.TessDllRecognize_all_Words();
+		final EANYCODE_CHAR[] text = (EANYCODE_CHAR[]) output.text[0].toArray(output.count);
 
-        StringBuilder sb = new StringBuilder();
-        int j = 0;
+		final StringBuilder sb = new StringBuilder();
+		int j = 0;
 
-        for (int i = 0; i < output.count; i = j) {
-            final EANYCODE_CHAR ch = text[i];
-            List<Byte> unistr = new ArrayList<Byte>();
+		for (int i = 0; i < output.count; i = j) {
+			final EANYCODE_CHAR ch = text[i];
+			final List<Byte> unistr = new ArrayList<Byte>();
 
-            for (int b = 0; b < ch.blanks; ++b) {
-                sb.append(" ");
-            }
+			for (int b = 0; b < ch.blanks; ++b) {
+				sb.append(" ");
+			}
 
-            for (j = i; j < output.count; j++) {
-                final EANYCODE_CHAR unich = text[j];
+			for (j = i; j < output.count; j++) {
+				final EANYCODE_CHAR unich = text[j];
 
-                if (ch.left != unich.left || ch.right != unich.right || ch.top != unich.top || ch.bottom != unich.bottom) {
-                    break;
-                }
-                unistr.add(unich.char_code); //aggregate all the utf-8 bytes for a character
-            }
+				if (ch.left != unich.left || ch.right != unich.right || ch.top != unich.top
+						|| ch.bottom != unich.bottom) {
+					break;
+				}
+				unistr.add(unich.char_code); // aggregate all the utf-8 bytes
+												// for a character
+			}
 
-            byte[] bb = Tesseract.wrapperListToByteArray(unistr);
-            String chr = new String(bb, "utf8"); // convert to a char
-            sb.append(chr);
+			final byte[] bb = Tesseract.wrapperListToByteArray(unistr);
+			final String chr = new String(bb, "utf8"); // convert to a char
+			sb.append(chr);
 
-            if ((ch.formatting & 64) == 64) {
-                sb.append('\n'); // new line
-            } else if ((ch.formatting & 128) == 128) {
-                sb.append("\n\n"); // new para
-            }
-        }
-        String result = sb.toString();
-        System.out.println(result);
-        assertEquals(expResult, result.substring(0, expResult.length()));
-    }
+			if ((ch.formatting & 64) == 64) {
+				sb.append('\n'); // new line
+			} else if ((ch.formatting & 128) == 128) {
+				sb.append("\n\n"); // new para
+			}
+		}
+		final String result = sb.toString();
+		System.out.println(result);
+		assertEquals(expResult, result.substring(0, expResult.length()));
+	}
 
-    /**
-     * Test of TessDllRelease method, of class TessDllLibrary.
-     */
-    @Ignore
-    @Test
-    public void testTessDllRelease() {
-        System.out.println("TessDllRelease");
-        TessDllAPI instance = new TessDllAPIImpl();
-        instance.TessDllRelease();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+	/**
+	 * Test of TessDllRelease method, of class TessDllLibrary.
+	 */
+	@Ignore
+	@Test
+	public void testTessDllRelease() {
+		System.out.println("TessDllRelease");
+		final TessDllAPI instance = new TessDllAPIImpl();
+		instance.TessDllRelease();
+		// TODO review the generated test code and remove the default call to
+		// fail.
+		fail("The test case is a prototype.");
+	}
 
-    public class TessDllAPIImpl implements TessDllAPI {
+	public class TessDllAPIImpl implements TessDllAPI {
 
-        public TessDllAPI getInstance() {
-            return INSTANCE;
-        }
+		public TessDllAPI getInstance() {
+			return INSTANCE;
+		}
 
-        public int TessDllBeginPage(int xsize, int ysize, ByteBuffer buf) {
-            return 0;
-        }
+		public int TessDllBeginPage(final int xsize, final int ysize, final ByteBuffer buf) {
+			return 0;
+		}
 
-        public int TessDllBeginPageLang(int xsize, int ysize, ByteBuffer buf, String lang) {
-            return 0;
-        }
+		public int TessDllBeginPageLang(final int xsize, final int ysize, final ByteBuffer buf, final String lang) {
+			return 0;
+		}
 
-        public int TessDllBeginPageUpright(int xsize, int ysize, ByteBuffer buf, String lang) {
-            return 0;
-        }
+		public int TessDllBeginPageUpright(final int xsize, final int ysize, final ByteBuffer buf, final String lang) {
+			return 0;
+		}
 
-        public int TessDllBeginPageBPP(int xsize, int ysize, ByteBuffer buf, byte bpp) {
-            return 0;
-        }
+		public int TessDllBeginPageBPP(final int xsize, final int ysize, final ByteBuffer buf, final byte bpp) {
+			return 0;
+		}
 
-        public int TessDllBeginPageLangBPP(int xsize, int ysize, ByteBuffer buf, String lang, byte bpp) {
-            return 0;
-        }
+		public int TessDllBeginPageLangBPP(final int xsize, final int ysize, final ByteBuffer buf, final String lang,
+				final byte bpp) {
+			return 0;
+		}
 
-        public int TessDllBeginPageUprightBPP(int xsize, int ysize, ByteBuffer buf, String lang, byte bpp) {
-            return 0;
-        }
+		public int TessDllBeginPageUprightBPP(final int xsize, final int ysize, final ByteBuffer buf,
+				final String lang, final byte bpp) {
+			return 0;
+		}
 
-        public void TessDllEndPage() {
-        }
+		public void TessDllEndPage() {}
 
-        public ETEXT_DESC TessDllRecognize_a_Block(int left, int right, int top, int bottom) {
-            return null;
-        }
+		public ETEXT_DESC TessDllRecognize_a_Block(final int left, final int right, final int top, final int bottom) {
+			return null;
+		}
 
-        public ETEXT_DESC TessDllRecognize_all_Words() {
-            return null;
-        }
+		public ETEXT_DESC TessDllRecognize_all_Words() {
+			return null;
+		}
 
-        public void TessDllRelease() {
-        }
+		public void TessDllRelease() {}
 
-        public boolean SetVariable(String variable, String value) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public boolean SetVariable(final String variable, final String value) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public void SimpleInit(String datapath, String language, boolean numeric_mode) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public void SimpleInit(final String datapath, final String language, final boolean numeric_mode) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public int Init(String datapath, String outputbase, String configfile, boolean numeric_mode, int argc, String[] argv) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public int Init(final String datapath, final String outputbase, final String configfile,
+				final boolean numeric_mode, final int argc, final String[] argv) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public int InitWithLanguage(String datapath, String outputbase, String language, String configfile, boolean numeric_mode, int argc, String[] argv) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public int InitWithLanguage(final String datapath, final String outputbase, final String language,
+				final String configfile, final boolean numeric_mode, final int argc, final String[] argv) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public int InitLangMod(String datapath, String outputbase, String language, String configfile, boolean numeric_mode, int argc, String[] argv) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public int InitLangMod(final String datapath, final String outputbase, final String language,
+				final String configfile, final boolean numeric_mode, final int argc, final String[] argv) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public void SetInputName(String name) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public void SetInputName(final String name) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public String TesseractRect(ByteBuffer imagedata, int bytes_per_pixel, int bytes_per_line, int left, int top, int width, int height) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public String TesseractRect(final ByteBuffer imagedata, final int bytes_per_pixel, final int bytes_per_line,
+				final int left, final int top, final int width, final int height) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public String TesseractRectBoxes(ByteBuffer imagedata, int bytes_per_pixel, int bytes_per_line, int left, int top, int width, int height, int imageheight) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public String TesseractRectBoxes(final ByteBuffer imagedata, final int bytes_per_pixel,
+				final int bytes_per_line, final int left, final int top, final int width, final int height,
+				final int imageheight) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public String TesseractRectUNLV(ByteBuffer imagedata, int bytes_per_pixel, int bytes_per_line, int left, int top, int width, int height) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public String TesseractRectUNLV(final ByteBuffer imagedata, final int bytes_per_pixel,
+				final int bytes_per_line, final int left, final int top, final int width, final int height) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public void ClearAdaptiveClassifier() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public void ClearAdaptiveClassifier() {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public void End() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public void End() {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public void DumpPGM(String filename) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public void DumpPGM(final String filename) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public Image GetTesseractImage() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public Image GetTesseractImage() {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public int OtsuStats(int histogram, int H_out, int omega0_out) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
+		public int OtsuStats(final int histogram, final int H_out, final int omega0_out) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
 
-        public int IsValidWord(String string) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    }
+		public int IsValidWord(final String string) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
+	}
 }
