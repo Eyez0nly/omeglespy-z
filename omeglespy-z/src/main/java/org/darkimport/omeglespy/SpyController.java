@@ -6,6 +6,7 @@ package org.darkimport.omeglespy;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,11 +17,30 @@ import org.apache.commons.logging.LogFactory;
  * @author user
  * 
  */
-public class SpyController implements Runnable {
+public class SpyController {
 	private static final Log			log				= LogFactory.getLog(SpyController.class);
 
+	private static final String			STRANGER_INDEX	= "strangerIndex";
+	private static final String			SPY_LISTENER	= "spyListener";
+	private static final String			IS_BLOCKED		= "isBlocked";
+
+	private static final String			MESSAGE			= "message";
+
 	private final Map<Long, WorkEvent>	workQueue		= new Hashtable<Long, WorkEvent>();
+
+	/**
+	 * Contains a map of completed work requests. The state of the value
+	 * indicates success/failure.
+	 * 
+	 * A null indicates that the work expired. Work can expire if the
+	 * conversation is ended before the work can be completed.
+	 */
 	private final Map<Long, Boolean>	completedTasks	= new Hashtable<Long, Boolean>();
+	private final Map<Long, Throwable>	erroredTasks	= new Hashtable<Long, Throwable>();
+	private long						lastWorkId		= 0;
+
+	private final OmegleSpy[]			spies			= new OmegleSpy[2];
+	private final String[]				names			= new String[] { "Bret", "Jane" };
 
 	/**
 	 * Tells us if the conversation is active. Also tells us if this
@@ -28,102 +48,256 @@ public class SpyController implements Runnable {
 	 */
 	private boolean						conversationEnded;
 
-	public void disconnectStranger(final int strangerIndex) {
-		// TODO
+	public void startConversation(final List<OmegleSpyListener> initialListeners) {
+		new Thread(new WorkerThread(initialListeners)).start();
 	}
 
-	public void swapStranger(final int strangerIndex) {
-		// TODO
+	public void disconnectStranger(final int strangerIndex) {
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put(STRANGER_INDEX, strangerIndex);
+		doWork(WorkEvent._disconnectStranger, params);
+	}
+
+	public void swapStranger(final int strangerIndex, final OmegleSpyListener spyListener) {
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put(STRANGER_INDEX, strangerIndex);
+		params.put(SPY_LISTENER, spyListener);
+		doWork(WorkEvent._swapStranger, params);
+	}
+
+	public void sendSecretMessage(final int targetIndex, final String message) {
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put(STRANGER_INDEX, targetIndex);
+		params.put(MESSAGE, message);
+		doWork(WorkEvent._sendSecretMessage, params);
+	}
+
+	public void toggleStrangersBlock(final boolean selected) {
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put(IS_BLOCKED, selected);
+		doWork(WorkEvent._toggleStrangersBlock, params);
 	}
 
 	public void endConversation() {
 		// TODO
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Runnable#run()
-	 */
-	/**
-	 * This thread will do the initial instantiation of the strangers, their
-	 * connection, and their association.
-	 * 
-	 * It then monitors an event stack to handle its other duties:
-	 * 
-	 * - Disconnecting a stranger
-	 * 
-	 * - Swapping a stranger
-	 * 
-	 * - Ending a conversation
-	 */
-	public void run() {
-		initializeStrangers();
-		while (conversationEnded) {
+	private void doWork(final WorkEvent workEvent, final Map<String, Object> params) {
+		if (params.size() > 0) {
+			workEvent.params = params;
+		}
+		final long id = addWorkRequest(workEvent);
+		waitForWorkCompletion(id);
+	}
+
+	private void initializeStrangers(final List<OmegleSpyListener> listeners) {
+		randomizeNames();
+		for (int i = 0; i < spies.length; i++) {
+			final String n = names[i];
+			spies[i] = new OmegleSpy(n);
+			spies[i].addOmegleSpyListener(listeners.get(i));
+		}
+
+		spies[0].setPartner(spies[1].getChat());
+		spies[1].setPartner(spies[0].getChat());
+
+		for (int i = 0; i < spies.length; i++) {
+			log.info("SPY CREATED : spy[" + i + "]	[ID: " + spies[i].getChat() + "]		[NAME: '" + names[i] + "']");
+		}
+	}
+
+	private void waitForWorkCompletion(final long id) {
+		while (!completedTasks.containsKey(id)) {
 			try {
 				Thread.sleep(100);
 			} catch (final InterruptedException e) {
 				log.warn("Thread error.", e);
 			}
-			if (!workQueue.isEmpty()) {
-				final Map<Long, WorkEvent> tempWorkQueue = new HashMap<Long, SpyController.WorkEvent>(workQueue);
-				final Set<Long> keys = tempWorkQueue.keySet();
-				final Map<Long, Boolean> workCompleted = new HashMap<Long, Boolean>();
-				for (final long key : keys) {
-					final WorkEvent workEvent = tempWorkQueue.get(key);
-					final Integer strangerIndex = workEvent.strangerIndex;
-					try {
-						final Method workMethod = getClass().getDeclaredMethod(workEvent.name(),
-								(strangerIndex != null ? strangerIndex.getClass() : null));
-						workMethod.invoke(this, strangerIndex);
-						workCompleted.put(key, true);
-					} catch (final Exception e) {
-						if (log.isDebugEnabled()) {
-							log.debug("An error occurred while invoking " + workEvent + " with strangerIndex "
-									+ strangerIndex + " for workId " + key + ".", e);
-						}
-						workCompleted.put(key, false);
-					}
-
-					// If we disconnected the conversation, we're not doing
-					// anymore work.
-					if (!conversationEnded) {
-						break;
-					}
-				}
-
-				completedTasks.putAll(workCompleted);
-			}
 		}
-		// We're done. Dump all pending work.
-		if (!workQueue.isEmpty()) {
-			final Set<Long> keys = workQueue.keySet();
-			for (final long key : keys) {
-				completedTasks.put(key, null);
-			}
-			workQueue.clear();
+
+		final Boolean workState = completedTasks.remove(id);
+		if (workState == false) {
+			log.warn("An error occurred while completing the work, " + id);
+			throw new RuntimeException(erroredTasks.remove(id));
 		}
 	}
 
-	private void initializeStrangers() {
-		// TODO Auto-generated method stub
+	private long addWorkRequest(final WorkEvent workEvent) {
+		if (!conversationEnded) {
+			long workId = -1;
+			synchronized (this) {
+				workId = lastWorkId++;
+			}
+			if (workId == -1) { throw new RuntimeException(
+					new InterruptedException("Unable to obtain a valid work ID.")); }
+			workQueue.put(workId, workEvent);
 
+			return workId;
+		}
+
+		throw new RuntimeException("The conversation is ended.");
 	}
 
-	protected void _disconnectStranger(final Integer strangerIndex) {
-		// TODO
+	public String getStrangerName(final int mainIndex) {
+		return spies[mainIndex].getName();
 	}
 
-	protected void _swapStranger(final Integer strangerIndex) {
-		// TODO
+	public int indexOf(final OmegleSpy spy) {
+		return spy == spies[0] ? 0 : 1;
 	}
 
-	protected void _endConversation() {
-		// TODO
+	private boolean randomizeNames() {
+		final int firstIndex = (int) (Math.random() * Common.possibleNames.length);
+		int secondIndex;
+		do {
+			secondIndex = (int) (Math.random() * Common.possibleNames.length);
+		} while (firstIndex == secondIndex);
+		names[0] = Common.possibleNames[firstIndex];
+		names[1] = Common.possibleNames[secondIndex];
+		return true;
 	}
 
 	private enum WorkEvent {
-		_disconnectStranger, _swapStranger, _endConversation;
-		private Integer	strangerIndex;
+		_disconnectStranger, _swapStranger, _toggleStrangersBlock, _endConversation, _sendSecretMessage;
+		private Map<String, Object>	params;
+	}
+
+	protected class WorkerThread implements Runnable {
+		private final List<OmegleSpyListener>	initialListeners;
+
+		private WorkerThread(final List<OmegleSpyListener> initialListeners) {
+			this.initialListeners = initialListeners;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Runnable#run()
+		 */
+		/**
+		 * This thread will do the initial instantiation of the strangers, their
+		 * connection, and their association.
+		 * 
+		 * It then monitors an event stack to handle its other duties:
+		 * 
+		 * - Disconnecting a stranger
+		 * 
+		 * - Swapping a stranger
+		 * 
+		 * - Ending a conversation
+		 */
+		public void run() {
+			initializeStrangers(initialListeners);
+			conversationEnded = false;
+			while (!conversationEnded) {
+				try {
+					Thread.sleep(100);
+				} catch (final InterruptedException e) {
+					log.warn("Thread error.", e);
+				}
+				if (!workQueue.isEmpty()) {
+					final Map<Long, WorkEvent> tempWorkQueue = new HashMap<Long, SpyController.WorkEvent>(workQueue);
+					final Set<Long> keys = tempWorkQueue.keySet();
+					final Map<Long, Boolean> workCompleted = new HashMap<Long, Boolean>();
+					final Map<Long, Throwable> detectedErrors = new HashMap<Long, Throwable>();
+					for (final long key : keys) {
+						final WorkEvent workEvent = tempWorkQueue.get(key);
+						final Map<String, Object> params = workEvent.params;
+						try {
+							final Method workMethod = getClass().getDeclaredMethod(workEvent.name(),
+									params != null ? Map.class : null);
+							workMethod.invoke(this, params);
+							workCompleted.put(key, true);
+						} catch (final Exception e) {
+							if (log.isDebugEnabled()) {
+								log.debug("An error occurred while invoking " + workEvent + " with params " + params
+										+ " for workId " + key + ".", e);
+							}
+							workCompleted.put(key, false);
+							detectedErrors.put(key, e);
+						}
+
+						// If we disconnected the conversation, we're not doing
+						// anymore work.
+						if (conversationEnded) {
+							break;
+						}
+					}
+
+					completedTasks.putAll(workCompleted);
+					erroredTasks.putAll(detectedErrors);
+					final Set<Long> finishedWorkSet = workCompleted.keySet();
+					for (final long id : finishedWorkSet) {
+						workQueue.remove(id);
+					}
+				}
+			}
+			// We're done. Dump all pending work.
+			if (!workQueue.isEmpty()) {
+				final Set<Long> keys = workQueue.keySet();
+				for (final long key : keys) {
+					completedTasks.put(key, null);
+				}
+				workQueue.clear();
+			}
+		}
+
+		protected void _disconnectStranger(final Integer strangerIndex) {
+			final OmegleSpy spy = spies[strangerIndex];
+			spy.disconnect();
+		}
+
+		protected void _swapStranger(final Map<String, Object> params) {
+			final int strangerIndex = (Integer) params.get(STRANGER_INDEX);
+			final int otherIndex = strangerIndex == 0 ? 1 : 0;
+			// grab swappiees name
+			final String oldName = spies[strangerIndex].getName();
+
+			final OmegleSpy oldSpy = spies[strangerIndex];
+
+			// create a new chatter spy with the swappiees old name
+			final OmegleSpy mainSpy = spies[strangerIndex] = new OmegleSpy(oldName);
+			oldSpy.disconnect();
+
+			// setup the new chatter spy as a event listener
+			mainSpy.addOmegleSpyListener((OmegleSpyListener) params.get(SPY_LISTENER));
+
+			// tell new chatter spy to talk to the other chatter (non touched
+			// chatter)
+			mainSpy.setPartner(spies[otherIndex].getChat());
+
+			// do i need this? tell the other chatter (non touched chatter) to
+			// talk to the new chatter
+			spies[otherIndex].setPartner(mainSpy.getChat());
+
+			// connect the new chatter into the chat
+			mainSpy.startChat();
+		}
+
+		protected void _toggleStrangersBlock(final Map<String, Object> params) {
+			final boolean blocked = (Boolean) params.get(IS_BLOCKED);
+			for (final OmegleSpy s : spies) {
+				if (s != null) {
+					s.setBlocking(blocked);
+				}
+			}
+		}
+
+		protected void _sendSecretMessage(final Map<String, Object> params) {
+			final int targetIndex = (Integer) params.get(STRANGER_INDEX);
+			final OmegleSpy spy = spies[targetIndex];
+			final String message = (String) params.get(MESSAGE);
+			if (!spy.sendExternalMessage(message)) { throw new RuntimeException("Failed to deliver the message, "
+					+ message + ", to " + spy.getName()); }
+		}
+
+		protected void _endConversation() {
+			for (final OmegleSpy s : spies) {
+				if (s != null) {
+					s.disconnect();
+				}
+			}
+			conversationEnded = true;
+		}
 	}
 }

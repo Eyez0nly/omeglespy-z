@@ -22,19 +22,6 @@ import org.apache.commons.logging.LogFactory;
 public class Common {
 	private static final Log			log						= LogFactory.getLog(Common.class);
 
-	// might as well make the 'common' file hold 'common' settings. here are
-	// some global app settings
-	public static final String			APP_VERSION				= "1.8";
-	public static final String			APP_REVISION			= "12";
-	public static final String			APP_FULLVER				= APP_VERSION + "." + APP_REVISION;
-	public static final String			APP_HEADER				= "OmegleSpyX - v" + APP_VERSION + " Resurrection";
-	public static final String			APP_TITLE				= "OmegleSpyX [v" + APP_FULLVER + "] - By BrentBXR";
-
-	public static final String[]		OMEGLE_SERVER_LIST		= { "quarks.omegle.com", "bajor.omegle.com",
-			"promenade.omegle.com", "cardassia.omegle.com", "chatserv.omegle.com" };
-
-	public static final String			GOOGLE_RECAPTCHA_URL	= "http://www.google.com/recaptcha/api/image?c=";
-
 	public static int					UNIT_INCREMENT			= 16;
 	public static String[]				possibleNames;
 	static {

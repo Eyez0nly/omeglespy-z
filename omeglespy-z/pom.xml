@@ -17,6 +17,22 @@
 	<build>
 		<plugins>
 			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>log4j.properties</exclude>
+								<exclude>names.txt</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>appassembler-maven-plugin</artifactId>
 				<version>1.1.1</version>
@@ -29,10 +45,20 @@
 					</execution>
 				</executions>
 				<configuration>
+					<!-- Set the target configuration directory to be used in the bin scripts -->
+					<configurationDirectory>conf</configurationDirectory>
+					<!-- Copy the contents from "/src/main/config" to the target configuration 
+						directory in the assembled application -->
+					<copyConfigurationDirectory>true</copyConfigurationDirectory>
+					<!-- Include the target configuration directory in the beginning of 
+						the classpath declaration in the bin scripts -->
+					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+					<!-- set alternative assemble directory -->
+					<assembleDirectory>${project.build.directory}/omeglespy-z-${project.version}</assembleDirectory>
 					<programs>
 						<program>
 							<mainClass>org.darkimport.omeglespy.ui.OmegleSpyMainWindow</mainClass>
-							<name>omeglespyx</name>
+							<name>omeglespy-z</name>
 						</program>
 					</programs>
 				</configuration>
@@ -44,6 +70,25 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.html</include>
+					<include>**/*.properties</include>
+					<include>**/*.yml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>**/*.html</exclude>
+					<exclude>**/*.properties</exclude>
+					<exclude>**/*.yml</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/config</directory>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 	</build>

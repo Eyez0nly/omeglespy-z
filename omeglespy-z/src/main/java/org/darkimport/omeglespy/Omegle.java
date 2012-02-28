@@ -17,10 +17,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class Omegle implements Runnable {
-	private static final Log			log				= LogFactory.getLog(Omegle.class);
+	private static final Log			log					= LogFactory.getLog(Omegle.class);
 
-	public static final Pattern			str_regex		= Pattern.compile("(\")((?>(?:(?>[^\"\\\\]+)|\\\\.)*))\\1");
-	public static final Pattern			escape_regex	= Pattern.compile("\\\\([\'\"\\\\bfnrt]|u(....))");
+	public static final Pattern			str_regex			= Pattern.compile("(\")((?>(?:(?>[^\"\\\\]+)|\\\\.)*))\\1");
+	public static final Pattern			escape_regex		= Pattern.compile("\\\\([\'\"\\\\bfnrt]|u(....))");
 	public static final String			EV_CONNECTING, EV_WAITING, EV_CONNECTED, EV_TYPING, EV_STOPPED_TYPING, EV_MSG,
 			EV_DISCONNECT, EV_RECAPTCHA, EV_RECAPTCHAREJECT;
 	static {
@@ -46,6 +46,26 @@ public class Omegle implements Runnable {
 	private boolean						dead;
 	private final List<OmegleListener>	listeners;
 
+	// Initializing the server list with one server just in case we can't load
+	// the servers from the list.
+	private static String[]				omegleServerList	= new String[] { "quarks.omegle.com" };
+	static {
+		InputStream in = null;
+		try {
+			in = Thread.currentThread().getContextClassLoader().getResourceAsStream("server_names.txt");
+			final List<String> loadedServers = IOUtils.readLines(in);
+			if (loadedServers != null && loadedServers.size() > 0) {
+				omegleServerList = loadedServers.toArray(new String[loadedServers.size()]);
+			} else {
+				log.warn("No servers loaded. Check that server_names.txt is configured correctly.");
+			}
+		} catch (final Exception e) {
+			log.warn("Unable to load omegle servers from the list.", e);
+		} finally {
+			IOUtils.closeQuietly(in);
+		}
+	}
+
 	public Omegle() {
 		chatId = null;
 		dead = false;
@@ -63,8 +83,7 @@ public class Omegle implements Runnable {
 			// count_url = new URL(omegleServer + "count");
 			// totalcount_url = new URL(omegleServer + "totalcount");
 			setRecaptcha_url(new URL(omegleServer + "recaptcha"));
-		} catch (final MalformedURLException ex) {
-		}
+		} catch (final MalformedURLException ex) {}
 	}
 
 	public void addOmegleListener(final OmegleListener ol) {
@@ -82,14 +101,10 @@ public class Omegle implements Runnable {
 	}
 
 	public boolean start() {
-		if (chatId != null || dead) {
-			return false;
-		}
+		if (chatId != null || dead) { return false; }
 
 		final String startr = wget(start_url, true);
-		if (startr == null) {
-			return false;
-		}
+		if (startr == null) { return false; }
 		final Matcher m = str_regex.matcher(startr);
 		if (m.matches()) {
 			chatId = m.group(2); // 2 is the actual string - Listner(sky) has
@@ -104,12 +119,19 @@ public class Omegle implements Runnable {
 
 	public void run() {
 		String eventr;
-		while (chatId != null && (eventr = wget(events_url, true, "id", chatId)) != null &&
-		/* chatId != null && /* hahahaha i have to check it twice */
-		!eventr.equals("null")) {
+		while (chatId != null && (eventr = wget(events_url, true, "id", chatId)) != null && !eventr.equals("null")) {
 			dispatch(eventr);
+			try {
+				// TODO randomize the sleep time.
+				Thread.sleep(100);
+			} catch (final InterruptedException e) {
+				log.warn("Thread error.", e);
+			}
 		}
 		if (chatId != null) {
+			// We left the loop because the server no longer recognizes our chat
+			// ID. TODO Or does it? Is it possible that there was a transmission
+			// error?
 			log.warn("** Fuck... An event check returned a null - This is a session destroyer. **");
 			log.warn("** Restart OmegleSpyX and hope Omegle didnt ban your ass. (symptoms of a ban). **");
 			chatId = null;
@@ -140,33 +162,25 @@ public class Omegle implements Runnable {
 	}
 
 	public boolean typing() {
-		if (chatId == null) {
-			return false;
-		}
+		if (chatId == null) { return false; }
 
 		final String r = wget(type_url, true, "id", chatId);
 		return r != null && r.equals("win");
 	}
 
 	public boolean stoppedTyping() {
-		if (chatId == null) {
-			return false;
-		}
+		if (chatId == null) { return false; }
 
 		final String r = wget(stoptype_url, true, "id", chatId);
 		return r != null && r.equals("win");
 	}
 
 	public boolean sendMsg(final String msg) {
-		if (chatId == null) {
-			return false;
-		}
+		if (chatId == null) { return false; }
 
 		// omegleListeners.messageInTheProcessOfSending()
 		final String sendr = wget(send_url, true, "id", chatId, "msg", msg);
-		if (sendr == null) {
-			return false;
-		}
+		if (sendr == null) { return false; }
 
 		final boolean b = sendr.equals("win");
 		if (b) {
@@ -179,9 +193,7 @@ public class Omegle implements Runnable {
 	}
 
 	public boolean disconnect() {
-		if (chatId == null) {
-			return false;
-		}
+		if (chatId == null) { return false; }
 
 		final String oldChatId = chatId;
 		chatId = null;
@@ -258,9 +270,9 @@ public class Omegle implements Runnable {
 	}
 
 	public void init() {
-		log.info(" -- Initializing, Please wait...");
-		final int randIndex = (int) (Math.random() * Common.OMEGLE_SERVER_LIST.length);
-		final String omegle_root_tmp = Common.OMEGLE_SERVER_LIST[randIndex];
+		log.info("-- Initializing, Please wait...");
+		final int randIndex = (int) (Math.random() * omegleServerList.length);
+		final String omegle_root_tmp = omegleServerList[randIndex];
 		log.info("* Chat server selected: " + omegle_root_tmp);
 		omegleServer = "http://" + omegle_root_tmp + "/";
 		try {
@@ -276,7 +288,7 @@ public class Omegle implements Runnable {
 		wget(init_2, false, true);
 		wget(init_3, false, true);
 		wget(init_4, false, true);
-		log.info(" -- Initialization  process has been completed.");
+		log.info("-- Initialization process has been completed.");
 	}
 
 	public static String wget(final URL url, final boolean post, final String... post_data) {
@@ -360,10 +372,4 @@ public class Omegle implements Runnable {
 	public void setRecaptcha_url(final URL recaptcha_url) {
 		this.recaptcha_url = recaptcha_url;
 	}
-}
-
-interface OmegleListener {
-	public void eventFired(Omegle src, String event, String... args);
-
-	public void messageSent(Omegle src, String msg);
 }
