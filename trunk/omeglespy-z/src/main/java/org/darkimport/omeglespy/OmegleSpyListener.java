@@ -10,4 +10,12 @@ public interface OmegleSpyListener {
 	public void isTyping(OmegleSpy src);
 
 	public void stoppedTyping(OmegleSpy src);
+
+	public void chatStarted(OmegleSpy src);
+
+	public void disconnected(OmegleSpy src);
+
+	public void recaptchaRejected(OmegleSpy src, String id);
+
+	public void recaptcha(OmegleSpy src, String id);
 }

@@ -1,6 +1,5 @@
 package org.darkimport.omeglespy;
 
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,10 +14,8 @@ public class OmegleSpy implements OmegleListener {
 	boolean						connected, disconnected;
 	private boolean				blocking;
 	List<OmegleSpyListener>		listeners;
-	private final boolean		useOcr;
 
-	public OmegleSpy(final String name, final boolean useOcr) {
-		this.useOcr = useOcr;
+	public OmegleSpy(final String name) {
 		chat = new Omegle();
 		chat.init();
 		chat.addOmegleListener(this);
@@ -86,15 +83,15 @@ public class OmegleSpy implements OmegleListener {
 	}
 
 	public boolean startChat() {
-		if (partner == null) {
-			return false;
-		}
-		if (!chat.start()) {
-			return false;
-		}
+		if (partner == null) { return false; }
+		if (!chat.start()) { return false; }
 
 		while (!connected) {
 			Common.rest(50);
+		}
+
+		for (final OmegleSpyListener omegleSpyListener : listeners) {
+			omegleSpyListener.chatStarted(this);
 		}
 		return true;
 	}
@@ -110,6 +107,7 @@ public class OmegleSpy implements OmegleListener {
 		return b;
 	}
 
+	// TODO Figure out if this triggers an event.
 	public boolean disconnect() {
 		final boolean b = chat.disconnect();
 		if (b) {
@@ -128,40 +126,6 @@ public class OmegleSpy implements OmegleListener {
 			for (final OmegleSpyListener osl : listeners) {
 				osl.messageBlocked(this, msg);
 			}
-		}
-	}
-
-	private void reCaptcha(final String id) {
-		try {
-			final String captcha = Omegle.wget(new URL("http://www.google.com/recaptcha/api/challenge?k=" + id
-					+ "&ajax=1&cachestop=0.34919850158610977"), false);
-			final int idx0 = captcha.indexOf("challenge : '") + "challenge : '".length();
-			final int idx1 = captcha.indexOf('\'', idx0);
-			final String challenge = captcha.substring(idx0, idx1);
-
-			final ReCaptchaWindow p = new ReCaptchaWindow(chat, challenge, useOcr);
-			p.setVisible(true);
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void reCaptchaReject(final String id) {
-		try {
-			// I would have just looped the reject event to the original
-			// recaptcha function to do the same thing
-			// but i like to keep my options open, it having its own function
-			// could be usfull in the future.
-			final String captcha = Omegle.wget(new URL("http://www.google.com/recaptcha/api/challenge?k=" + id
-					+ "&ajax=1&cachestop=0.34919850158610977"), false);
-			final int idx0 = captcha.indexOf("challenge : '") + "challenge : '".length();
-			final int idx1 = captcha.indexOf('\'', idx0);
-			final String challenge = captcha.substring(idx0, idx1);
-
-			final ReCaptchaWindow p = new ReCaptchaWindow(chat, challenge, useOcr);
-			p.setVisible(true);
-		} catch (final Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -194,16 +158,22 @@ public class OmegleSpy implements OmegleListener {
 		} else if (event.equals(Omegle.EV_MSG)) {
 			gotMessage(args[0]);
 		} else if (event.equals(Omegle.EV_RECAPTCHA)) {
-			reCaptcha(args[0]);
+			for (final OmegleSpyListener omegleSpyListener : listeners) {
+				omegleSpyListener.recaptcha(this, args[0]);
+			}
 		} else if (event.equals(Omegle.EV_RECAPTCHAREJECT)) {
-			reCaptchaReject(args[0]);
+			for (final OmegleSpyListener omegleSpyListener : listeners) {
+				omegleSpyListener.recaptchaRejected(this, args[0]);
+			}
 		} else if (event.equals(Omegle.EV_DISCONNECT)) {
 			disconnected = true;
+			for (final OmegleSpyListener omegleSpyListener : listeners) {
+				omegleSpyListener.disconnected(this);
+			}
 		}
 	}
 
-	public void messageSent(final Omegle src, final String msg) {
-	}
+	public void messageSent(final Omegle src, final String msg) {}
 
 	public Omegle getChat() {
 		return chat;
