@@ -103,6 +103,7 @@ public class SpyController {
 
 		for (int i = 0; i < spies.length; i++) {
 			log.info("SPY CREATED : spy[" + i + "]	[ID: " + spies[i].getChat() + "]		[NAME: '" + names[i] + "']");
+			spies[i].startChat();
 		}
 	}
 
