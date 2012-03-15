@@ -525,14 +525,6 @@ public class OmegleSpyMainWindow extends JFrame {
 			// A stranger disconnected, hide his typing label
 			((JLabel) result.get(MessageFormat.format(ControlNameConstants.LBL_STRANGER_TYPING, String.valueOf(index))))
 					.setVisible(false);
-			// disable his swap button and set the text of his button to
-			// neutral.
-			final String swapButtonName = MessageFormat.format(ControlNameConstants.BTN_SWAP_STRANGER,
-					String.valueOf(index));
-			final JButton swapButton = (JButton) result.get(swapButtonName);
-			swapButton
-					.setText(SwingJavaBuilder.getConfig().getResource(ResourceConstants.BUTTON_SWAP_STRANGER_NEUTRAL));
-			swapButton.setEnabled(false);
 			// disable his disconnect button and set the text of his disconnect
 			// button to neutral.
 			final String targetedDisconnectButtonName = MessageFormat.format(
