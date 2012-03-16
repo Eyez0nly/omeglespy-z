@@ -26,39 +26,70 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<executions>
-					<execution>
-						<configuration>
-							<excludes>
-								<exclude>**/log4j.properties</exclude>
-								<exclude>**/names.txt</exclude>
-								<exclude>**/server_names.txt</exclude>
-								<exclude>**/settings.properties</exclude>
-							</excludes>
-						</configuration>
-					</execution>
-				</executions>
+				<configuration>
+					<excludes>
+						<exclude>**/log4j.properties</exclude>
+						<exclude>**/names.txt</exclude>
+						<exclude>**/server_names.txt</exclude>
+						<exclude>**/settings.properties</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
+			<!-- <plugin> -->
+			<!-- <groupId>org.apache.maven.plugins</groupId> -->
+			<!-- <artifactId>maven-shade-plugin</artifactId> -->
+			<!-- <version>1.5</version> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <phase>package</phase> -->
+			<!-- <goals> -->
+			<!-- <goal>shade</goal> -->
+			<!-- </goals> -->
+			<!-- <configuration> -->
+			<!-- <filters> -->
+			<!-- <filter> -->
+			<!-- <artifact>net.java.dev.glazedlists:glazedlists_java15</artifact> -->
+			<!-- <excludes> -->
+			<!-- <exclude>resources/**</exclude> -->
+			<!-- </excludes> -->
+			<!-- </filter> -->
+			<!-- <filter> -->
+			<!-- <artifact>*:*</artifact> -->
+			<!-- <excludes> -->
+			<!-- <exclude>META-INF/*.SF</exclude> -->
+			<!-- <exclude>META-INF/*.DSA</exclude> -->
+			<!-- <exclude>META-INF/*.RSA</exclude> -->
+			<!-- <exclude>META-INF/maven/**</exclude> -->
+			<!-- </excludes> -->
+			<!-- </filter> -->
+			<!-- </filters> -->
+			<!-- <minimizeJar>true</minimizeJar> -->
+			<!-- <transformers> -->
+			<!-- <transformer -->
+			<!-- implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"> -->
+			<!-- </transformer> -->
+			<!-- <transformer -->
+			<!-- implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer"> -->
+			<!-- <addHeader>false</addHeader> -->
+			<!-- </transformer> -->
+			<!-- </transformers> -->
+			<!-- </configuration> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
 			<plugin>
 				<groupId>com.pyx4me</groupId>
 				<artifactId>proguard-maven-plugin</artifactId>
 				<version>2.0.4</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>proguard</goal>
-						</goals>
-					</execution>
-				</executions>
+				<!-- <executions> -->
+				<!-- <execution> -->
+				<!-- <phase>package</phase> -->
+				<!-- <goals> -->
+				<!-- <goal>proguard</goal> -->
+				<!-- </goals> -->
+				<!-- </execution> -->
+				<!-- </executions> -->
 				<configuration>
-					<options>
-						<option>-allowaccessmodification</option>
-						<option>-keep public class
-							org.darkimport.omeglespy.ui.OmegleSpyMainWindow { }</option>
-						<option>-dontskipnonpubliclibraryclassmembers</option>
-					</options>
 					<obfuscate>true</obfuscate>
 					<outputDirectory>${project.build.directory}</outputDirectory>
 					<proguardInclude>${basedir}/proguard.conf</proguardInclude>
@@ -68,6 +99,7 @@
 					</libs>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>appassembler-maven-plugin</artifactId>
@@ -91,6 +123,9 @@
 					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
 					<!-- set alternative assemble directory -->
 					<assembleDirectory>${project.build.directory}/omeglespy-z-${project.version}</assembleDirectory>
+					<licenseHeaderFile>header</licenseHeaderFile>
+					<repositoryLayout>flat</repositoryLayout>
+					<repositoryName>lib</repositoryName>
 					<programs>
 						<program>
 							<mainClass>org.darkimport.omeglespy.ui.OmegleSpyMainWindow</mainClass>
@@ -141,16 +176,16 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.1</version>
 		</dependency>
-		<dependency>
-			<groupId>net.java.dev.jai-imageio</groupId>
-			<artifactId>jai-imageio-core-standalone</artifactId>
-			<version>1.2-pre-dr-b04-2010-04-30</version>
-		</dependency>
-		<dependency>
-			<groupId>net.java.dev.jna</groupId>
-			<artifactId>jna</artifactId>
-			<version>3.2.7</version>
-		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>net.java.dev.jai-imageio</groupId> -->
+		<!-- <artifactId>jai-imageio-core-standalone</artifactId> -->
+		<!-- <version>1.2-pre-dr-b04-2010-04-30</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>net.java.dev.jna</groupId> -->
+		<!-- <artifactId>jna</artifactId> -->
+		<!-- <version>3.2.7</version> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>

@@ -20,20 +20,20 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class Common {
-	private static final Log			log						= LogFactory.getLog(Common.class);
+	private static final Log			log				= LogFactory.getLog(Common.class);
 
-	public static int					UNIT_INCREMENT			= 16;
+	public static int					UNIT_INCREMENT	= 16;
 	public static String[]				possibleNames;
 	static {
 		loadNames();
 	}
 	public static final JFileChooser	fc;
-	public static final String			HTML_EXT				= ".html";
+	public static final String			HTML_EXT		= ".html";
 
-	static final String[]				browsers				= { "firefox", "opera", "konqueror", "epiphany",
-			"seamonkey", "galeon", "kazehakase", "mozilla", "netscape", "chrome" };
-	static final Runtime				rt						= Runtime.getRuntime();
-	static final String					osName					= System.getProperty("os.name");
+	static final String[]				browsers		= { "firefox", "opera", "konqueror", "epiphany", "seamonkey",
+			"galeon", "kazehakase", "mozilla", "netscape", "chrome" };
+	static final Runtime				rt				= Runtime.getRuntime();
+	static final String					osName			= System.getProperty("os.name");
 
 	static {
 		JFileChooser jfc;
@@ -58,8 +58,7 @@ public class Common {
 		fc = jfc;
 	}
 
-	private Common() {
-	}
+	private Common() {}
 
 	public static JScrollPane scroller(final Component c) {
 		final JScrollPane jsp = new JScrollPane(c);
@@ -81,8 +80,7 @@ public class Common {
 	public static void rest(final long millis) {
 		try {
 			Thread.sleep(millis);
-		} catch (final InterruptedException ex) {
-		}
+		} catch (final InterruptedException ex) {}
 	}
 
 	public static String timestamp(final Calendar c) {
@@ -135,21 +133,19 @@ public class Common {
 					}
 				}
 			}
-			if (!found) {
-				throw new Exception("Could not launch any web browser");
-			}
+			if (!found) { throw new Exception("Could not launch any web browser"); }
 		}
 	}
 
 	private static boolean loadNames() {
 		try {
-			final InputStream is = Common.class.getResourceAsStream("/names.txt");
+			final InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("names.txt");
 			final List<String> namesList = IOUtils.readLines(is, null);
 
 			possibleNames = namesList.toArray(new String[namesList.size()]);
 			return true;
 		} catch (final Exception ex) {
-			possibleNames = new String[0];
+			possibleNames = new String[] { "Stranger 1", "Stranger 2" };
 			log.warn("Could not load names file: " + ex.getMessage());
 			return false;
 		}

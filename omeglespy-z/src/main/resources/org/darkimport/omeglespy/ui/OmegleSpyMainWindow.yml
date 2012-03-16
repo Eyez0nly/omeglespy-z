@@ -2,16 +2,18 @@ JFrame(name=frame, title=frame.main.title, size=packed, iconImage=/spyboticon.pn
   - JPanel(name=grpTitlePane):
     - JLabel(name=lblTitle, text=label.title, font=Verdana bold 16pt)
     - JLabel(name=lblBlockMessage, text=label.blockMessage, font=Verdana plain 10pt)
+    - JLabel(name=lblFilterMessage, text=label.filterMessages, font=Verdana plain 10pt)
     - JLabel(name=lblAutoScroll, text=label.autoScroll, font=Verdana plain 10pt)
     - JButton(name=btnClearScreen, text=button.clearScreen, font=Verdana plain 10pt, onAction=[clearScreen])
     - JButton(name=btnViewLogs, text=button.viewLogs, font=Verdana plain 10pt, onAction=[viewLogs])
     - JButton(name=btnToggleConnectionState, text=button.connect, font=Verdana plain 10pt, onAction=[toggleConnectionState])
-    - JCheckBox(name=cbxBlockMessage, onAction=[toggleStrangersBlocked])
+    - JCheckBox(name=cbxBlockMessage, enabled=false, onAction=[toggleStrangersBlocked])
+    - JCheckBox(name=cbxFilterMessage, enabled=false, onAction=[toggleFilter])
     - JCheckBox(name=cbxAutoScroll, selected=true)
     - MigLayout: |
-        [grow]                              [grow]                  [grow]                                [grow]
+        [grow]                              [grow]                              [grow]              [grow]           [grow]
         |^lblTitle+*                                                                                                                                                           [grow,30]
-        |-cbxBlockMessage,lblBlockMessage=2 |-btnClearScreen=1>     |-btnViewLogs=1>                      |-cbxAutoScroll,lblAutoScroll=2
+        |-cbxBlockMessage,lblBlockMessage=2 |-cbxFilterMessage,lblFilterMessage=2 |-btnClearScreen=1> |-btnViewLogs=1> |-cbxAutoScroll,lblAutoScroll=2
         |-btnToggleConnectionState+*>/                                                                                                                                         [grow,45]
   - JPanel(name=grpContentPane):
     - JScrollPane(name=consoleScroller): JEditorPane(name=console, editable=false, contentType=text/html)

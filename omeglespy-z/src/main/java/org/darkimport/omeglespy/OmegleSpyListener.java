@@ -18,4 +18,6 @@ public interface OmegleSpyListener {
 	public void recaptchaRejected(OmegleSpy src, String id);
 
 	public void recaptcha(OmegleSpy src, String id);
+
+	public void messageFiltered(OmegleSpy omegleSpy, String msg);
 }
