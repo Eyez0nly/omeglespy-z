@@ -13,6 +13,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.darkimport.omeglespy.Omegle;
@@ -79,12 +80,13 @@ public class OmegleSpyRecaptchaWindow extends JDialog {
 		final int key = e.getKeyCode();
 
 		if (key == KeyEvent.VK_ENTER) {
-
-			final String response = ((JTextField) e.getSource()).getText();
-			log.debug("Sending " + response);
-			Omegle.wget(chat.getRecaptcha_url(), true, "id", chat.getChatId(), "challenge", challenge, "response",
-					response);
-			dispose();
+			response = ((JTextField) e.getSource()).getText();
+			if (!StringUtils.isEmpty(response)) {
+				log.debug("Sending " + response);
+				Omegle.wget(chat.getRecaptcha_url(), true, "id", chat.getChatId(), "challenge", challenge, "response",
+						response);
+				dispose();
+			}
 		}
 	}
 

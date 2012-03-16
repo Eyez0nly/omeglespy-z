@@ -23,6 +23,7 @@ public class SpyController {
 	private static final String			STRANGER_INDEX	= "strangerIndex";
 	private static final String			SPY_LISTENER	= "spyListener";
 	private static final String			IS_BLOCKED		= "isBlocked";
+	private static final String			IS_FILTERED		= "isFiltered";
 
 	private static final String			MESSAGE			= "message";
 
@@ -78,12 +79,18 @@ public class SpyController {
 		doWork(WorkEvent._toggleStrangersBlock, params);
 	}
 
+	public void toggleFilter(final boolean selected) {
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put(IS_FILTERED, selected);
+		doWork(WorkEvent._toggleFilter, params);
+	}
+
 	public void endConversation() {
-		// TODO
+		doWork(WorkEvent._endConversation, null);
 	}
 
 	private void doWork(final WorkEvent workEvent, final Map<String, Object> params) {
-		if (params.size() > 0) {
+		if (params != null && params.size() > 0) {
 			workEvent.params = params;
 		}
 		final long id = addWorkRequest(workEvent);
@@ -159,7 +166,7 @@ public class SpyController {
 	}
 
 	private enum WorkEvent {
-		_disconnectStranger, _swapStranger, _toggleStrangersBlock, _endConversation, _sendSecretMessage;
+		_disconnectStranger, _swapStranger, _toggleStrangersBlock, _toggleFilter, _endConversation, _sendSecretMessage;
 		private Map<String, Object>	params;
 	}
 
@@ -205,8 +212,7 @@ public class SpyController {
 						final WorkEvent workEvent = tempWorkQueue.get(key);
 						final Map<String, Object> params = workEvent.params;
 						try {
-							final Method workMethod = getClass().getDeclaredMethod(workEvent.name(),
-									params != null ? Map.class : null);
+							final Method workMethod = getClass().getDeclaredMethod(workEvent.name(), Map.class);
 							workMethod.invoke(this, params);
 							workCompleted.put(key, true);
 						} catch (final Exception e) {
@@ -243,7 +249,8 @@ public class SpyController {
 			}
 		}
 
-		protected void _disconnectStranger(final Integer strangerIndex) {
+		protected void _disconnectStranger(final Map<String, Object> params) {
+			final int strangerIndex = (Integer) params.get(STRANGER_INDEX);
 			final OmegleSpy spy = spies[strangerIndex];
 			spy.disconnect();
 		}
@@ -284,6 +291,15 @@ public class SpyController {
 			}
 		}
 
+		protected void _toggleFilter(final Map<String, Object> params) {
+			final boolean filtered = (Boolean) params.get(IS_FILTERED);
+			for (final OmegleSpy s : spies) {
+				if (s != null) {
+					s.setFiltering(filtered);
+				}
+			}
+		}
+
 		protected void _sendSecretMessage(final Map<String, Object> params) {
 			final int targetIndex = (Integer) params.get(STRANGER_INDEX);
 			final OmegleSpy spy = spies[targetIndex];
@@ -292,7 +308,7 @@ public class SpyController {
 					+ message + ", to " + spy.getName()); }
 		}
 
-		protected void _endConversation() {
+		protected void _endConversation(final Map<String, Object> params) {
 			for (final OmegleSpy s : spies) {
 				if (s != null) {
 					s.disconnect();

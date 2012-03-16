@@ -5,14 +5,22 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.darkimport.omeglespy.util.FilterHelper;
 
 public class OmegleSpy implements OmegleListener {
 	private static final Log	log	= LogFactory.getLog(OmegleSpy.class);
 
 	Omegle						chat, partner;
 	String						name;
-	boolean						connected, disconnected;
+
+	// TODO Why do we need both a connected and a disconnected field???
+	private boolean				connected;
+	private boolean				disconnected;
+
+	// TODO both blocking and filtering enabled should be application scope --
+	// not session scope.
 	private boolean				blocking;
+	private boolean				filteringEnabled;
 	List<OmegleSpyListener>		listeners;
 
 	public OmegleSpy(final String name) {
@@ -66,6 +74,10 @@ public class OmegleSpy implements OmegleListener {
 		}
 	}
 
+	public void setFiltering(final boolean b) {
+		filteringEnabled = b;
+	}
+
 	public boolean isBlocking() {
 		return blocking;
 	}
@@ -117,7 +129,12 @@ public class OmegleSpy implements OmegleListener {
 	}
 
 	private void gotMessage(final String msg) {
-		if (!isBlocking()) {
+		// Is filtering enabled? If so, does this message violate the filter?
+		if (filteringEnabled && FilterHelper.isBadMessage(msg)) {
+			for (final OmegleSpyListener osl : listeners) {
+				osl.messageFiltered(this, msg);
+			}
+		} else if (!blocking) {
 			sendMsg(msg);
 			for (final OmegleSpyListener osl : listeners) {
 				osl.messageTransferred(this, msg);
@@ -129,6 +146,7 @@ public class OmegleSpy implements OmegleListener {
 		}
 	}
 
+	// TODO The omegle spy should not implement the OmegleListener
 	public void eventFired(final Omegle src, final String event, final String... args) {
 		if (log.isDebugEnabled()) {
 			String argslist = "";
@@ -144,7 +162,7 @@ public class OmegleSpy implements OmegleListener {
 		if (event.equals(Omegle.EV_CONNECTED)) {
 			connected = true;
 		} else if (event.equals(Omegle.EV_TYPING)) {
-			if (!isBlocking()) {
+			if (!blocking) {
 				partner.typing();
 			}
 			for (final OmegleSpyListener osl : listeners) {

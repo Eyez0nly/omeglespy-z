@@ -79,8 +79,6 @@ public class OmegleSpyMainWindow extends JFrame {
 																			"([a-z]{2,6}://)?(?:[a-z0-9\\-]+\\.)+[a-z]{2,6}(?::\\d+)?(/\\S*)?",
 																			Pattern.CASE_INSENSITIVE);
 
-	private static final String			CBX_BLOCKMESSAGE	= "cbxBlockMessage";
-
 	private final SpyController			controller			= new SpyController();
 
 	private boolean						autoScrollEnabled	= true;
@@ -191,6 +189,13 @@ public class OmegleSpyMainWindow extends JFrame {
 		final int targetIndex = new Integer(button.getName().substring(button.getName().length() - 1));
 		log.debug("Disconnecting Stranger " + targetIndex + 1);
 
+		disconnectStranger(targetIndex);
+	}
+
+	/**
+	 * @param targetIndex
+	 */
+	private void disconnectStranger(final int targetIndex) {
 		// Adjust UI controls
 		final String swapButtonName = MessageFormat.format(ControlNameConstants.BTN_SWAP_STRANGER,
 				String.valueOf(targetIndex));
@@ -220,7 +225,6 @@ public class OmegleSpyMainWindow extends JFrame {
 		// tell user swapiee is being swapped
 		printStatusLog(currentConvo, controller.getStrangerName(mainIndex) + " is being swapped");
 
-		// TODO UI adjustment
 		controller.swapStranger(mainIndex, new MainWindowOmegleSpyListener() {
 			@Override
 			protected int getStrangerIndex() {
@@ -251,6 +255,11 @@ public class OmegleSpyMainWindow extends JFrame {
 	public void toggleStrangersBlocked(final JCheckBox button) {
 		log.debug("Toggling stranger block to " + button.isSelected());
 		controller.toggleStrangersBlock(button.isSelected());
+	}
+
+	public void toggleFilter(final JCheckBox button) {
+		log.debug("Toggling filter to " + button.isSelected());
+		controller.toggleFilter(button.isSelected());
 	}
 
 	public void toggleConnectionState(final JButton button) {
@@ -289,10 +298,13 @@ public class OmegleSpyMainWindow extends JFrame {
 
 			// CHAT ACTUALLY STARTS HERE
 			controller.startConversation(initialListeners);
-			controller.toggleStrangersBlock(((JCheckBox) result.get(CBX_BLOCKMESSAGE)).isSelected());
+			((JCheckBox) result.get(ControlNameConstants.CBX_BLOCKMESSAGE)).setEnabled(true);
+			((JCheckBox) result.get(ControlNameConstants.CBX_FILTERMESSAGES)).setEnabled(true);
 
 			button.setText(SwingJavaBuilder.getConfig().getResource(ResourceConstants.BUTTON_DISCONNECT));
 		} else {
+			((JCheckBox) result.get(ControlNameConstants.CBX_BLOCKMESSAGE)).setEnabled(false);
+			((JCheckBox) result.get(ControlNameConstants.CBX_FILTERMESSAGES)).setEnabled(false);
 			// TODO Magic number
 			// 2 is the number of strangers
 			for (int i = 0; i < 2; i++) {
@@ -308,6 +320,7 @@ public class OmegleSpyMainWindow extends JFrame {
 				targetedDisconnectButton.setText(SwingJavaBuilder.getConfig().getResource(
 						ResourceConstants.BUTTON_DISCONNECT_STRANGER_NEUTRAL));
 				targetedDisconnectButton.setEnabled(false);
+
 			}
 
 			button.setText(SwingJavaBuilder.getConfig().getResource(ResourceConstants.BUTTON_CONNECT));
@@ -594,8 +607,8 @@ public class OmegleSpyMainWindow extends JFrame {
 		 * .lang.String)
 		 */
 		public void recaptchaRejected(final OmegleSpy src, final String id) {
-			// TODO Auto-generated method stub
-
+			final OmegleSpyRecaptchaWindow recaptchaWindow = new OmegleSpyRecaptchaWindow(src, id);
+			recaptchaWindow.setVisible(true);
 		}
 
 		/*
@@ -606,8 +619,20 @@ public class OmegleSpyMainWindow extends JFrame {
 		 * )
 		 */
 		public void recaptcha(final OmegleSpy src, final String id) {
-			// TODO Auto-generated method stub
+			final OmegleSpyRecaptchaWindow recaptchaWindow = new OmegleSpyRecaptchaWindow(src, id);
+			recaptchaWindow.setVisible(true);
+		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.darkimport.omeglespy.OmegleSpyListener#messageFiltered(org.darkimport
+		 * .omeglespy.OmegleSpy, java.lang.String)
+		 */
+		public void messageFiltered(final OmegleSpy omegleSpy, final String msg) {
+			final int targetIndex = controller.indexOf(omegleSpy);
+			disconnectStranger(targetIndex);
 		}
 
 	}
