@@ -128,7 +128,7 @@
 					<repositoryName>lib</repositoryName>
 					<programs>
 						<program>
-							<mainClass>org.darkimport.omeglespy.ui.OmegleSpyMainWindow</mainClass>
+							<mainClass>org.darkimport.omeglespy.App</mainClass>
 							<name>omeglespy-z</name>
 						</program>
 					</programs>

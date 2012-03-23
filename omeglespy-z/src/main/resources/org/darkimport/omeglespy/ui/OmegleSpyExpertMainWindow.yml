@@ -1,0 +1,24 @@
+JFrame(name=frame, title=frame.main.title, size=packed, iconImage=/spyboticon.png, defaultCloseOperation=disposeOnClose):
+  - JPanel(name=grpTitlePane):
+    - JLabel(name=lblTitle, text=label.title, font=Verdana bold 16pt)
+    - MigLayout: |
+        [grow]
+        |^lblTitle+*                                                                                                                                                           [grow,30]
+  - JPanel(name=grpContentPane):
+    - JScrollPane(name=consoleScroller): JEditorPane(name=console, editable=false, contentType=text/html)
+    - MigLayout: |
+        [grow]
+        consoleScroller [grow,400]
+  - JPanel(name=grpControlPane):
+    - JTextField(name=txtToStranger enabled=false, font=Verdana plain 10pt, onAction=[sendSecretMessage])
+    - JLabel(name=lblStrangerTyping0, text=label.strangerTyping, font=Verdana bold 10pt, visible=false)
+    - JLabel(name=lblStrangerTyping1, text=label.strangerTyping, font=Verdana bold 10pt, visible=false)
+    - MigLayout: |
+        [grow]              [grow]                   [grow]             [grow]
+        txtToStranger+*
+        lblStrangerTyping0>                          lblStrangerTyping1>
+  - MigLayout: |
+      [grow,800]
+      |-grpTitlePane
+      |-grpContentPane
+      |-grpControlPane

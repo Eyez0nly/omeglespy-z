@@ -1,4 +1,4 @@
-investigate commons-httpclient
-collect recaptchas for training (crowd source)
-
-
+Externalize strings
+Document error codes
+Implement config helper
+Add license to headers of source files

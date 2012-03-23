@@ -10,6 +10,8 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.darkimport.configuration.ConfigHelper;
+import org.darkimport.omeglespy.constants.ConfigConstants;
 
 /**
  * For now, we just do string matching on some known bot tells.
@@ -38,17 +40,19 @@ public class FilterHelper {
 		badMessages = new ArrayList<String>();
 		InputStream in = null;
 		try {
-			in = Thread.currentThread().getContextClassLoader().getResourceAsStream("filter.txt");
+			final String filterfile = ConfigHelper.getGroup(ConfigConstants.GROUP_MAIN).getProperty(
+					ConfigConstants.MAIN_FILTERFILE);
+			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(filterfile);
 			final List<String> loadedBadMessages = IOUtils.readLines(in);
 			badMessages.addAll(loadedBadMessages);
 		} catch (final Exception e) {
-			IOUtils.closeQuietly(in);
 			log.warn("Failed to load bad words.", e);
 		} finally {
 			// Set initialized to true regardless of the outcome.
 			// TODO Later we will prevent changing the filter setting in the app
 			// if initialization failed.
 			initialized = true;
+			IOUtils.closeQuietly(in);
 		}
 	}
 

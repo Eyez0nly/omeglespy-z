@@ -3,6 +3,7 @@
  */
 package org.darkimport.omeglespy;
 
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -10,8 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.darkimport.configuration.ConfigHelper;
+import org.darkimport.omeglespy.constants.ConfigConstants;
 
 /**
  * @author user
@@ -26,6 +30,8 @@ public class SpyController {
 	private static final String			IS_FILTERED		= "isFiltered";
 
 	private static final String			MESSAGE			= "message";
+
+	public static String[]				possibleNames;
 
 	private final Map<Long, WorkEvent>	workQueue		= new Hashtable<Long, WorkEvent>();
 
@@ -48,6 +54,23 @@ public class SpyController {
 	 * spycontroller is accepting any new work requests.
 	 */
 	private boolean						conversationEnded;
+
+	static {
+		InputStream is = null;
+		try {
+			final String namesfile = ConfigHelper.getGroup(ConfigConstants.GROUP_MAIN).getProperty(
+					ConfigConstants.MAIN_NAMESFILE);
+			is = Thread.currentThread().getContextClassLoader().getResourceAsStream(namesfile);
+			final List<String> namesList = IOUtils.readLines(is, null);
+
+			possibleNames = namesList.toArray(new String[namesList.size()]);
+		} catch (final Exception ex) {
+			possibleNames = new String[] { "Stranger 1", "Stranger 2" };
+			log.warn("Could not load names file: " + ex.getMessage());
+		} finally {
+			IOUtils.closeQuietly(is);
+		}
+	}
 
 	public void startConversation(final List<OmegleSpyListener> initialListeners) {
 		new Thread(new WorkerThread(initialListeners)).start();
@@ -155,13 +178,13 @@ public class SpyController {
 	}
 
 	private boolean randomizeNames() {
-		final int firstIndex = (int) (Math.random() * Common.possibleNames.length);
+		final int firstIndex = (int) (Math.random() * possibleNames.length);
 		int secondIndex;
 		do {
-			secondIndex = (int) (Math.random() * Common.possibleNames.length);
+			secondIndex = (int) (Math.random() * possibleNames.length);
 		} while (firstIndex == secondIndex);
-		names[0] = Common.possibleNames[firstIndex];
-		names[1] = Common.possibleNames[secondIndex];
+		names[0] = possibleNames[firstIndex];
+		names[1] = possibleNames[secondIndex];
 		return true;
 	}
 
