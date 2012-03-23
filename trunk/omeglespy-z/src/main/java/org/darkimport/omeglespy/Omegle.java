@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.darkimport.configuration.ConfigHelper;
+import org.darkimport.omeglespy.constants.ConfigConstants;
 
 public class Omegle implements Runnable {
 	private static final Log			log					= LogFactory.getLog(Omegle.class);
@@ -51,13 +53,17 @@ public class Omegle implements Runnable {
 	private static String[]				omegleServerList	= new String[] { "quarks.omegle.com" };
 	static {
 		InputStream in = null;
+		String servernamesfile = null;
 		try {
-			in = Thread.currentThread().getContextClassLoader().getResourceAsStream("server_names.txt");
+			servernamesfile = ConfigHelper.getGroup(ConfigConstants.GROUP_MAIN).getProperty(
+					ConfigConstants.MAIN_SERVERNAMESFILE);
+			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(servernamesfile);
 			final List<String> loadedServers = IOUtils.readLines(in);
 			if (loadedServers != null && loadedServers.size() > 0) {
 				omegleServerList = loadedServers.toArray(new String[loadedServers.size()]);
 			} else {
-				log.warn("No servers loaded. Check that server_names.txt is configured correctly.");
+				log.warn("No servers loaded. Check that the specified server name config file, " + servernamesfile
+						+ ", is configured correctly.");
 			}
 		} catch (final Exception e) {
 			log.warn("Unable to load omegle servers from the list.", e);
@@ -335,7 +341,7 @@ public class Omegle implements Runnable {
 			return data;
 		} catch (final Exception ex) {
 			log.warn("An error occurred while submitting " + msg + " request to " + url.toString()
-					+ "with the following data: " + data, ex);
+					+ " with the following data: " + data, ex);
 			return null;
 		} finally {
 			IOUtils.closeQuietly(in);

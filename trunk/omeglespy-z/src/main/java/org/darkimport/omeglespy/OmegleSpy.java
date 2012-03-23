@@ -99,7 +99,9 @@ public class OmegleSpy implements OmegleListener {
 		if (!chat.start()) { return false; }
 
 		while (!connected) {
-			Common.rest(50);
+			try {
+				Thread.sleep(50);
+			} catch (final InterruptedException e) {}
 		}
 
 		for (final OmegleSpyListener omegleSpyListener : listeners) {

@@ -26,6 +26,8 @@ import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.Element;
@@ -41,8 +43,8 @@ import org.darkimport.omeglespy.OmegleSpyListener;
 import org.darkimport.omeglespy.SpyController;
 import org.darkimport.omeglespy.constants.ControlNameConstants;
 import org.darkimport.omeglespy.constants.ResourceConstants;
-import org.darkimport.omeglespy.util.LogHelper;
 import org.darkimport.omeglespy.util.UrlHelper;
+import org.darkimport.omeglespy.util.LogHelper;
 import org.javabuilders.BuildResult;
 import org.javabuilders.annotations.DoInBackground;
 import org.javabuilders.event.BackgroundEvent;
@@ -52,8 +54,8 @@ import org.javabuilders.swing.SwingJavaBuilder;
  * @author user
  * 
  */
-public class OmegleSpyMainWindow extends JFrame {
-	private static final Log			log					= LogFactory.getLog(OmegleSpyMainWindow.class);
+public class OmegleSpyExpertMainWindow extends JFrame {
+	private static final Log			log					= LogFactory.getLog(OmegleSpyExpertMainWindow.class);
 
 	/**
 	 * 
@@ -88,7 +90,7 @@ public class OmegleSpyMainWindow extends JFrame {
 
 	private final DesperationWindow		logViewer			= new DesperationWindow();
 
-	public OmegleSpyMainWindow() {
+	public OmegleSpyExpertMainWindow() {
 		result = SwingJavaBuilder.build(this);
 
 		try {
@@ -636,5 +638,32 @@ public class OmegleSpyMainWindow extends JFrame {
 			disconnectStranger(targetIndex);
 		}
 
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(final String[] args) {
+
+		log.info("**** OmegleSpy-Z starting ****\n\r");
+		if (log.isDebugEnabled()) {
+			log.debug("> Running in DEVELOPMENT release mode. Debug mode is [ON] & Private functions are [ENABLED]");
+		} else {
+			log.info("> Running in Standard release mode. Debug mode is [OFF] & Private functions are [DISABLED]");
+		}
+
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				// activate internationalization
+				SwingJavaBuilder.getConfig().addResourceBundle("OmegleSpyMainWindow");
+				SwingJavaBuilder.getConfig().addResourceBundle("OmegleSpyRecaptchaWindow");
+				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					new OmegleSpyExpertMainWindow().setVisible(true);
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
