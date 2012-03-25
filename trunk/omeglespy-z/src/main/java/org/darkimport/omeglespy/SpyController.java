@@ -22,18 +22,18 @@ import org.darkimport.omeglespy.constants.ConfigConstants;
  * 
  */
 public class SpyController {
-	private static final Log			log				= LogFactory.getLog(SpyController.class);
+	private static final Log			log					= LogFactory.getLog(SpyController.class);
 
-	private static final String			STRANGER_INDEX	= "strangerIndex";
-	private static final String			SPY_LISTENER	= "spyListener";
-	private static final String			IS_BLOCKED		= "isBlocked";
-	private static final String			IS_FILTERED		= "isFiltered";
+	private static final String			STRANGER_INDEX		= "strangerIndex";
+	private static final String			SPY_LISTENER		= "spyListener";
+	private static final String			IS_BLOCKED			= "isBlocked";
+	private static final String			IS_FILTERED			= "isFiltered";
 
-	private static final String			MESSAGE			= "message";
+	private static final String			MESSAGE				= "message";
 
 	public static String[]				possibleNames;
 
-	private final Map<Long, WorkEvent>	workQueue		= new Hashtable<Long, WorkEvent>();
+	private final Map<Long, WorkEvent>	workQueue			= new Hashtable<Long, WorkEvent>();
 
 	/**
 	 * Contains a map of completed work requests. The state of the value
@@ -42,18 +42,18 @@ public class SpyController {
 	 * A null indicates that the work expired. Work can expire if the
 	 * conversation is ended before the work can be completed.
 	 */
-	private final Map<Long, Boolean>	completedTasks	= new Hashtable<Long, Boolean>();
-	private final Map<Long, Throwable>	erroredTasks	= new Hashtable<Long, Throwable>();
-	private long						lastWorkId		= 0;
+	private final Map<Long, Boolean>	completedTasks		= new Hashtable<Long, Boolean>();
+	private final Map<Long, Throwable>	erroredTasks		= new Hashtable<Long, Throwable>();
+	private long						lastWorkId			= 0;
 
-	private final OmegleSpy[]			spies			= new OmegleSpy[2];
-	private final String[]				names			= new String[] { "Bret", "Jane" };
+	private final OmegleSpy[]			spies				= new OmegleSpy[2];
+	private final String[]				names				= new String[] { "Bret", "Jane" };
 
 	/**
 	 * Tells us if the conversation is active. Also tells us if this
 	 * spycontroller is accepting any new work requests.
 	 */
-	private boolean						conversationEnded;
+	private boolean						conversationEnded	= true;
 
 	static {
 		InputStream is = null;
@@ -113,6 +113,8 @@ public class SpyController {
 	}
 
 	private void doWork(final WorkEvent workEvent, final Map<String, Object> params) {
+		if (conversationEnded) { throw new IllegalStateException("The conversation is not started."); }
+
 		if (params != null && params.size() > 0) {
 			workEvent.params = params;
 		}
@@ -154,19 +156,14 @@ public class SpyController {
 	}
 
 	private long addWorkRequest(final WorkEvent workEvent) {
-		if (!conversationEnded) {
-			long workId = -1;
-			synchronized (this) {
-				workId = lastWorkId++;
-			}
-			if (workId == -1) { throw new RuntimeException(
-					new InterruptedException("Unable to obtain a valid work ID.")); }
-			workQueue.put(workId, workEvent);
-
-			return workId;
+		long workId = -1;
+		synchronized (this) {
+			workId = lastWorkId++;
 		}
+		if (workId == -1) { throw new RuntimeException(new InterruptedException("Unable to obtain a valid work ID.")); }
+		workQueue.put(workId, workEvent);
 
-		throw new RuntimeException("The conversation is ended.");
+		return workId;
 	}
 
 	public String getStrangerName(final int mainIndex) {
@@ -339,5 +336,9 @@ public class SpyController {
 			}
 			conversationEnded = true;
 		}
+	}
+
+	public boolean isConnected() {
+		return !conversationEnded;
 	}
 }

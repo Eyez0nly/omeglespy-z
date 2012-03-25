@@ -9,6 +9,7 @@ package org.darkimport.omeglespy.constants;
  */
 public interface ConfigConstants {
 	public static final String	GROUP_MAIN				= "main";
+	public static final String	GROUP_SHORTCUTS			= "shortcuts";
 
 	public static final String	MAIN_NAMESFILE			= "namesfile";
 	public static final String	MAIN_SERVERNAMESFILE	= "servernamesfile";

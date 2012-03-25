@@ -5,6 +5,7 @@ package org.darkimport.omeglespy.ui;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -18,16 +19,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.Element;
@@ -43,11 +40,9 @@ import org.darkimport.omeglespy.OmegleSpyListener;
 import org.darkimport.omeglespy.SpyController;
 import org.darkimport.omeglespy.constants.ControlNameConstants;
 import org.darkimport.omeglespy.constants.ResourceConstants;
-import org.darkimport.omeglespy.util.UrlHelper;
 import org.darkimport.omeglespy.util.LogHelper;
+import org.darkimport.omeglespy.util.UrlHelper;
 import org.javabuilders.BuildResult;
-import org.javabuilders.annotations.DoInBackground;
-import org.javabuilders.event.BackgroundEvent;
 import org.javabuilders.swing.SwingJavaBuilder;
 
 /**
@@ -90,8 +85,16 @@ public class OmegleSpyExpertMainWindow extends JFrame {
 
 	private final DesperationWindow		logViewer			= new DesperationWindow();
 
+	private boolean						strangersBlocked;
+
+	private boolean						filtered;
+
+	private final ShortcutKeyHelper		shortcutKeyHelper;
+
 	public OmegleSpyExpertMainWindow() {
 		result = SwingJavaBuilder.build(this);
+
+		shortcutKeyHelper = new ShortcutKeyHelper(this);
 
 		try {
 			baseHTML = IOUtils.toString(getClass().getResourceAsStream("/base.html"));
@@ -186,39 +189,23 @@ public class OmegleSpyExpertMainWindow extends JFrame {
 		System.exit(0);
 	}
 
-	public void disconnectStranger(final JButton button) {
-		log.debug("Disconnect stranger initiated by " + button.getName());
-		final int targetIndex = new Integer(button.getName().substring(button.getName().length() - 1));
-		log.debug("Disconnecting Stranger " + targetIndex + 1);
-
+	public void disconnectStranger(final Map<String, String> args) {
+		final int targetIndex = new Integer(args.get("index"));
 		disconnectStranger(targetIndex);
 	}
 
 	/**
 	 * @param targetIndex
 	 */
-	private void disconnectStranger(final int targetIndex) {
-		// Adjust UI controls
-		final String swapButtonName = MessageFormat.format(ControlNameConstants.BTN_SWAP_STRANGER,
-				String.valueOf(targetIndex));
-		((JButton) result.get(swapButtonName)).setText(SwingJavaBuilder.getConfig().getResource(
-				ResourceConstants.BUTTON_SWAP_STRANGER_NEUTRAL));
-		final String targetedDisconnectButtonName = MessageFormat.format(ControlNameConstants.BTN_DISCONNECT_STRANGER,
-				String.valueOf(targetIndex));
-		final JButton targetedDisconnectButton = (JButton) result.get(targetedDisconnectButtonName);
-		targetedDisconnectButton.setText(SwingJavaBuilder.getConfig().getResource(
-				ResourceConstants.BUTTON_DISCONNECT_STRANGER_NEUTRAL));
-		targetedDisconnectButton.setEnabled(false);
+	public void disconnectStranger(final int targetIndex) {
+		log.debug("Disconnecting Stranger " + targetIndex + 1);
 
 		// Request disconnect of targeted stranger
 		controller.disconnectStranger(targetIndex);
 	}
 
-	@DoInBackground(cancelable = false, indeterminateProgress = true, blocking = false)
-	public void swapStranger(final BackgroundEvent evt) {
-		final JButton button = (JButton) evt.getSource();
-		log.debug("Swap stranger initiated by " + button.getName());
-		final int mainIndex = new Integer(button.getName().substring(button.getName().length() - 1));
+	public void swapStranger(final Map<String, String> args) {
+		final int mainIndex = new Integer(args.get("index"));
 
 		if (log.isDebugEnabled()) {
 			log.debug("-- SWAP FUNCTION ALL SwapBTN[" + mainIndex + "][KEY_PRESS]");
@@ -234,42 +221,30 @@ public class OmegleSpyExpertMainWindow extends JFrame {
 			}
 		});
 
-		// Enable his controls
-		((JTextField) result.get(MessageFormat.format(ControlNameConstants.TXT_TO_STRANGER, String.valueOf(mainIndex))))
-				.setEnabled(true);
-		final JButton targetedDisconnectButton = (JButton) result.get(MessageFormat.format(
-				ControlNameConstants.BTN_DISCONNECT_STRANGER, String.valueOf(mainIndex)));
-		targetedDisconnectButton.setText(MessageFormat.format(
-				SwingJavaBuilder.getConfig().getResource(ResourceConstants.BUTTON_DISCONNECT_STRANGER),
-				controller.getStrangerName(mainIndex)));
-		targetedDisconnectButton.setEnabled(true);
-		final JButton swapButton = (JButton) result.get(MessageFormat.format(ControlNameConstants.BTN_SWAP_STRANGER,
-				String.valueOf(mainIndex)));
-		swapButton.setText(MessageFormat.format(
-				SwingJavaBuilder.getConfig().getResource(ResourceConstants.BUTTON_SWAP_STRANGER),
-				controller.getStrangerName(mainIndex)));
-		swapButton.setEnabled(true);
-
 		// tell user a new chatter connected
 		printStatusLog(currentConvo, controller.getStrangerName(mainIndex) + " connected");
 	}
 
-	public void toggleStrangersBlocked(final JCheckBox button) {
-		log.debug("Toggling stranger block to " + button.isSelected());
-		controller.toggleStrangersBlock(button.isSelected());
+	public synchronized void toggleStrangersBlocked(final Map<String, String> args) {
+		strangersBlocked = !strangersBlocked;
+		log.debug("Toggling stranger block to " + strangersBlocked);
+		controller.toggleStrangersBlock(strangersBlocked);
+		printStatusLog(currentConvo, "Strangers " + (strangersBlocked ? "blocked" : "unblocked") + ".");
 	}
 
-	public void toggleFilter(final JCheckBox button) {
-		log.debug("Toggling filter to " + button.isSelected());
-		controller.toggleFilter(button.isSelected());
+	public synchronized void toggleFilter(final Map<String, String> args) {
+		filtered = !filtered;
+		log.debug("Toggling filter to " + filtered);
+		controller.toggleFilter(filtered);
+		printStatusLog(currentConvo, "Filter " + (filtered ? "enabled" : "disabled") + ".");
 	}
 
-	public void toggleConnectionState(final JButton button) {
+	public synchronized void toggleConnectionState(final Map<String, String> args) {
 		log.debug("Toggle connection state initiated.");
-		if (button.getText().equals(SwingJavaBuilder.getConfig().getResource(ResourceConstants.BUTTON_CONNECT))) {
+		if (!controller.isConnected()) {
 			if (firstRun) {
 				console.setText("");
-				clearScreen();
+				clearScreen(null);
 				initializeConsole();
 				firstRun = false;
 			}
@@ -300,39 +275,10 @@ public class OmegleSpyExpertMainWindow extends JFrame {
 
 			// CHAT ACTUALLY STARTS HERE
 			controller.startConversation(initialListeners);
-			((JCheckBox) result.get(ControlNameConstants.CBX_BLOCKMESSAGE)).setEnabled(true);
-			((JCheckBox) result.get(ControlNameConstants.CBX_FILTERMESSAGES)).setEnabled(true);
-
-			button.setText(SwingJavaBuilder.getConfig().getResource(ResourceConstants.BUTTON_DISCONNECT));
 		} else {
-			((JCheckBox) result.get(ControlNameConstants.CBX_BLOCKMESSAGE)).setEnabled(false);
-			((JCheckBox) result.get(ControlNameConstants.CBX_FILTERMESSAGES)).setEnabled(false);
-			// TODO Magic number
-			// 2 is the number of strangers
-			for (int i = 0; i < 2; i++) {
-				final String swapButtonName = MessageFormat.format(ControlNameConstants.BTN_SWAP_STRANGER,
-						String.valueOf(i));
-				final JButton swapButton = (JButton) result.get(swapButtonName);
-				swapButton.setText(SwingJavaBuilder.getConfig().getResource(
-						ResourceConstants.BUTTON_SWAP_STRANGER_NEUTRAL));
-				swapButton.setEnabled(false);
-				final String targetedDisconnectButtonName = MessageFormat.format(
-						ControlNameConstants.BTN_DISCONNECT_STRANGER, String.valueOf(i));
-				final JButton targetedDisconnectButton = (JButton) result.get(targetedDisconnectButtonName);
-				targetedDisconnectButton.setText(SwingJavaBuilder.getConfig().getResource(
-						ResourceConstants.BUTTON_DISCONNECT_STRANGER_NEUTRAL));
-				targetedDisconnectButton.setEnabled(false);
-
-			}
-
-			button.setText(SwingJavaBuilder.getConfig().getResource(ResourceConstants.BUTTON_CONNECT));
-
 			controller.endConversation();
 
 			log.info("-- CHAT ENDED ( convoNum: " + convoNum + " ) --------------------------------------------");
-
-			((JButton) result.get(ControlNameConstants.BTN_TOGGLE_CONNECTION)).setText(SwingJavaBuilder.getConfig()
-					.getResource(ResourceConstants.BUTTON_CONNECT));
 
 			printHTML(currentChat, "<div>** Would you like to <a href='#' class='" + BTN_LINK + "' "
 					+ "id='save-convo-" + convoNum + "'>" + "save this conversation</a>? **</div>");
@@ -345,20 +291,20 @@ public class OmegleSpyExpertMainWindow extends JFrame {
 		}
 	}
 
-	public void sendSecretMessage(final JTextField textField) {
-		log.debug("Send secret message action generated by " + textField.getName());
+	public void sendSecretMessage(final Map<String, String> args) {
+		final JTextField textField = (JTextField) result.get("txtToStranger");
 		if (textField.getText().trim().length() > 0) {
-			final int targetIndex = new Integer(textField.getName().substring(textField.getName().length() - 1));
+			final int targetIndex = new Integer(args.get("index"));
 			try {
 				controller.sendSecretMessage(targetIndex, textField.getText());
 				textField.setText("");
 			} catch (final Exception e) {
-				log.warn("Message delivery failure.");
+				log.warn("Message delivery failure.", e);
 			}
 		}
 	}
 
-	public void clearScreen() {
+	public void clearScreen(final Map<String, String> args) {
 		log.debug("Clear screen initiated.");
 		if (currentConvo != null) {
 			final String convoText = blocks.get(convoNum);
@@ -379,30 +325,10 @@ public class OmegleSpyExpertMainWindow extends JFrame {
 		}
 	}
 
-	public void viewLogs() {
+	public void viewLogs(final Map<String, String> args) {
 		log.debug("Preparing to display log viewer.");
 		logViewer.setVisible(true);
 	}
-
-	// /**
-	// * @return
-	// */
-	// private static boolean readyOcr() {
-	// boolean success = true;
-	// try {
-	// final String currentDirectory = FilenameUtils.normalize(new
-	// File(".").getAbsolutePath());
-	// final String tessDllPath = FilenameUtils.concat(currentDirectory,
-	// TESSDLL_DLL);
-	// NativeHelper.addDir(currentDirectory);
-	// NativeHelper.extractNative(tessDllPath, TESSDLL_DLL);
-	// System.load(tessDllPath);
-	// } catch (final Throwable e) {
-	// log.warn("Failed to load ocr libs. Will proceed without OCR.", e);
-	// success = false;
-	// }
-	// return success;
-	// }
 
 	private void printLabelledMsg(final String className, final String from, String msg) {
 		// from = escapeHTML(from);
@@ -482,6 +408,13 @@ public class OmegleSpyExpertMainWindow extends JFrame {
 		this.autoScrollEnabled = autoScrollEnabled;
 	}
 
+	public void keyPressed(final KeyEvent e) {
+		log.debug("Received " + ShortcutKeyHelper.getShortcutString(e));
+		if (shortcutKeyHelper.isShortcutDefined(e)) {
+			shortcutKeyHelper.performShortcut(e);
+		}
+	}
+
 	private abstract class MainWindowOmegleSpyListener implements OmegleSpyListener {
 		protected abstract int getStrangerIndex();
 
@@ -512,18 +445,6 @@ public class OmegleSpyExpertMainWindow extends JFrame {
 			((JLabel) result.get(MessageFormat.format(ControlNameConstants.LBL_STRANGER_TYPING, String.valueOf(k))))
 					.setText(MessageFormat.format(
 							SwingJavaBuilder.getConfig().getResource(ResourceConstants.LABEL_STRANGER_TYPING), n));
-			final JButton targetedDisconnectButton = (JButton) result.get(MessageFormat.format(
-					ControlNameConstants.BTN_DISCONNECT_STRANGER, String.valueOf(k)));
-			targetedDisconnectButton.setText(MessageFormat.format(
-					SwingJavaBuilder.getConfig().getResource(ResourceConstants.BUTTON_DISCONNECT_STRANGER), n));
-			targetedDisconnectButton.setEnabled(true);
-			final JButton swapButton = (JButton) result.get(MessageFormat.format(
-					ControlNameConstants.BTN_SWAP_STRANGER, String.valueOf(k)));
-			swapButton.setText(MessageFormat.format(
-					SwingJavaBuilder.getConfig().getResource(ResourceConstants.BUTTON_SWAP_STRANGER), n));
-			swapButton.setEnabled(true);
-			((JTextField) result.get(MessageFormat.format(ControlNameConstants.TXT_TO_STRANGER, String.valueOf(k))))
-					.setEnabled(true);
 			printLabelledMsg(CLASS_NAMES[controller.indexOf(src)], "System", src.getName() + " connected");
 		}
 
@@ -541,17 +462,6 @@ public class OmegleSpyExpertMainWindow extends JFrame {
 			// A stranger disconnected, hide his typing label
 			((JLabel) result.get(MessageFormat.format(ControlNameConstants.LBL_STRANGER_TYPING, String.valueOf(index))))
 					.setVisible(false);
-			// disable his disconnect button and set the text of his disconnect
-			// button to neutral.
-			final String targetedDisconnectButtonName = MessageFormat.format(
-					ControlNameConstants.BTN_DISCONNECT_STRANGER, String.valueOf(index));
-			final JButton targetedDisconnectButton = (JButton) result.get(targetedDisconnectButtonName);
-			targetedDisconnectButton.setText(SwingJavaBuilder.getConfig().getResource(
-					ResourceConstants.BUTTON_DISCONNECT_STRANGER_NEUTRAL));
-			targetedDisconnectButton.setEnabled(false);
-			// disable his txtbox.
-			((JTextField) result.get(MessageFormat.format(ControlNameConstants.TXT_TO_STRANGER, String.valueOf(index))))
-					.setEnabled(false);
 		}
 
 		/*
@@ -638,32 +548,5 @@ public class OmegleSpyExpertMainWindow extends JFrame {
 			disconnectStranger(targetIndex);
 		}
 
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(final String[] args) {
-
-		log.info("**** OmegleSpy-Z starting ****\n\r");
-		if (log.isDebugEnabled()) {
-			log.debug("> Running in DEVELOPMENT release mode. Debug mode is [ON] & Private functions are [ENABLED]");
-		} else {
-			log.info("> Running in Standard release mode. Debug mode is [OFF] & Private functions are [DISABLED]");
-		}
-
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				// activate internationalization
-				SwingJavaBuilder.getConfig().addResourceBundle("OmegleSpyMainWindow");
-				SwingJavaBuilder.getConfig().addResourceBundle("OmegleSpyRecaptchaWindow");
-				try {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					new OmegleSpyExpertMainWindow().setVisible(true);
-				} catch (final Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 }
