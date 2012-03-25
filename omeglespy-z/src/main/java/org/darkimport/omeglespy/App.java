@@ -10,7 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.darkimport.configuration.ConfigHelper;
-import org.darkimport.omeglespy.ui.OmegleSpyMainWindow;
+import org.darkimport.omeglespy.ui.OmegleSpyExpertMainWindow;
 import org.javabuilders.swing.SwingJavaBuilder;
 
 /**
@@ -51,7 +51,8 @@ public class App {
 				SwingJavaBuilder.getConfig().addResourceBundle("LogViewerWindow");
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					new OmegleSpyMainWindow().setVisible(true);
+					// new OmegleSpyMainWindow().setVisible(true);
+					new OmegleSpyExpertMainWindow().setVisible(true);
 				} catch (final Exception e) {
 					e.printStackTrace();
 				}
