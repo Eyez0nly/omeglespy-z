@@ -4,7 +4,7 @@
 
 	<groupId>org.darkimport</groupId>
 	<artifactId>omeglespy-z</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>2.0.0-BETA</version>
 	<packaging>jar</packaging>
 
 	<name>omeglespy</name>
@@ -19,6 +19,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3</version>
 				<configuration>
 					<source>1.5</source>
 					<target>jsr14</target>
@@ -26,118 +27,93 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3</version>
 				<configuration>
 					<excludes>
 						<exclude>**/log4j.properties</exclude>
 						<exclude>**/names.txt</exclude>
 						<exclude>**/server_names.txt</exclude>
+						<exclude>**/browsers.txt</exclude>
+						<exclude>**/filter.txt</exclude>
 						<exclude>**/settings.properties</exclude>
+						<exclude>**/omeglespy-z</exclude>
+						<exclude>**/omeglespy-z.bat</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
-			<!-- <plugin> -->
-			<!-- <groupId>org.apache.maven.plugins</groupId> -->
-			<!-- <artifactId>maven-shade-plugin</artifactId> -->
-			<!-- <version>1.5</version> -->
-			<!-- <executions> -->
-			<!-- <execution> -->
-			<!-- <phase>package</phase> -->
-			<!-- <goals> -->
-			<!-- <goal>shade</goal> -->
-			<!-- </goals> -->
-			<!-- <configuration> -->
-			<!-- <filters> -->
-			<!-- <filter> -->
-			<!-- <artifact>net.java.dev.glazedlists:glazedlists_java15</artifact> -->
-			<!-- <excludes> -->
-			<!-- <exclude>resources/**</exclude> -->
-			<!-- </excludes> -->
-			<!-- </filter> -->
-			<!-- <filter> -->
-			<!-- <artifact>*:*</artifact> -->
-			<!-- <excludes> -->
-			<!-- <exclude>META-INF/*.SF</exclude> -->
-			<!-- <exclude>META-INF/*.DSA</exclude> -->
-			<!-- <exclude>META-INF/*.RSA</exclude> -->
-			<!-- <exclude>META-INF/maven/**</exclude> -->
-			<!-- </excludes> -->
-			<!-- </filter> -->
-			<!-- </filters> -->
-			<!-- <minimizeJar>true</minimizeJar> -->
-			<!-- <transformers> -->
-			<!-- <transformer -->
-			<!-- implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"> -->
-			<!-- </transformer> -->
-			<!-- <transformer -->
-			<!-- implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer"> -->
-			<!-- <addHeader>false</addHeader> -->
-			<!-- </transformer> -->
-			<!-- </transformers> -->
-			<!-- </configuration> -->
-			<!-- </execution> -->
-			<!-- </executions> -->
-			<!-- </plugin> -->
 			<plugin>
-				<groupId>com.pyx4me</groupId>
-				<artifactId>proguard-maven-plugin</artifactId>
-				<version>2.0.4</version>
-				<!-- <executions> -->
-				<!-- <execution> -->
-				<!-- <phase>package</phase> -->
-				<!-- <goals> -->
-				<!-- <goal>proguard</goal> -->
-				<!-- </goals> -->
-				<!-- </execution> -->
-				<!-- </executions> -->
-				<configuration>
-					<obfuscate>true</obfuscate>
-					<outputDirectory>${project.build.directory}</outputDirectory>
-					<proguardInclude>${basedir}/proguard.conf</proguardInclude>
-					<libs>
-						<lib>${java.home}/lib/rt.jar</lib>
-						<lib>${java.home}/lib/jsse.jar</lib>
-					</libs>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>appassembler-maven-plugin</artifactId>
-				<version>1.2</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>1.6</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
 						<goals>
-							<goal>assemble</goal>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<filters>
+								<filter>
+									<artifact>net.java.dev.glazedlists:glazedlists_java15</artifact>
+									<excludes>
+										<exclude>resources/**</exclude>
+									</excludes>
+								</filter>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+										<exclude>META-INF/maven/**</exclude>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</filter>
+								<filter>
+									<artifact>log4j:log4j</artifact>
+									<includes>
+										<include>**</include>
+									</includes>
+								</filter>
+								<filter>
+									<artifact>commons-logging:commons-logging</artifact>
+									<includes>
+										<include>**</include>
+									</includes>
+								</filter>
+							</filters>
+							<minimizeJar>true</minimizeJar>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer">
+								</transformer>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer">
+									<addHeader>false</addHeader>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
 				<configuration>
-					<!-- Set the target configuration directory to be used in the bin scripts -->
-					<configurationDirectory>conf</configurationDirectory>
-					<!-- Copy the contents from "/src/main/config" to the target configuration 
-						directory in the assembled application -->
-					<copyConfigurationDirectory>true</copyConfigurationDirectory>
-					<!-- Include the target configuration directory in the beginning of 
-						the classpath declaration in the bin scripts -->
-					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
-					<!-- set alternative assemble directory -->
-					<assembleDirectory>${project.build.directory}/omeglespy-z-${project.version}</assembleDirectory>
-					<licenseHeaderFile>header</licenseHeaderFile>
-					<repositoryLayout>flat</repositoryLayout>
-					<repositoryName>lib</repositoryName>
-					<programs>
-						<program>
-							<mainClass>org.darkimport.omeglespy.App</mainClass>
-							<name>omeglespy-z</name>
-						</program>
-					</programs>
+					<descriptors>
+						<descriptor>src/assemble/distribution.xml</descriptor>
+					</descriptors>
 				</configuration>
 			</plugin>
 		</plugins>
-		<filters>
-			<filter>project.properties</filter>
-		</filters>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -161,6 +137,10 @@
 				<directory>src/main/config</directory>
 				<filtering>true</filtering>
 			</resource>
+			<resource>
+				<directory>src/main/scripts</directory>
+				<filtering>true</filtering>
+			</resource>
 		</resources>
 	</build>
 
@@ -176,16 +156,6 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.1</version>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>net.java.dev.jai-imageio</groupId> -->
-		<!-- <artifactId>jai-imageio-core-standalone</artifactId> -->
-		<!-- <version>1.2-pre-dr-b04-2010-04-30</version> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- <groupId>net.java.dev.jna</groupId> -->
-		<!-- <artifactId>jna</artifactId> -->
-		<!-- <version>3.2.7</version> -->
-		<!-- </dependency> -->
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
