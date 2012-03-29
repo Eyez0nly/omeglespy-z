@@ -1,0 +1,82 @@
+JFrame(name=frame, title=frame.main.title, size=packed, iconImage=/spyboticon.png, defaultCloseOperation=disposeOnClose):
+  - Action(name=actionClearScreen, text=action.clearScreen, toolTipText=action.clearScreen.tooltip, onAction=[$confirm,clearScreen])
+  - Action(name=actionViewLogs, text=action.viewLogs, toolTipText=action.viewLogs.tooltip, onAction=[viewLogs])
+  - Action(name=actionToggleConnectionState, text=action.connect, toolTipText=action.connect.tooltip, onAction=[toggleConnectionState])
+  - Action(name=actionToggleStrangersBlocked, text=action.toggleStrangersBlocked, toolTipText=action.toggleStrangersBlocked.tooltip, onAction=[toggleStrangersBlocked])
+  - Action(name=actionToggleFilter, text=action.toggleFilter, toolTipText=action.toggleFilter.tooltip, onAction=[toggleFilter])
+  - Action(name=actionToggleAutoScroll, text=action.toggleAutoScroll, toolTipText=action.toggleAutoScroll.tooltip, onAction=[toggleAutoScroll])
+  - Action(name=actionDisconnectStranger, text=action.disconnectStranger.neutral, toolTipText=action.disconnectStranger.tooltip, onAction=[disconnectStranger])
+  - Action(name=actionSwapStranger, text=action.swapStranger.neutral, toolTipText=action.swapStranger.tooltip, onAction=[swapStranger])
+  - Action(name=actionShowAbout, text=action.showAbout, toolTipText=action.showAbout.tooltip, onAction=[showAbout])
+  - Action(name=actionExit, text=action.exit, toolTipText=action.exit.tooltip, onAction=[exit])
+  - JMenuBar:
+    - JMenu(name=fileMenu,text=menu.file):
+      - JMenuItem(action=actionExit)
+    - JMenu(name=conversionMenu,text=menu.conversation):
+      - JMenuItem(action=actionToggleStrangersBlocked)
+      - JMenuItem(action=actionToggleFilter)
+      - JSeparator()
+      - JMenuItem(name=mnuDisconnectStranger0, action=actionDisconnectStranger)
+      - JMenuItem(name=mnuSwapStranger0, action=actionSwapStranger)
+      - JSeparator()
+      - JMenuItem(name=mnuDisconnectStranger1, action=actionDisconnectStranger)
+      - JMenuItem(name=mnuSwapStranger1, action=actionSwapStranger)
+      - JSeparator()
+      - JMenuItem(action=actionToggleConnectionState)
+    - JMenu(name=viewMenu,text=menu.view):
+      - JMenuItem(action=actionViewLogs)
+      - JMenuItem(action=actionClearScreen)
+    - JMenu(name=helpMenu,text=menu.help):
+      - JMenuItem(action=actionShowAbout)
+  - JPanel(name=grpTitlePane):
+    - JLabel(name=lblBlockMessage, text=label.blockMessage, font=Verdana plain 10pt)
+    - JLabel(name=lblFilterMessage, text=label.filterMessages, font=Verdana plain 10pt)
+    - JLabel(name=lblAutoScroll, text=label.autoScroll, font=Verdana plain 10pt)
+    - JButton(name=btnClearScreen, font=Verdana plain 10pt, action=actionClearScreen)
+    - JButton(name=btnViewLogs, font=Verdana plain 10pt, action=actionViewLogs)
+    - JButton(name=btnToggleConnectionState, font=Verdana plain 10pt, action=actionToggleConnectionState)
+    - JCheckBox(name=cbxBlockMessage, enabled=false, action=actionToggleStrangersBlocked)
+    - JCheckBox(name=cbxFilterMessage, enabled=false, action=actionToggleFilter)
+    - JCheckBox(name=cbxAutoScroll, selected=true, action=actionToggleAutoScroll)
+    - MigLayout: |
+        [grow]                              [grow]                                [grow]              [grow]           [grow]
+        |-cbxBlockMessage,lblBlockMessage=2 |-cbxFilterMessage,lblFilterMessage=2 |-btnClearScreen=1> |-btnViewLogs=1> |-cbxAutoScroll,lblAutoScroll=2
+        |-btnToggleConnectionState+*>/                                                                                                                                         [grow,45]
+  - JPanel(name=grpContentPane):
+    - JScrollPane(name=consoleScroller): JEditorPane(name=console, editable=false, contentType=text/html, focusable=false)
+    - MigLayout: |
+        [grow]
+        consoleScroller [grow,430]
+  - JPanel(name=grpSecretMessagePane):
+    - JPanel(name=grpSimpleSecretMessagePane):
+      - JTextField(name=txtToStranger0, background=pink, enabled=false, font=Verdana plain 10pt, onAction=[sendSecretMessage])
+      - JTextField(name=txtToStranger1, background=palegreen, enabled=false, font=Verdana plain 10pt, onAction=[sendSecretMessage])
+      - MigLayout: |
+          [grow]              [grow]                   [grow]             [grow]
+          txtToStranger0+2                             txtToStranger1+2
+    - JPanel(name=grpExpertMessagePane):
+      - JTextField(name=txtToStranger, enabled=true, font=Verdana plain 10pt, onKeyPressed=[keyPressed])
+      - MigLayout: |
+          [grow]              [grow]                   [grow]             [grow]
+          txtToStranger+*
+    - CardLayout(name=secretMessageCards): [grpSimpleSecretMessagePane,grpExpertMessagePane]
+  - JPanel(name=grpControlPane):
+    - JLabel(name=lblStrangerTyping0, text=label.strangerTyping, font=Verdana bold 10pt, visible=false)
+    - JLabel(name=lblStrangerTyping1, text=label.strangerTyping, font=Verdana bold 10pt, visible=false)
+    - JButton(name=btnDisconnectStranger0, enabled=false, action=actionDisconnectStranger)
+    - JButton(name=btnDisconnectStranger1, enabled=false, action=actionDisconnectStranger)
+    - JButton(name=btnSwapStranger0, enabled=false, action=actionSwapStranger)
+    - JButton(name=btnSwapStranger1, enabled=false, action=actionSwapStranger)
+    - MigLayout: |
+        [grow]              [grow]                   [grow]              [grow]
+        lblStrangerTyping0>                          lblStrangerTyping1>
+        btnSwapStranger0>/  btnDisconnectStranger0>/ btnSwapStranger1>/  btnDisconnectStranger1>/ [grow,30]
+  - MigLayout: |
+      [grow,800]
+      |-grpTitlePane
+      |-grpContentPane
+      |-grpSecretMessagePane
+      |-grpControlPane
+
+bind:
+    - this.autoScrollEnabled: cbxAutoScroll.selected
