@@ -174,12 +174,12 @@
 		<dependency>
 			<groupId>org.javabuilders</groupId>
 			<artifactId>javabuilder-swing</artifactId>
-			<version>1.1.0</version>
+			<version>1.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.javabuilders</groupId>
 			<artifactId>javabuilder-swing-glazedlists</artifactId>
-			<version>1.1.0</version>
+			<version>1.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

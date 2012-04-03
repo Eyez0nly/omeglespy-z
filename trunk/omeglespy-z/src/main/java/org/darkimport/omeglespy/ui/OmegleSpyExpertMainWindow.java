@@ -94,7 +94,7 @@ public class OmegleSpyExpertMainWindow extends JFrame {
 	public OmegleSpyExpertMainWindow() {
 		result = SwingJavaBuilder.build(this);
 
-		shortcutKeyHelper = new ShortcutKeyHelper(this);
+		shortcutKeyHelper = new ShortcutKeyHelper(this, result);
 
 		try {
 			baseHTML = IOUtils.toString(getClass().getResourceAsStream("/base.html"));
