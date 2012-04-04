@@ -90,7 +90,7 @@ ${project.artifactId}.
 
 5. ${project.artifactId} Development
 ==================================================================================
-If you would like join the ${project.artifactId} development team and contribute your
+If you would like to join the ${project.artifactId} development team and contribute your
 code/patch, please feel free to attach your code/patch to an existing or new issue on
 https://code.google.com/p/omeglespy-z/issues/list
 
@@ -98,7 +98,7 @@ https://code.google.com/p/omeglespy-z/issues/list
 
 6. ${project.artifactId} License Agreement
 ==================================================================================
-You MUST agree the "${project.artifactId} License Agreement" before using ${project.artifactId}:
+You MUST agree to the "${project.artifactId} License Agreement" before using ${project.artifactId}:
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
