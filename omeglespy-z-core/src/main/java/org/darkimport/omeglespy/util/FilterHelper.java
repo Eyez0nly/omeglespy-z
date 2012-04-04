@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.darkimport.configuration.ConfigHelper;
 import org.darkimport.omeglespy.constants.ConfigConstants;
+import org.darkimport.omeglespy.log.LogHelper;
+import org.darkimport.omeglespy.log.LogLevel;
 
 /**
  * For now, we just do string matching on some known bot tells.
@@ -22,8 +22,6 @@ import org.darkimport.omeglespy.constants.ConfigConstants;
  * 
  */
 public class FilterHelper {
-	private static final Log	log			= LogFactory.getLog(FilterHelper.class);
-
 	private static boolean		initialized	= false;
 	private static List<String>	badMessages;
 
@@ -46,7 +44,7 @@ public class FilterHelper {
 			final List<String> loadedBadMessages = IOUtils.readLines(in);
 			badMessages.addAll(loadedBadMessages);
 		} catch (final Exception e) {
-			log.warn("Failed to load bad words.", e);
+			LogHelper.log(FilterHelper.class, LogLevel.WARN, "Failed to load bad words.", e);
 		} finally {
 			// Set initialized to true regardless of the outcome.
 			// TODO Later we will prevent changing the filter setting in the app

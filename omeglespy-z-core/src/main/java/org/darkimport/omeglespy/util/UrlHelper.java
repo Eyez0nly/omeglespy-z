@@ -5,14 +5,12 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.darkimport.configuration.ConfigHelper;
 import org.darkimport.omeglespy.constants.ConfigConstants;
+import org.darkimport.omeglespy.log.LogHelper;
+import org.darkimport.omeglespy.log.LogLevel;
 
 public class UrlHelper {
-	private static final Log		log		= LogFactory.getLog(UrlHelper.class);
-
 	private static final Runtime	rt		= Runtime.getRuntime();
 	private static final String		osName	= System.getProperty("os.name");
 
@@ -28,7 +26,8 @@ public class UrlHelper {
 			browsers = browserList.toArray(new String[browserList.size()]);
 		} catch (final Exception e) {
 			browsers = new String[0];
-			log.warn("Could not load browsers file. This only matters if you're running Linux.", e);
+			LogHelper.log(UrlHelper.class, LogLevel.WARN,
+					"Could not load browsers file. This only matters if you're running Linux.", e);
 		} finally {
 			IOUtils.closeQuietly(is);
 		}

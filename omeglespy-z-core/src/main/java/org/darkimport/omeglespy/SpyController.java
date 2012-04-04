@@ -12,18 +12,16 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.darkimport.configuration.ConfigHelper;
 import org.darkimport.omeglespy.constants.ConfigConstants;
+import org.darkimport.omeglespy.log.LogHelper;
+import org.darkimport.omeglespy.log.LogLevel;
 
 /**
  * @author user
  * 
  */
 public class SpyController {
-	private static final Log			log					= LogFactory.getLog(SpyController.class);
-
 	private static final String			STRANGER_INDEX		= "strangerIndex";
 	private static final String			SPY_LISTENER		= "spyListener";
 	private static final String			IS_BLOCKED			= "isBlocked";
@@ -66,7 +64,7 @@ public class SpyController {
 			possibleNames = namesList.toArray(new String[namesList.size()]);
 		} catch (final Exception ex) {
 			possibleNames = new String[] { "Stranger 1", "Stranger 2" };
-			log.warn("Could not load names file: " + ex.getMessage());
+			LogHelper.log(SpyController.class, LogLevel.WARN, "Could not load names file: " + ex.getMessage());
 		} finally {
 			IOUtils.closeQuietly(is);
 		}
@@ -134,7 +132,8 @@ public class SpyController {
 		spies[1].setPartner(spies[0].getChat());
 
 		for (int i = 0; i < spies.length; i++) {
-			log.info("SPY CREATED : spy[" + i + "]	[ID: " + spies[i].getChat() + "]		[NAME: '" + names[i] + "']");
+			LogHelper.log(SpyController.class, LogLevel.INFO, "SPY CREATED : spy[" + i + "]	[ID: " + spies[i].getChat()
+					+ "]		[NAME: '" + names[i] + "']");
 			spies[i].startChat();
 		}
 	}
@@ -144,13 +143,13 @@ public class SpyController {
 			try {
 				Thread.sleep(100);
 			} catch (final InterruptedException e) {
-				log.warn("Thread error.", e);
+				LogHelper.log(SpyController.class, LogLevel.WARN, "Thread error.", e);
 			}
 		}
 
 		final Boolean workState = completedTasks.remove(id);
 		if (workState == false) {
-			log.warn("An error occurred while completing the work, " + id);
+			LogHelper.log(SpyController.class, LogLevel.WARN, "An error occurred while completing the work, " + id);
 			throw new RuntimeException(erroredTasks.remove(id));
 		}
 	}
@@ -221,7 +220,7 @@ public class SpyController {
 				try {
 					Thread.sleep(100);
 				} catch (final InterruptedException e) {
-					log.warn("Thread error.", e);
+					LogHelper.log(SpyController.class, LogLevel.WARN, "Thread error.", e);
 				}
 				if (!workQueue.isEmpty()) {
 					final Map<Long, WorkEvent> tempWorkQueue = new HashMap<Long, SpyController.WorkEvent>(workQueue);
@@ -236,9 +235,9 @@ public class SpyController {
 							workMethod.invoke(this, params);
 							workCompleted.put(key, true);
 						} catch (final Exception e) {
-							if (log.isDebugEnabled()) {
-								log.debug("An error occurred while invoking " + workEvent + " with params " + params
-										+ " for workId " + key + ".", e);
+							if (LogHelper.isLogLevelEnabled(LogLevel.DEBUG, SpyController.class)) {
+								LogHelper.log(SpyController.class, LogLevel.DEBUG, "An error occurred while invoking "
+										+ workEvent + " with params " + params + " for workId " + key + ".", e);
 							}
 							workCompleted.put(key, false);
 							detectedErrors.put(key, e);

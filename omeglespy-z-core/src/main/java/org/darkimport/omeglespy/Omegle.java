@@ -1,11 +1,8 @@
 package org.darkimport.omeglespy;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,14 +10,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.darkimport.configuration.ConfigHelper;
 import org.darkimport.omeglespy.constants.ConfigConstants;
+import org.darkimport.omeglespy.log.LogHelper;
+import org.darkimport.omeglespy.log.LogLevel;
+import org.darkimport.omeglespy.network.CommunicationHelper;
 
-public class Omegle implements Runnable {
-	private static final Log			log					= LogFactory.getLog(Omegle.class);
-
+class Omegle implements Runnable {
 	public static final Pattern			str_regex			= Pattern.compile("(\")((?>(?:(?>[^\"\\\\]+)|\\\\.)*))\\1");
 	public static final Pattern			escape_regex		= Pattern.compile("\\\\([\'\"\\\\bfnrt]|u(....))");
 	public static final String			EV_CONNECTING, EV_WAITING, EV_CONNECTED, EV_TYPING, EV_STOPPED_TYPING, EV_MSG,
@@ -62,11 +58,12 @@ public class Omegle implements Runnable {
 			if (loadedServers != null && loadedServers.size() > 0) {
 				omegleServerList = loadedServers.toArray(new String[loadedServers.size()]);
 			} else {
-				log.warn("No servers loaded. Check that the specified server name config file, " + servernamesfile
-						+ ", is configured correctly.");
+				LogHelper.log(Omegle.class, LogLevel.WARN,
+						"No servers loaded. Check that the specified server name config file, " + servernamesfile
+								+ ", is configured correctly.");
 			}
 		} catch (final Exception e) {
-			log.warn("Unable to load omegle servers from the list.", e);
+			LogHelper.log(Omegle.class, LogLevel.WARN, "Unable to load omegle servers from the list.", e);
 		} finally {
 			IOUtils.closeQuietly(in);
 		}
@@ -109,13 +106,13 @@ public class Omegle implements Runnable {
 	public boolean start() {
 		if (chatId != null || dead) { return false; }
 
-		final String startr = wget(start_url, true);
+		final String startr = CommunicationHelper.wget(start_url, true);
 		if (startr == null) { return false; }
 		final Matcher m = str_regex.matcher(startr);
 		if (m.matches()) {
 			chatId = m.group(2); // 2 is the actual string - Listner(sky) has
 			// started his chat session here is the ID
-			log.debug("Chat Started - chatId[" + chatId + "]");
+			LogHelper.log(Omegle.class, LogLevel.DEBUG, "Chat Started - chatId[" + chatId + "]");
 		} else {
 			return false;
 		}
@@ -125,27 +122,30 @@ public class Omegle implements Runnable {
 
 	public void run() {
 		String eventr;
-		while (chatId != null && (eventr = wget(events_url, true, "id", chatId)) != null && !eventr.equals("null")) {
+		while (chatId != null && (eventr = CommunicationHelper.wget(events_url, true, "id", chatId)) != null
+				&& !eventr.equals("null")) {
 			dispatch(eventr);
 			try {
 				// TODO randomize the sleep time.
 				Thread.sleep(100);
 			} catch (final InterruptedException e) {
-				log.warn("Thread error.", e);
+				LogHelper.log(Omegle.class, LogLevel.WARN, "Thread error.", e);
 			}
 		}
 		if (chatId != null) {
 			// We left the loop because the server no longer recognizes our chat
 			// ID. TODO Or does it? Is it possible that there was a transmission
 			// error?
-			log.warn("** Fuck... An event check returned a null - This is a session destroyer. **");
-			log.warn("** Restart OmegleSpyX and hope Omegle didnt ban your ass. (symptoms of a ban). **");
+			LogHelper.log(Omegle.class, LogLevel.WARN,
+					"** Fuck... An event check returned a null - This is a session destroyer. **");
+			LogHelper.log(Omegle.class, LogLevel.WARN,
+					"** Restart OmegleSpyX and hope Omegle didnt ban your ass. (symptoms of a ban). **");
 			chatId = null;
 		}
 	}
 
 	public void dispatch(final String eventr) {
-		log.debug("Dispatch - eventr[" + eventr + "]");
+		LogHelper.log(Omegle.class, LogLevel.DEBUG, "Dispatch - eventr[" + eventr + "]");
 
 		final List<List<String>> events = new LinkedList<List<String>>();
 		List<String> currentEvent = null;
@@ -170,14 +170,14 @@ public class Omegle implements Runnable {
 	public boolean typing() {
 		if (chatId == null) { return false; }
 
-		final String r = wget(type_url, true, "id", chatId);
+		final String r = CommunicationHelper.wget(type_url, true, "id", chatId);
 		return r != null && r.equals("win");
 	}
 
 	public boolean stoppedTyping() {
 		if (chatId == null) { return false; }
 
-		final String r = wget(stoptype_url, true, "id", chatId);
+		final String r = CommunicationHelper.wget(stoptype_url, true, "id", chatId);
 		return r != null && r.equals("win");
 	}
 
@@ -185,7 +185,7 @@ public class Omegle implements Runnable {
 		if (chatId == null) { return false; }
 
 		// omegleListeners.messageInTheProcessOfSending()
-		final String sendr = wget(send_url, true, "id", chatId, "msg", msg);
+		final String sendr = CommunicationHelper.wget(send_url, true, "id", chatId, "msg", msg);
 		if (sendr == null) { return false; }
 
 		final boolean b = sendr.equals("win");
@@ -203,12 +203,12 @@ public class Omegle implements Runnable {
 
 		final String oldChatId = chatId;
 		chatId = null;
-		final String d = wget(disc_url, true, "id", oldChatId);
+		final String d = CommunicationHelper.wget(disc_url, true, "id", oldChatId);
 		final boolean b = d != null && d.equals("win");
 		if (b) {
 			dead = true;
 		} else {
-			log.warn("Disconnection Error - Rolling Back...");
+			LogHelper.log(Omegle.class, LogLevel.WARN, "Disconnection Error - Rolling Back...");
 			chatId = oldChatId;
 		}
 		return b;
@@ -263,12 +263,12 @@ public class Omegle implements Runnable {
 			try {
 				m.appendReplacement(sb, "" + c);
 			} catch (final Exception ex) {
-				log.warn("[" + new Date() + "]:");
-				log.warn("sb = " + sb.toString());
-				log.warn("e = " + e);
-				log.warn("c = " + c);
-				log.warn("escaped = " + escaped);
-				log.warn("m.group(0) = " + m.group(0), ex);
+				LogHelper.log(Omegle.class, LogLevel.WARN, "[" + new Date() + "]:");
+				LogHelper.log(Omegle.class, LogLevel.WARN, "sb = " + sb.toString());
+				LogHelper.log(Omegle.class, LogLevel.WARN, "e = " + e);
+				LogHelper.log(Omegle.class, LogLevel.WARN, "c = " + c);
+				LogHelper.log(Omegle.class, LogLevel.WARN, "escaped = " + escaped);
+				LogHelper.log(Omegle.class, LogLevel.WARN, "m.group(0) = " + m.group(0), ex);
 			}
 		}
 		m.appendTail(sb);
@@ -276,10 +276,10 @@ public class Omegle implements Runnable {
 	}
 
 	public void init() {
-		log.info("-- Initializing, Please wait...");
+		LogHelper.log(Omegle.class, LogLevel.INFO, "-- Initializing, Please wait...");
 		final int randIndex = (int) (Math.random() * omegleServerList.length);
 		final String omegle_root_tmp = omegleServerList[randIndex];
-		log.info("* Chat server selected: " + omegle_root_tmp);
+		LogHelper.log(Omegle.class, LogLevel.INFO, "* Chat server selected: " + omegle_root_tmp);
 		omegleServer = "http://" + omegle_root_tmp + "/";
 		try {
 			init_1 = new URL("http://www.omegle.com");
@@ -290,63 +290,11 @@ public class Omegle implements Runnable {
 			e.printStackTrace();
 		}
 		setOmegleRoot();
-		wget(init_1, false, true);
-		wget(init_2, false, true);
-		wget(init_3, false, true);
-		wget(init_4, false, true);
-		log.info("-- Initialization process has been completed.");
-	}
-
-	public static String wget(final URL url, final boolean post, final String... post_data) {
-		return wget(url, post, false, post_data);
-	}
-
-	public static String wget(final URL url, final boolean post, final boolean ignore, final String... post_data) {
-		String msg = "";
-		InputStream in = null;
-		OutputStream out = null;
-		String data = null;
-		try {
-			final URLConnection urlcon = url.openConnection();
-
-			if (post) {
-				// String msg = "";
-				boolean key = false;
-				for (final String s : post_data) {
-					msg += URLEncoder.encode(s, "UTF-8");
-					if (key = !key) {
-						msg += "=";
-					} else {
-						msg += "&";
-					}
-				}
-				urlcon.setDoOutput(true);
-				out = urlcon.getOutputStream();
-				out.write(msg.getBytes());
-			}
-
-			in = urlcon.getInputStream();
-			data = ignore ? null : "";
-			int len;
-			final byte[] buffer = new byte[1023];
-			while ((len = in.read(buffer)) >= 0) {
-				if (!ignore) {
-					data += new String(buffer, 0, len);
-				}
-			}
-			if (log.isDebugEnabled()) {
-				log.debug("WGET= URL[" + url.toString() + "?" + msg + "] RETURN[" + data + "]");
-			}
-
-			return data;
-		} catch (final Exception ex) {
-			log.warn("An error occurred while submitting " + msg + " request to " + url.toString()
-					+ " with the following data: " + data, ex);
-			return null;
-		} finally {
-			IOUtils.closeQuietly(in);
-			IOUtils.closeQuietly(out);
-		}
+		CommunicationHelper.wget(init_1, false, true);
+		CommunicationHelper.wget(init_2, false, true);
+		CommunicationHelper.wget(init_3, false, true);
+		CommunicationHelper.wget(init_4, false, true);
+		LogHelper.log(Omegle.class, LogLevel.INFO, "-- Initialization process has been completed.");
 	}
 
 	/**
