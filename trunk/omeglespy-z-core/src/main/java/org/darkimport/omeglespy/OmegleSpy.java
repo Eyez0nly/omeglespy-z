@@ -3,25 +3,23 @@ package org.darkimport.omeglespy;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.darkimport.omeglespy.log.LogHelper;
+import org.darkimport.omeglespy.log.LogLevel;
 import org.darkimport.omeglespy.util.FilterHelper;
 
-public class OmegleSpy implements OmegleListener {
-	private static final Log	log	= LogFactory.getLog(OmegleSpy.class);
-
-	Omegle						chat, partner;
-	String						name;
+class OmegleSpy implements OmegleListener {
+	Omegle					chat, partner;
+	String					name;
 
 	// TODO Why do we need both a connected and a disconnected field???
-	private boolean				connected;
-	private boolean				disconnected;
+	private boolean			connected;
+	private boolean			disconnected;
 
 	// TODO both blocking and filtering enabled should be application scope --
 	// not session scope.
-	private boolean				blocking;
-	private boolean				filteringEnabled;
-	List<OmegleSpyListener>		listeners;
+	private boolean			blocking;
+	private boolean			filteringEnabled;
+	List<OmegleSpyListener>	listeners;
 
 	public OmegleSpy(final String name) {
 		chat = new Omegle();
@@ -150,7 +148,7 @@ public class OmegleSpy implements OmegleListener {
 
 	// TODO The omegle spy should not implement the OmegleListener
 	public void eventFired(final Omegle src, final String event, final String... args) {
-		if (log.isDebugEnabled()) {
+		if (LogHelper.isLogLevelEnabled(LogLevel.DEBUG, OmegleSpy.class)) {
 			String argslist = "";
 			final String argstake[] = args;
 			if (args.length > 0) {
@@ -159,7 +157,7 @@ public class OmegleSpy implements OmegleListener {
 					argslist += "[" + s + "]";
 				}
 			}
-			log.debug("* eventFire Request EVENT[" + event + "] " + argslist);
+			LogHelper.log(OmegleSpy.class, LogLevel.DEBUG, "* eventFire Request EVENT[" + event + "] " + argslist);
 		}
 		if (event.equals(Omegle.EV_CONNECTED)) {
 			connected = true;

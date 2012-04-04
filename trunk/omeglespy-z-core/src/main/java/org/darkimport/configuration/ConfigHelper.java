@@ -19,8 +19,8 @@ import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.darkimport.omeglespy.log.LogHelper;
+import org.darkimport.omeglespy.log.LogLevel;
 
 /**
  * For now, use file based configuration. Later updates will allow us more
@@ -29,12 +29,14 @@ import org.apache.commons.logging.LogFactory;
  * TODO Use the Spring Resource class so that we know how to access (in/out)
  * more resource types.
  * 
+ * TODO Use this class for feeding config values only. Another class needs to
+ * load and save the config.
+ * 
  * @author user
  * 
  */
 public class ConfigHelper {
 	private static final String				META_INF_DEFAULT_CONFIG_PROPERTIES	= "META-INF/DEFAULTSETTINGS.properties";
-	private static final Log				log									= LogFactory.getLog(ConfigHelper.class);
 	private static boolean					initialized							= false;
 	private static String					configFileName;
 	private static Map<String, Properties>	propertiesByGroup;
@@ -50,7 +52,8 @@ public class ConfigHelper {
 			final URL configFileDirURL = configFileDirURI.toURL();
 			classLoader = new URLClassLoader(new URL[] { configFileDirURL });
 		} catch (final MalformedURLException e) {
-			log.fatal("The URL of the settings file " + configFileName + " is malformed.", e);
+			LogHelper.log(ConfigHelper.class, LogLevel.FATAL, "The URL of the settings file " + configFileName
+					+ " is malformed.", e);
 			throw new RuntimeException(e);
 		}
 
@@ -60,7 +63,8 @@ public class ConfigHelper {
 		// If the settings file does not exist (is null resource), use the
 		// default settings.
 		if (userSettingsIn == null) {
-			log.warn("Settings file not found at " + configFileName + ". Loading default configuration.");
+			LogHelper.log(ConfigHelper.class, LogLevel.WARN, "Settings file not found at " + configFileName
+					+ ". Loading default configuration.");
 			loadDefaultSettings(configFileName);
 			userSettingsIn = classLoader.getResourceAsStream(FilenameUtils.getName(configFileName));
 		}
@@ -70,7 +74,8 @@ public class ConfigHelper {
 		try {
 			amalgamatedProperties.load(userSettingsIn);
 		} catch (final Exception e) {
-			log.warn("Unable to load the config file: " + configFileName + ".", e);
+			LogHelper.log(ConfigHelper.class, LogLevel.WARN, "Unable to load the config file: " + configFileName + ".",
+					e);
 			throw new RuntimeException(e);
 		} finally {
 			IOUtils.closeQuietly(userSettingsIn);
@@ -100,7 +105,7 @@ public class ConfigHelper {
 			out = new FileOutputStream(configFileName);
 			IOUtils.copy(in, out);
 		} catch (final Exception e) {
-			log.warn("Unable to pull out the default.", e);
+			LogHelper.log(ConfigHelper.class, LogLevel.WARN, "Unable to pull out the default.", e);
 			throw new RuntimeException(e);
 		} finally {
 			IOUtils.closeQuietly(in);
@@ -169,7 +174,7 @@ public class ConfigHelper {
 			out = new FileOutputStream(configFileName);
 			amalgamatedProperties.store(out, null);
 		} catch (final Exception e) {
-			log.warn("An error occurred while saving the configuration.", e);
+			LogHelper.log(ConfigHelper.class, LogLevel.WARN, "An error occurred while saving the configuration.", e);
 			throw new RuntimeException(e);
 		} finally {
 			IOUtils.closeQuietly(out);
