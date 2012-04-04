@@ -8,7 +8,7 @@
   <packaging>jar</packaging>
 
   <name>omeglespy-z-desktop</name>
-  <url>http://maven.apache.org</url>
+  <url>https://code.google.com/p/omeglespy-z</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,4 +27,12 @@
     	<version>2.0.0-BETA</version>
     </dependency>
   </dependencies>
+  <scm>
+  	<url>http://omeglespy-z.googlecode.com/svn/trunk/omeglespy-z-desktop</url>
+  	<developerConnection>darkimport@gmail.com</developerConnection>
+  </scm>
+  <issueManagement>
+  	<system>GoogleCode</system>
+  	<url>https://code.google.com/p/omeglespy-z/issues/list</url>
+  </issueManagement>
 </project>
