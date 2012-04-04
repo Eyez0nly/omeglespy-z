@@ -1,4 +1,4 @@
 #summary Instructions for building omeglespy-z.
-#labels Featured,Phase-Implementation
+#labels Phase-Implementation
 
 Offline while we are reorganizing the project.
