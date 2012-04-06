@@ -10,6 +10,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.darkimport.configuration.ConfigHelper;
+import org.darkimport.omeglespy.log.CommonsLoggingLogHelper;
+import org.darkimport.omeglespy.log.LogHelper;
 import org.darkimport.omeglespy.ui.OmegleSpyMainWindowCombined;
 import org.javabuilders.swing.SwingJavaBuilder;
 
@@ -25,6 +27,7 @@ public class App {
 	 * @param args
 	 */
 	public static void main(final String[] args) {
+		LogHelper.initialize(new CommonsLoggingLogHelper());
 		log.info("**** OmegleSpy-Z starting ****\n\r");
 		if (log.isDebugEnabled()) {
 			log.debug("> Running in DEVELOPMENT release mode. Debug mode is [ON] & Private functions are [ENABLED]");

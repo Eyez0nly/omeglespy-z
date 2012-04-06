@@ -46,7 +46,7 @@ import org.darkimport.omeglespy.OmegleSpyListener;
 import org.darkimport.omeglespy.SpyController;
 import org.darkimport.omeglespy.constants.ControlNameConstants;
 import org.darkimport.omeglespy.constants.ResourceConstants;
-import org.darkimport.omeglespy.util.LogHelper;
+import org.darkimport.omeglespy.ui.util.ChatHistoryHelper;
 import org.darkimport.omeglespy.util.UrlHelper;
 import org.javabuilders.BuildResult;
 import org.javabuilders.swing.SwingAction;
@@ -135,7 +135,7 @@ public class OmegleSpyMainWindowCombined extends JFrame {
 					log.debug("Clicked a link: " + ev.getURL());
 					try {
 						final Element e = ev.getSourceElement();
-						if (LogHelper.saveLog(e, baseHTML, blocks) == null) {
+						if (ChatHistoryHelper.saveLog(e, baseHTML, blocks) == null) {
 							try {
 								UrlHelper.openURL(ev.getURL().toString());
 							} catch (final Exception ex) {

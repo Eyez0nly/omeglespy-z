@@ -16,8 +16,7 @@ import javax.swing.JTextField;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.darkimport.omeglespy.Omegle;
-import org.darkimport.omeglespy.OmegleSpy;
+import org.darkimport.omeglespy.network.CommunicationHelper;
 import org.javabuilders.BuildResult;
 import org.javabuilders.swing.SwingJavaBuilder;
 
@@ -38,14 +37,17 @@ public class OmegleSpyRecaptchaWindow extends JDialog {
 
 	private final BuildResult	result;
 
-	private final Omegle		chat;
+	private final String		omegleRecaptchaChallengeURL;
 
 	private final String		challenge;
 	private String				response;
 
-	public OmegleSpyRecaptchaWindow(final OmegleSpy omegleSpy, final String id) {
+	private final String		chatId;
+
+	public OmegleSpyRecaptchaWindow(final String omegleRecaptchaChallengeURL, final String chatId, final String id) {
 		result = SwingJavaBuilder.build(this);
-		chat = omegleSpy.getChat();
+		this.omegleRecaptchaChallengeURL = omegleRecaptchaChallengeURL;
+		this.chatId = chatId;
 		challenge = getChallenge(id);
 
 		final JLabel label = (JLabel) result.get(CAPTCHA_LABEL);
@@ -64,8 +66,9 @@ public class OmegleSpyRecaptchaWindow extends JDialog {
 
 	private String getChallenge(final String id) {
 		try {
-			final String captcha = Omegle.wget(new URL("http://www.google.com/recaptcha/api/challenge?k=" + id
-					+ "&ajax=1&cachestop=0.34919850158610977"), false);
+			// TODO Strip out this string for parameterization
+			final String captcha = CommunicationHelper.wget(new URL("http://www.google.com/recaptcha/api/challenge?k="
+					+ id + "&ajax=1&cachestop=0.34919850158610977"), false);
 			final int idx0 = captcha.indexOf("challenge : '") + "challenge : '".length();
 			final int idx1 = captcha.indexOf('\'', idx0);
 			final String challenge = captcha.substring(idx0, idx1);
@@ -83,8 +86,8 @@ public class OmegleSpyRecaptchaWindow extends JDialog {
 			response = ((JTextField) e.getSource()).getText();
 			if (!StringUtils.isEmpty(response)) {
 				log.debug("Sending " + response);
-				Omegle.wget(chat.getRecaptcha_url(), true, "id", chat.getChatId(), "challenge", challenge, "response",
-						response);
+				CommunicationHelper.wget(omegleRecaptchaChallengeURL, true, "id", chatId, "challenge", challenge,
+						"response", response);
 				dispose();
 			}
 		}
