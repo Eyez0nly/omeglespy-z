@@ -23,7 +23,7 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.darkimport.omeglespy.util.LogHelper;
+import org.darkimport.omeglespy.ui.util.ChatHistoryHelper;
 import org.darkimport.omeglespy.util.UrlHelper;
 
 public class DesperationWindow extends JFrame implements ListSelectionListener, HyperlinkListener, ActionListener {
@@ -100,7 +100,7 @@ public class DesperationWindow extends JFrame implements ListSelectionListener, 
 		final Object src = ev.getSource();
 		if (src == save) {
 			try {
-				LogHelper.guiWriteHtmlFile(currentEp.getText(), this);
+				ChatHistoryHelper.guiWriteHtmlFile(currentEp.getText(), this);
 			} catch (final IOException ex) {
 				showError(this, "Could not save file: " + ex.getMessage());
 			}
