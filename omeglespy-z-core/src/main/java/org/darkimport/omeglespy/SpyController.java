@@ -21,12 +21,12 @@ import org.darkimport.omeglespy.log.LogLevel;
  * @author user
  * 
  */
-public class SpyController {
+@Deprecated
+class SpyController {
 	private static final String			STRANGER_INDEX		= "strangerIndex";
 	private static final String			SPY_LISTENER		= "spyListener";
 	private static final String			IS_BLOCKED			= "isBlocked";
 	private static final String			IS_FILTERED			= "isFiltered";
-
 	private static final String			MESSAGE				= "message";
 
 	public static String[]				possibleNames;
@@ -169,9 +169,10 @@ public class SpyController {
 		return spies[mainIndex].getName();
 	}
 
-	public int indexOf(final OmegleSpy spy) {
-		return spy == spies[0] ? 0 : 1;
-	}
+	/*
+	 * private int indexOf(final OmegleSpy spy) { return spy == spies[0] ? 0 :
+	 * 1; }
+	 */
 
 	private boolean randomizeNames() {
 		final int firstIndex = (int) (Math.random() * possibleNames.length);
