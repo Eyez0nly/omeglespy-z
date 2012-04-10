@@ -11,7 +11,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
-import org.darkimport.omeglespy.OmegleSpy;
 import org.darkimport.omeglespy.log.LogHelper;
 import org.darkimport.omeglespy.log.LogLevel;
 import org.darkimport.omeglespy.util.FilterHelper;
@@ -98,7 +97,7 @@ class OmegleSpyConversationCoordinator implements Observer {
 		final OmegleConnection connection = (OmegleConnection) o;
 		final OmegleEvent omegleEvent = (OmegleEvent) arg;
 		final OmegleSpyEvent evt = new OmegleSpyEvent(connection);
-		if (LogHelper.isLogLevelEnabled(LogLevel.DEBUG, OmegleSpy.class)) {
+		if (LogHelper.isLogLevelEnabled(LogLevel.DEBUG, OmegleSpyConversationCoordinator.class)) {
 			String argslist = "";
 			final String argstake[] = omegleEvent.getArgs();
 			if (argstake.length > 0) {
