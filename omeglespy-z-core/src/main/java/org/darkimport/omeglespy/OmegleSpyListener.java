@@ -1,5 +1,6 @@
 package org.darkimport.omeglespy;
 
+@Deprecated
 public interface OmegleSpyListener {
 	public void messageTransferred(OmegleSpy src, String msg);
 
