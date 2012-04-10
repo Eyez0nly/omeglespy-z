@@ -12,9 +12,6 @@ import java.util.Observable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.darkimport.omeglespy.log.LogHelper;
-import org.darkimport.omeglespy.log.LogLevel;
-import org.darkimport.omeglespy.network.CommunicationHelper;
 
 /**
  * @author user

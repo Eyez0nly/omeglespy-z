@@ -1,7 +1,8 @@
+package org.darkimport.configuration;
 /**
  * 
  */
-package org.darkimport.omeglespy.constants;
+
 
 /**
  * @author user

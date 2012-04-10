@@ -11,9 +11,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
-import org.darkimport.omeglespy.log.LogHelper;
-import org.darkimport.omeglespy.log.LogLevel;
-import org.darkimport.omeglespy.util.FilterHelper;
 
 /**
  * @author user

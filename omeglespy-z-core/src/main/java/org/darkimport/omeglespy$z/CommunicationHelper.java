@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy.network;
+package org.darkimport.omeglespy$z;
 
 import java.net.URL;
 

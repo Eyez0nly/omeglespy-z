@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.darkimport.omeglespy.log.LogHelper;
-import org.darkimport.omeglespy.log.LogLevel;
 
 /**
  * The entry point into the omeglespy-z application framework.
