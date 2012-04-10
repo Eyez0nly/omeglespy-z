@@ -7,7 +7,8 @@ import org.darkimport.omeglespy.log.LogHelper;
 import org.darkimport.omeglespy.log.LogLevel;
 import org.darkimport.omeglespy.util.FilterHelper;
 
-class OmegleSpy implements OmegleListener {
+@Deprecated
+public class OmegleSpy implements OmegleListener {
 	Omegle					chat, partner;
 	String					name;
 

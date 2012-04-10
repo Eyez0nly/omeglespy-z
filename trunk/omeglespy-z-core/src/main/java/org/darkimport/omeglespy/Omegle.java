@@ -16,9 +16,13 @@ import org.darkimport.omeglespy.log.LogHelper;
 import org.darkimport.omeglespy.log.LogLevel;
 import org.darkimport.omeglespy.network.CommunicationHelper;
 
+@Deprecated
 class Omegle implements Runnable {
-	public static final Pattern			str_regex			= Pattern.compile("(\")((?>(?:(?>[^\"\\\\]+)|\\\\.)*))\\1");
-	public static final Pattern			escape_regex		= Pattern.compile("\\\\([\'\"\\\\bfnrt]|u(....))");
+	private static final String			COMMUNICATION_SUCCESS_STRING	= "win";
+	public static final Pattern			str_regex						= Pattern
+																				.compile("(\")((?>(?:(?>[^\"\\\\]+)|\\\\.)*))\\1");
+	public static final Pattern			escape_regex					= Pattern
+																				.compile("\\\\([\'\"\\\\bfnrt]|u(....))");
 	public static final String			EV_CONNECTING, EV_WAITING, EV_CONNECTED, EV_TYPING, EV_STOPPED_TYPING, EV_MSG,
 			EV_DISCONNECT, EV_RECAPTCHA, EV_RECAPTCHAREJECT;
 	static {
@@ -46,7 +50,7 @@ class Omegle implements Runnable {
 
 	// Initializing the server list with one server just in case we can't load
 	// the servers from the list.
-	private static String[]				omegleServerList	= new String[] { "quarks.omegle.com" };
+	private static String[]				omegleServerList				= new String[] { "quarks.omegle.com" };
 	static {
 		InputStream in = null;
 		String servernamesfile = null;
@@ -126,8 +130,8 @@ class Omegle implements Runnable {
 				&& !eventr.equals("null")) {
 			dispatch(eventr);
 			try {
-				// TODO randomize the sleep time.
-				Thread.sleep(100);
+				// TODO experimenting with randomized sleep time.
+				Thread.sleep(50 + (int) (Math.random() * 100));
 			} catch (final InterruptedException e) {
 				LogHelper.log(Omegle.class, LogLevel.WARN, "Thread error.", e);
 			}
@@ -171,14 +175,14 @@ class Omegle implements Runnable {
 		if (chatId == null) { return false; }
 
 		final String r = CommunicationHelper.wget(type_url, true, "id", chatId);
-		return r != null && r.equals("win");
+		return COMMUNICATION_SUCCESS_STRING.equals(r);
 	}
 
 	public boolean stoppedTyping() {
 		if (chatId == null) { return false; }
 
 		final String r = CommunicationHelper.wget(stoptype_url, true, "id", chatId);
-		return r != null && r.equals("win");
+		return COMMUNICATION_SUCCESS_STRING.equals(r);
 	}
 
 	public boolean sendMsg(final String msg) {
@@ -188,7 +192,7 @@ class Omegle implements Runnable {
 		final String sendr = CommunicationHelper.wget(send_url, true, "id", chatId, "msg", msg);
 		if (sendr == null) { return false; }
 
-		final boolean b = sendr.equals("win");
+		final boolean b = sendr.equals(COMMUNICATION_SUCCESS_STRING);
 		if (b) {
 			for (final OmegleListener ol : listeners) {
 				ol.messageSent(this, msg);
@@ -204,7 +208,7 @@ class Omegle implements Runnable {
 		final String oldChatId = chatId;
 		chatId = null;
 		final String d = CommunicationHelper.wget(disc_url, true, "id", oldChatId);
-		final boolean b = d != null && d.equals("win");
+		final boolean b = d != null && d.equals(COMMUNICATION_SUCCESS_STRING);
 		if (b) {
 			dead = true;
 		} else {

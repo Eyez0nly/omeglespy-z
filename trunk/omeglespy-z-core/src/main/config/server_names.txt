@@ -3,3 +3,7 @@ bajor.omegle.com
 promenade.omegle.com
 cardassia.omegle.com
 chatserv.omegle.com
+odo-bucket.omegle.com
+ferengi.omegle.com
+empok-nor.omegle.com
+quibbler.omegle.com
