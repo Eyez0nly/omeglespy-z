@@ -3,9 +3,9 @@ package org.darkimport.omeglespy;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.darkimport.omeglespy.log.LogHelper;
-import org.darkimport.omeglespy.log.LogLevel;
-import org.darkimport.omeglespy.util.FilterHelper;
+import org.darkimport.omeglespy$z.FilterHelper;
+import org.darkimport.omeglespy$z.LogHelper;
+import org.darkimport.omeglespy$z.LogLevel;
 
 @Deprecated
 public class OmegleSpy implements OmegleListener {

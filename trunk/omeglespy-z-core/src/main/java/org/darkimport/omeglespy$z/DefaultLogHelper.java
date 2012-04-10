@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy.log;
+package org.darkimport.omeglespy$z;
 
 /**
  * @author user

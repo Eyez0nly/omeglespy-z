@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.darkimport.omeglespy.log.LogHelper;
-import org.darkimport.omeglespy.log.LogLevel;
+import org.darkimport.io.FilenameUtils;
+import org.darkimport.io.IOUtils;
+import org.darkimport.omeglespy$z.LogHelper;
+import org.darkimport.omeglespy$z.LogLevel;
 
 /**
  * For now, use file based configuration. Later updates will allow us more

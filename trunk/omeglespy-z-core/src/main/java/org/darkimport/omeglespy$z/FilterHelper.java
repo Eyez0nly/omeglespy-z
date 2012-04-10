@@ -1,17 +1,15 @@
 /**
  * 
  */
-package org.darkimport.omeglespy.util;
+package org.darkimport.omeglespy$z;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
+import org.darkimport.configuration.ConfigConstants;
 import org.darkimport.configuration.ConfigHelper;
-import org.darkimport.omeglespy.constants.ConfigConstants;
-import org.darkimport.omeglespy.log.LogHelper;
-import org.darkimport.omeglespy.log.LogLevel;
+import org.darkimport.io.IOUtils;
 
 /**
  * For now, we just do string matching on some known bot tells.
