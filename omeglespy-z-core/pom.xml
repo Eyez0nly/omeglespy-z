@@ -9,6 +9,10 @@
 
 	<name>omeglespy-z-core</name>
 	<url>https://code.google.com/p/omeglespy-z</url>
+	<inceptionYear>2011</inceptionYear>
+	<organization>
+		<name>darkimport</name>
+	</organization>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,42 +30,68 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3</version>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.0</version>
 				<configuration>
-					<excludes>
-						<exclude>**/log4j.properties</exclude>
-						<exclude>**/names.txt</exclude>
-						<exclude>**/server_names.txt</exclude>
-						<exclude>**/browsers.txt</exclude>
-						<exclude>**/filter.txt</exclude>
-						<exclude>**/settings.properties</exclude>
-						<exclude>**/omeglespy-z</exclude>
-						<exclude>**/omeglespy-z.bat</exclude>
-					</excludes>
+					<licenseFile>${basedir}/COPYING</licenseFile>
+					<licenseName>gpl_v2</licenseName>
+					<addSvnKeyWords>true</addSvnKeyWords>
 				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>update-file-header</goal>
+						</goals>
+						<phase>process-sources</phase>
+						<configuration>
+							<roots>
+								<root>src/main/java</root>
+								<root>src/test/java</root>
+							</roots>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>**/*.properties</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
-				<excludes>
-					<exclude>**/*.properties</exclude>
-				</excludes>
-			</resource>
-			<resource>
-				<directory>src/main/config</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											license-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0,)
+										</versionRange>
+										<goals>
+											<goal>
+												update-file-header
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<dependencies>
@@ -73,30 +103,11 @@
 		</dependency>
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<releases />
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>mygrid-repository</id>
-			<name>myGrid Repository</name>
-			<url>http://www.mygrid.org.uk/maven/repository</url>
-		</repository>
-		<repository>
-			<releases />
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>java-repository</id>
-			<name>java Repository</name>
-			<url>http://download.java.net/maven/2</url>
-		</repository>
-	</repositories>
 	<scm>
 		<url>http://omeglespy-z.googlecode.com/svn/trunk/omeglespy-z-core</url>
 		<developerConnection>darkimport@gmail.com</developerConnection>
 	</scm>
+
 	<issueManagement>
 		<system>GoogleCode</system>
 		<url>https://code.google.com/p/omeglespy-z/issues/list</url>
