@@ -26,14 +26,13 @@
 ==================================================================================
 
 Thank you for downloading ${project.artifactId} from https://code.google.com/p/omeglespy-z. If you
-downloaded this zip-file from another site, please check https://code.google.com/p/omeglespy-z for
+downloaded this jar-file from another site, please check https://code.google.com/p/omeglespy-z for
 the latest official release.
 
 This version has a lot of new exciting features, such as:
 
- * disconnecting a stranger if they type in crap about web cams.
- * allowing you to replace a disconnected stranger without ending the conversation.
- * keyboard shortcuts for common tasks.
+ * support for bad phrase filtering.
+ * support for swapping disconnected strangers without ending the conversation.
  * retooling the connection script to reduce the occurrence of recaptcha challenges
  * miscellaneous other fun stuff. 
 
@@ -42,16 +41,8 @@ discussion, please post your feedback, comments and bugs to:
 
 https://code.google.com/p/omeglespy-z/issues/list
 
-NOTE: At this ${project.version} release ${project.artifactId} supports one language: English.
-      (If ${project.artifactId} has not been localized to your language, don't worry, you can
-      translate the files LogViewerWindow.properties, OmegleSpyMainWindow.properties, and
-      OmegleSpyRecaptchaWindow.properties (found in the root of
-      /lib/${project.artifactId}-${project.version}.jar) to your language, and if you would like
-      ${project.artifactId} to officially support your language in later releases, please email me
-      your translation)
-
-${project.artifactId} should run on any Windows (98x, ME, XP, Vista, 7), Mac OSX (10.4+), or
-Linux (tested on KDE and GNOME desktops) box with the Java 1.4.2+ runtime installed.
+${project.artifactId} is supported on any Windows (98x, ME, XP, Vista, 7), Mac OSX (10.4+), or
+Linux (tested on openJDK) box with the Java 1.4.2+ runtime installed.
 
 Developed by
 - Dark Import <darkimport at gmail d0t com>
@@ -63,20 +54,49 @@ Based on code developed by
 
 2. Installation/Upgrade Instructions
 ==================================================================================
-For new installs, simply unzip ${project.artifactId}-${project.version}-distribution.zip to your
-desired location.
+For new installs, simply copy ${project.artifactId}-${project.version}.jar to your application lib
+directory. Or use mvn install to copy the lib to your local maven repository. At some point in the
+near future (hopefully prior to release), I'll be copying the artifact to an external maven repo.
 
-For upgrades, unzip ${project.artifactId}-${project.version}-distribution.zip to the same directory
-in which you unzipped the previous version. Overwrite files when prompted. Your previous settings
-will be preserved.
-
+For upgrades... well, this is the first public version...
 
 
-3. Execution Instructions
+
+3. Implementation Instructions
 ==================================================================================
-On Linux/OSX, execute the shell script, bin/omeglespy-z.
+This core library was designed to be an application-agnostic interface to omegle. However, there are
+some common steps that every implementing application must perform. This is a list of the required
+steps:
 
-On Windows, execute the batch script, bin/omeglespy-z.bat.
+	1.) Initialize org.darkimport.omeglespy$z.CommunicationHelper with a concrete instance. I have
+	    not provided a default implementation in this project. However, since the omegle interface
+	    resembles a REST API, an implementation would be truly trivial. In fact, I am considering
+	    providing a default implementation within the core.
+	    
+	    For the truly lazy, find the implementation in the desktop version of omeglespy-z:
+	    
+	    https://omeglespy-z.googlecode.com/svn/trunk/omeglespy-z-desktop/src/main/java/org/darkimport/omeglespy/network/DefaultCommunicationHelper.java
+	    
+Optional steps:
+
+	1.) Initialize org.darkimport.omeglespy$z.LogHelper with a concrete instance. The default
+		implementation (org.darkimport.omeglespy$z.DefaultLogHelper) writes log output to
+		System.out. Another implementation might utilize the java logging framework or SLF4J or
+		log4j.
+		
+	2.) Implement org.darkimport.omeglespy$z.NameGenerator -- one each for server-name generation
+		and conversant name generation.
+		
+		If you don't do this, the default implementations provide promenade.omegle.com as the
+		server name for all connections and Stranger1 and Stranger2 as the names of the
+		conversants.
+		
+	3.) Implement org.darkimport.omeglespy$z.FilterHelper with a concrete instance. The default
+		implementation should actually be adequate for most filtering needs. However, in its
+		default configuration, it simply has no "bad phrase" list.
+		
+		Also, the default implementation does whole-phrase matching. A more robust implementation
+		might utilize regular expressions instead.
 
 
 
@@ -114,13 +134,7 @@ STOP USING ${project.artifactId} NOW IF YOU DO NOT AGREE TO THE ABOVE LICENSE
 
 NOTE: This product includes software developed by the
       Apache Software Foundation (http://www.apache.org/) and others:
-      Common Lang                   http://jakarta.apache.org/commons/lang
-      Common Logging                http://jakarta.apache.org/commons/logging
-      Log4J                         http://logging.apache.org
       Commons IO                    http://jakarta.apache.org/commons/io
-      Swing Java Builders           http://code.google.com/p/javabuilders/
-      SLF4J                         http://www.slf4j.org/
-      jEdit                         http://www.jedit.org/
       omegle-spy (the original)     https://code.google.com/p/omegle-spy/
 
 ==================================================================================

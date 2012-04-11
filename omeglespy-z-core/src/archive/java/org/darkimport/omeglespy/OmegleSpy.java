@@ -3,7 +3,7 @@ package org.darkimport.omeglespy;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.darkimport.omeglespy$z.FilterHelper;
+import org.darkimport.omeglespy$z.DefaultFilterHelper;
 import org.darkimport.omeglespy$z.LogHelper;
 import org.darkimport.omeglespy$z.LogLevel;
 
@@ -131,7 +131,7 @@ public class OmegleSpy implements OmegleListener {
 
 	private void gotMessage(final String msg) {
 		// Is filtering enabled? If so, does this message violate the filter?
-		if (filteringEnabled && FilterHelper.isBadMessage(msg)) {
+		if (filteringEnabled && DefaultFilterHelper.isBadMessage(msg)) {
 			for (final OmegleSpyListener osl : listeners) {
 				osl.messageFiltered(this, msg);
 			}
