@@ -43,6 +43,12 @@ cd into the project root (you'll know you're there because you'll see pom.xml in
 mvn package
 }}}
 
+If you modified the code and/or plan on using the omeglespy-z-core in your own mavenized Java project, you may want to install the omeglespy-z-core build artifact in your local maven repository. Simply invoke
+
+{{{
+mvn install
+}}}
+
 === Profit ===
 
 Everything you'd ever want should be in the /target directory. Enjoy!
