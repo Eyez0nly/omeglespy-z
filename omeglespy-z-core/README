@@ -15,7 +15,7 @@
 0. Table of Contents
 1. ${project.artifactId} ${project.version} Introduction
 2. Installation/Upgrade Instruction
-3. Execution Instructions
+3. Implementation Instructions
 4. Build Instructions
 5. ${project.artifactId} Development
 6. ${project.artifactId} License Agreement
@@ -68,14 +68,17 @@ This core library was designed to be an application-agnostic interface to omegle
 some common steps that every implementing application must perform. This is a list of the required
 steps:
 
-	1.) Initialize org.darkimport.omeglespy$z.CommunicationHelper with a concrete instance. I have
-	    not provided a default implementation in this project. However, since the omegle interface
-	    resembles a REST API, an implementation would be truly trivial. In fact, I am considering
-	    providing a default implementation within the core.
-	    
-	    For the truly lazy, find the implementation in the desktop version of omeglespy-z:
-	    
-	    https://omeglespy-z.googlecode.com/svn/trunk/omeglespy-z-desktop/src/main/java/org/darkimport/omeglespy/network/DefaultCommunicationHelper.java
+	1.) Implement OmegleSpyConversationListener interface.
+	
+		Your implementation will usually just adjust the UI state in response to events.
+
+	2.) Invoke the controller:
+	
+		final OmegleSpyConversationController conversationController =
+					new OmegleSpyConversationController(activeListeners);
+		conversationController.startConversation();
+				
+Where activeListeners is a List<OmegleSpyConversationListener>.
 	    
 Optional steps:
 
@@ -97,14 +100,18 @@ Optional steps:
 		
 		Also, the default implementation does whole-phrase matching. A more robust implementation
 		might utilize regular expressions instead.
+		
+	4.) Initialize org.darkimport.omeglespy$z.CommunicationHelper with a concrete instance. The
+		Default implementation should be adequate for most scenarios. However it is changeable for
+		those who want more control or those who are dealing with a subset of the core java IO API.
 
 
 
 4. Build Instructions
 ==================================================================================
-Please read https://code.google.com/p/omeglespy-z/wiki/BuildInstructions for detailed information
-on how to build ${project.artifactId}. This instruction is for the source distribution package of
-${project.artifactId}.
+Please read https://code.google.com/p/omeglespy-z/wiki/BuildInstructionsCore for detailed information
+on how to build ${project.artifactId}. These instructions are for source pulled down from the
+subversion repository of ${project.artifactId}.
 
 
 
@@ -132,10 +139,6 @@ GNU General Public License for more details.
 
 STOP USING ${project.artifactId} NOW IF YOU DO NOT AGREE TO THE ABOVE LICENSE
 
-NOTE: This product includes software developed by the
-      Apache Software Foundation (http://www.apache.org/) and others:
-      Commons IO                    http://jakarta.apache.org/commons/io
-      omegle-spy (the original)     https://code.google.com/p/omegle-spy/
 
 ==================================================================================
 

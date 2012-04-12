@@ -1,26 +1,18 @@
 /*
- * #%L
- * omeglespy-z-core
+ * #%L omeglespy-z-core
  * 
- * $Id$
- * $HeadURL$
- * %%
- * Copyright (C) 2011 - 2012 darkimport
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 2 of the 
- * License, or (at your option) any later version.
+ * $Id$ $HeadURL$ %% Copyright (C) 2011 - 2012 darkimport %% This program is
+ * free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation,
+ * either version 2 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU General Public 
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/gpl-2.0.html>.
- * #L%
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/gpl-2.0.html>. #L%
  */
 /**
  * 
@@ -33,7 +25,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 
 /**
  * The entry point into the omeglespy-z application framework.
@@ -318,7 +309,7 @@ public class OmegleSpyConversationController {
 			final String targetName = (String) params.get(TARGET_STRANGER_NAME);
 			final String fromName = (String) params.get(FROM_STRANGER_NAME);
 			final String message = (String) params.get(MESSAGE);
-			conversationCoordinator.sendExternalMessage(fromName, targetName, message);
+			conversationCoordinator.sendExternalMessage(targetName, fromName, message);
 		}
 
 		protected void _sendRecaptchaResponse(final Map<String, Object> params) {
