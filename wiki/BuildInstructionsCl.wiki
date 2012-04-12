@@ -1,6 +1,6 @@
 #summary Instructions for building the omeglespy-z-cl
 
-= Building omeglespy-z-core =
+= Building omeglespy-z-cl =
 
 omeglespy-z-cl is a command line based omeglespy-z application. Like omeglespy-z-desktop, omeglespy-z-cl is built on top of omegle-spy-z-core.
 
