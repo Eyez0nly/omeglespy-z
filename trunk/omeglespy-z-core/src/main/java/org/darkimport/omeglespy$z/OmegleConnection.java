@@ -1,26 +1,18 @@
 /*
- * #%L
- * omeglespy-z-core
+ * #%L omeglespy-z-core
  * 
- * $Id$
- * $HeadURL$
- * %%
- * Copyright (C) 2011 - 2012 darkimport
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 2 of the 
- * License, or (at your option) any later version.
+ * $Id$ $HeadURL$ %% Copyright (C) 2011 - 2012 darkimport %% This program is
+ * free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation,
+ * either version 2 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU General Public 
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/gpl-2.0.html>.
- * #L%
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/gpl-2.0.html>. #L%
  */
 /**
  * 
@@ -35,7 +27,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 /**
  * @author user
@@ -60,6 +51,7 @@ class OmegleConnection extends Observable implements Runnable {
 	private URL					events_url;
 	private URL					start_url;
 	private URL					recaptcha_url;
+	private boolean				paused;
 
 	public OmegleConnection(final String conversantName, final String serverName) {
 		this.conversantName = conversantName;
@@ -102,29 +94,36 @@ class OmegleConnection extends Observable implements Runnable {
 			LogHelper.log(OmegleConnection.class, LogLevel.DEBUG, "Chat Started - chatId[" + chatId + "]");
 		}
 
-		String eventr;
-		while (chatId != null && (eventr = CommunicationHelper.wget(events_url, true, "id", chatId)) != null
-				&& !eventr.equals("null")) {
-			LogHelper.log(OmegleConnection.class, LogLevel.DEBUG, "Dispatch - eventr[" + eventr + "]");
-
-			final List<List<String>> events = new LinkedList<List<String>>();
-			List<String> currentEvent = null;
-			m = STR_REGEX.matcher(eventr);
-			while (m.find()) {
-				if (eventr.charAt(m.start() - 1) == '[') {
-					currentEvent = new LinkedList<String>();
-					events.add(currentEvent);
+		while (chatId != null) {
+			if (!paused) {
+				final String eventr = CommunicationHelper.wget(events_url, true, "id", chatId);
+				if (eventr == null || eventr.equals("null")) {
+					break;
 				}
-				currentEvent.add(unJsonify(m.group(2)));
-			}
-			// PARSE THE EVENT STRING HERE
-			for (final List<String> ev : events) {
-				setChanged();
-				final String name = ev.remove(0);
-				final String[] args = ev.toArray(new String[0]);
+				LogHelper.log(OmegleConnection.class, LogLevel.DEBUG, "Dispatch - eventr[" + eventr + "]");
 
-				final OmegleEventType eventType = OmegleEventType.valueOf(name);
-				notifyObservers(new OmegleEvent(eventType, args));
+				final List<List<String>> events = new LinkedList<List<String>>();
+				List<String> currentEvent = null;
+				m = STR_REGEX.matcher(eventr);
+				while (m.find()) {
+					if (eventr.charAt(m.start() - 1) == '[') {
+						currentEvent = new LinkedList<String>();
+						events.add(currentEvent);
+					}
+					currentEvent.add(unJsonify(m.group(2)));
+				}
+				// PARSE THE EVENT STRING HERE
+				for (final List<String> ev : events) {
+					setChanged();
+					final String name = ev.remove(0);
+					final String[] args = ev.toArray(new String[0]);
+
+					final OmegleEventType eventType = OmegleEventType.valueOf(name);
+					notifyObservers(new OmegleEvent(eventType, args));
+				}
+			} else {
+				LogHelper.log(OmegleConnection.class, LogLevel.TRACE, "The connection with " + conversantName
+						+ " is paused.");
 			}
 			try {
 				// TODO experimenting with randomized sleep time.
@@ -239,5 +238,12 @@ class OmegleConnection extends Observable implements Runnable {
 
 	public void sendRecaptchaResponse(final String challenge, final String response) {
 		CommunicationHelper.wget(recaptcha_url, true, "id", chatId, "challenge", challenge, "response", response);
+		paused = false;
+		LogHelper.log(OmegleConnection.class, LogLevel.DEBUG, "Unpaused the event pinger.");
+	}
+
+	public void pause() {
+		paused = true;
+		LogHelper.log(OmegleConnection.class, LogLevel.DEBUG, "Paused the event pinger.");
 	}
 }
