@@ -72,7 +72,7 @@
 					<repositoryName>lib</repositoryName>
 					<programs>
 						<program>
-							<mainClass>org.darkimport.omeglespy$z.App</mainClass>
+							<mainClass>org.darkimport.omeglespy_z.App</mainClass>
 							<name>omeglespy-z-cl</name>
 						</program>
 					</programs>
