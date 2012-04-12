@@ -1,6 +1,9 @@
 package org.darkimport.omeglespy$z;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -314,6 +317,22 @@ public class App {
 		new Thread(new Runnable() {
 			public void run() {
 				recaptchaDialog.setVisible(true);
+				Robot r;
+				try {
+					r = new Robot();
+					r.keyPress(KeyEvent.VK_ALT);
+					r.keyPress(KeyEvent.VK_TAB);
+					try {
+						Thread.sleep(500);
+					} catch (final InterruptedException e) {
+						log.warn("Thread no sleep.", e);
+					}
+					r.keyRelease(KeyEvent.VK_TAB);
+					r.keyRelease(KeyEvent.VK_ALT);
+				} catch (final AWTException e) {
+					log.warn("No robot for you.", e);
+				}
+
 				try {
 					Thread.sleep(20 * 1000);
 				} catch (final InterruptedException e) {
