@@ -22,12 +22,13 @@
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
-package org.darkimport.omeglespy$z;
+package org.darkimport.omeglespy_z;
 
 import java.io.PrintStream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
+import org.darkimport.omeglespy$z.ChatHistoryHelper;
 
 final class CLChatHistoryHelper extends ChatHistoryHelper {
 	private int					longestLabelLength	= 0;

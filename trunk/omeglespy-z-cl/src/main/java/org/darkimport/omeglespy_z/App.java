@@ -22,7 +22,7 @@
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
-package org.darkimport.omeglespy$z;
+package org.darkimport.omeglespy_z;
 
 import java.awt.AWTException;
 import java.awt.BorderLayout;
@@ -48,6 +48,14 @@ import javax.swing.JLabel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.darkimport.omeglespy$z.ChatHistoryHelper;
+import org.darkimport.omeglespy$z.CommunicationHelper;
+import org.darkimport.omeglespy$z.DefaultCommunicationHelper;
+import org.darkimport.omeglespy$z.LogHelper;
+import org.darkimport.omeglespy$z.OmegleSpyConversationController;
+import org.darkimport.omeglespy$z.OmegleSpyConversationListener;
+import org.darkimport.omeglespy$z.OmegleSpyEvent;
+import org.darkimport.omeglespy$z.RecaptchaHelper;
 
 /**
  * Hello world!
