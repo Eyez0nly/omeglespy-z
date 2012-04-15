@@ -24,7 +24,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.darkimport.omeglespy.ui.util.ChatHistoryHelper;
-import org.darkimport.omeglespy.util.UrlHelper;
+import org.darkimport.omeglespy.ui.util.UrlHelper;
 
 public class DesperationWindow extends JFrame implements ListSelectionListener, HyperlinkListener, ActionListener {
 	/**

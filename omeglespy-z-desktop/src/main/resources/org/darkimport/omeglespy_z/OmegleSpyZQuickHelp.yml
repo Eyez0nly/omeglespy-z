@@ -1,0 +1,5 @@
+JFrame(name=frame, title=frame.help.title, size=packed, iconImage=/spyboticon.png, alwaysOnTop=true, defaultCloseOperation=hideOnClose):
+  - JEditorPane(name=helpText, editable=false, contentType=text/html, focusable=false)
+  - MigLayout: |
+      [grow,350]
+      |-helpText [grow,800]

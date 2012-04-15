@@ -11,22 +11,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -37,17 +32,15 @@ import javax.swing.text.Element;
 import javax.swing.text.html.HTMLDocument;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.darkimport.omeglespy.DesperationWindow;
-import org.darkimport.omeglespy.OmegleSpy;
-import org.darkimport.omeglespy.OmegleSpyListener;
-import org.darkimport.omeglespy.SpyController;
-import org.darkimport.omeglespy.constants.ControlNameConstants;
+import org.darkimport.omeglespy$z.OmegleSpyConversationController;
+import org.darkimport.omeglespy$z.OmegleSpyConversationListener;
+import org.darkimport.omeglespy$z.OmegleSpyEvent;
 import org.darkimport.omeglespy.constants.ResourceConstants;
 import org.darkimport.omeglespy.ui.util.ChatHistoryHelper;
-import org.darkimport.omeglespy.util.UrlHelper;
+import org.darkimport.omeglespy.ui.util.UrlHelper;
 import org.javabuilders.BuildResult;
 import org.javabuilders.swing.SwingAction;
 import org.javabuilders.swing.SwingJavaBuilder;
@@ -57,43 +50,39 @@ import org.javabuilders.swing.SwingJavaBuilder;
  * 
  */
 public class OmegleSpyMainWindowCombined extends JFrame {
-	private static final Log			log					= LogFactory.getLog(OmegleSpyMainWindowCombined.class);
+	private static final Log						log					= LogFactory
+																				.getLog(OmegleSpyMainWindowCombined.class);
 
 	/**
 	 * 
 	 */
-	private static final long			serialVersionUID	= 9092938195254654975L;
+	private static final long						serialVersionUID	= 9092938195254654975L;
 
-	public static final int				REST_TIME			= 80;
+	public static final int							REST_TIME			= 80;
 
-	private final BuildResult			result;
-	private CardLayout					secretMessageCards;
-	private JPanel						grpSecretMessagePane;
+	final BuildResult								result;
+	private CardLayout								secretMessageCards;
+	private JPanel									grpSecretMessagePane;
 
-	private int							convoNum;
+	private int										convoNum;
 
-	private String						baseHTML;
-	private JEditorPane					console;
-	private HTMLDocument				doc;
-	private Element						logbox, currentChat, currentConvo;
-	private final Map<Integer, String>	blocks				= new HashMap<Integer, String>();
-	private static final String[]		CLASS_NAMES			= { "youmsg", "strangermsg" };
-	private static final String			BTN_LINK			= "btn-link";
-	private static final String			CONVO_LINK			= "convo-link";
-	public static final Pattern			url_regex			= Pattern
-																	.compile(
-																			"([a-z]{2,6}://)?(?:[a-z0-9\\-]+\\.)+[a-z]{2,6}(?::\\d+)?(/\\S*)?",
-																			Pattern.CASE_INSENSITIVE);
+	private String									baseHTML;
+	private JEditorPane								console;
+	private HTMLDocument							doc;
+	private Element									logbox, currentChat;
 
-	private final SpyController			controller			= new SpyController();
+	Element											currentConvo;
+	private final Map<Integer, String>				blocks				= new HashMap<Integer, String>();
 
-	private boolean						autoScrollEnabled	= true;
-	private final JScrollBar			autoScrollBar;
+	private final OmegleSpyConversationController	controller;
 
-	private boolean						firstRun			= true;
+	private boolean									autoScrollEnabled	= true;
+	private final JScrollBar						autoScrollBar;
 
-	private final DesperationWindow		logViewer			= new DesperationWindow();
-	private final ShortcutKeyHelper		shortcutKeyHelper;
+	private boolean									firstRun			= true;
+
+	private final DesperationWindow					logViewer			= new DesperationWindow();
+	private final ShortcutKeyHelper					shortcutKeyHelper;
 
 	public OmegleSpyMainWindowCombined() {
 		result = SwingJavaBuilder.build(this);
@@ -244,14 +233,15 @@ public class OmegleSpyMainWindowCombined extends JFrame {
 				}
 
 				// tell user swapiee is being swapped
-				printStatusLog(currentConvo, controller.getStrangerName(mainIndex) + " is being swapped");
+				ChatHistoryHelper.printStatusLog(currentConvo, doc, controller.getStrangerName(mainIndex)
+						+ " is being swapped");
 
-				controller.swapStranger(mainIndex, new MainWindowOmegleSpyListener() {
-					@Override
-					protected int getStrangerIndex() {
-						return mainIndex;
-					}
-				});
+				// TODO Switching to new controller
+				controller.swapStranger(mainIndex, /*
+													 * new
+													 * MainWindowOmegleSpyListener
+													 * ()
+													 */null);
 
 				// Enable his controls
 				((JTextField) result.get(MessageFormat.format(ControlNameConstants.TXT_TO_STRANGER,
@@ -270,7 +260,8 @@ public class OmegleSpyMainWindowCombined extends JFrame {
 				swapButton.setEnabled(true);
 
 				// tell user a new chatter connected
-				printStatusLog(currentConvo, controller.getStrangerName(mainIndex) + " connected");
+				ChatHistoryHelper.printStatusLog(currentConvo, doc, controller.getStrangerName(mainIndex)
+						+ " connected");
 			}
 		}).start();
 	}
@@ -315,26 +306,30 @@ public class OmegleSpyMainWindowCombined extends JFrame {
 
 			final String chatID = "chat-" + convoNum;
 			final String convoID = "convo-" + convoNum;
-			printHTML(logbox, "<div id='" + chatID + "'>" + "<div id='" + convoID + "'>" + "</div></div>");
+			final String htmlText = "<div id='" + chatID + "'>" + "<div id='" + convoID + "'>" + "</div></div>";
+			try {
+				doc.insertBeforeEnd(logbox, htmlText);
+			} catch (final Exception e) {
+				log.warn("An error occurred while writing " + htmlText + " to the logbox.", e);
+			}
 			currentChat = doc.getElement(chatID);
 			currentConvo = doc.getElement(convoID);
 
-			printStatusLog(currentConvo, "Finding two strangers...");
+			ChatHistoryHelper.printStatusLog(currentConvo, doc, "Finding two strangers...");
 
 			// 2 is the magic number of conversants
-			final List<OmegleSpyListener> initialListeners = new ArrayList<OmegleSpyListener>();
-			for (int i = 0; i < 2; i++) {
-				final int index = i;
-				initialListeners.add(new MainWindowOmegleSpyListener() {
-					@Override
-					protected int getStrangerIndex() {
-						return index;
-					}
-				});
-			}
+			final List<OmegleSpyConversationListener> initialListeners = new ArrayList<OmegleSpyConversationListener>();
+			initialListeners.add(new MainWindowOmegleSpyListener(currentConvo, result, doc, new UICallback() {
+
+				public void doCallback(final Object o) {
+					final OmegleSpyEvent evt = (OmegleSpyEvent) o;
+					disconnectStranger(evt.getConversantIndex());
+				}
+			}));
 
 			// CHAT ACTUALLY STARTS HERE
-			controller.startConversation(initialListeners);
+			// TODO Change to new controller
+			// controller.startConversation(initialListeners);
 			((Action) result.get(ControlNameConstants.ACTION_BLOCKMESSAGE)).setEnabled(true);
 			((Action) result.get(ControlNameConstants.ACTION_FILTERMESSAGES)).setEnabled(true);
 
@@ -362,9 +357,14 @@ public class OmegleSpyMainWindowCombined extends JFrame {
 			((JButton) result.get(ControlNameConstants.BTN_TOGGLE_CONNECTION)).setText(SwingJavaBuilder.getConfig()
 					.getResource(ResourceConstants.BUTTON_CONNECT));
 
-			printHTML(currentChat, "<div>** Would you like to <a href='#' class='" + BTN_LINK + "' "
-					+ "id='save-convo-" + convoNum + "'>" + "save this conversation</a>? **</div>");
-			printHTML(currentChat, "<br><hr>");
+			final String htmlText = "<div>** Would you like to <a href='#' class='" + ChatHistoryHelper.BTN_LINK + "' "
+					+ "id='save-convo-" + convoNum + "'>" + "save this conversation</a>? **</div><br><hr>";
+			try {
+				doc.insertBeforeEnd(currentChat, htmlText);
+				// doc.insertBeforeEnd(currentChat, "<br><hr>");
+			} catch (final Exception e) {
+				log.warn("An error occurred while writing " + htmlText + " to the current chat node.", e);
+			}
 
 			currentConvo = null;
 			currentChat = null;
@@ -420,69 +420,6 @@ public class OmegleSpyMainWindowCombined extends JFrame {
 		log.debug("Preparing to display help.");
 	}
 
-	private void printLabelledMsg(final String className, final String from, String msg) {
-		// from = escapeHTML(from);
-		msg = StringEscapeUtils.escapeHtml(msg);
-
-		final StringBuffer sb = new StringBuffer();
-		final Matcher m = url_regex.matcher(msg);
-		while (m.find()) {
-			String rep;
-			if (m.group(1) != null || m.group(2) != null) {
-				final String proto = m.group(1) == null ? "http://" : "";
-				rep = "<a href='" + proto + "$0' target='_blank' " + "class='" + CONVO_LINK + "'>$0</a>";
-			} else {
-				rep = m.group();
-			}
-			m.appendReplacement(sb, rep);
-		}
-		m.appendTail(sb);
-		msg = sb.toString();
-
-		final Element e = currentConvo;
-		printLogItem(e, "<span class='" + className + "'>" + from + ":</span> " + msg);
-	}
-
-	private void printRegMsg(final OmegleSpy from, final String msg) {
-		printLabelledMsg(CLASS_NAMES[controller.indexOf(from)], from.getName(), msg);
-	}
-
-	private void printLogItem(final Element e, final String line) {
-		final DateFormat timestamp = DateFormat.getTimeInstance(DateFormat.SHORT);
-		printHTML(e, "<div class='logitem'>" + "<span class='timestamp'>[" + timestamp.format(new Date()) + "]</span>"
-				+ " " + line + "</div>");
-	}
-
-	private void printBlockedMsg(final OmegleSpy from, final String msg) {
-		final String className = CLASS_NAMES[controller.indexOf(from)] + "-blocked";
-		final String fromLbl = "<s>&lt;&lt;" + from.getName() + "&gt;&gt;</s>";
-		printLabelledMsg(className, fromLbl, msg);
-	}
-
-	private void printSecretMsg(final OmegleSpy to, final String msg) {
-		// 2 is the magic number of conversants we have connected
-		final int otherIndex = 2 - controller.indexOf(to) - 1;
-		final String className = CLASS_NAMES[otherIndex] + "-secret";
-		printLabelledMsg(className, "{{from " + controller.getStrangerName(otherIndex) + "}}", msg);
-	}
-
-	private void printHTML(final Element e, final String html) {
-		try {
-			if (e == currentConvo) {
-				String record = blocks.get(convoNum);
-				record = record == null ? html : record + html;
-				blocks.put(convoNum, record);
-			}
-			doc.insertBeforeEnd(e, html);
-		} catch (final Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	private void printStatusLog(final Element e, final String sl) {
-		printLogItem(e, "<span class='statuslog'>" + sl + "</span>");
-	}
-
 	/**
 	 * @return the autoScrollEnabled
 	 */
@@ -496,164 +433,6 @@ public class OmegleSpyMainWindowCombined extends JFrame {
 	 */
 	public void setAutoScrollEnabled(final boolean autoScrollEnabled) {
 		this.autoScrollEnabled = autoScrollEnabled;
-	}
-
-	private abstract class MainWindowOmegleSpyListener implements OmegleSpyListener {
-		protected abstract int getStrangerIndex();
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.darkimport.omeglespy.OmegleSpyListener#messageTransferred(org
-		 * .darkimport .omeglespy.OmegleSpy, java.lang.String)
-		 */
-		public void messageTransferred(final OmegleSpy src, final String msg) {
-			printRegMsg(src, msg);
-			((JLabel) result.get(MessageFormat.format(ControlNameConstants.LBL_STRANGER_TYPING,
-					String.valueOf(getStrangerIndex())))).setVisible(false);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.darkimport.omeglespy.OmegleSpyListener#chatStarted(org.darkimport
-		 * .omeglespy.OmegleSpy)
-		 */
-		public void chatStarted(final OmegleSpy src) {
-			final int k = controller.indexOf(src);
-			final String n = src.getName();
-
-			((JLabel) result.get(MessageFormat.format(ControlNameConstants.LBL_STRANGER_TYPING, String.valueOf(k))))
-					.setText(MessageFormat.format(
-							SwingJavaBuilder.getConfig().getResource(ResourceConstants.LABEL_STRANGER_TYPING), n));
-			final JButton targetedDisconnectButton = (JButton) result.get(MessageFormat.format(
-					ControlNameConstants.BTN_DISCONNECT_STRANGER, String.valueOf(k)));
-			targetedDisconnectButton.setText(MessageFormat.format(
-					SwingJavaBuilder.getConfig().getResource(ResourceConstants.BUTTON_DISCONNECT_STRANGER), n));
-			targetedDisconnectButton.setEnabled(true);
-			final JButton swapButton = (JButton) result.get(MessageFormat.format(
-					ControlNameConstants.BTN_SWAP_STRANGER, String.valueOf(k)));
-			swapButton.setText(MessageFormat.format(
-					SwingJavaBuilder.getConfig().getResource(ResourceConstants.BUTTON_SWAP_STRANGER), n));
-			swapButton.setEnabled(true);
-			((JTextField) result.get(MessageFormat.format(ControlNameConstants.TXT_TO_STRANGER, String.valueOf(k))))
-					.setEnabled(true);
-			printLabelledMsg(CLASS_NAMES[controller.indexOf(src)], "System", src.getName() + " connected");
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.darkimport.omeglespy.OmegleSpyListener#disconnected(org.darkimport
-		 * .omeglespy.OmegleSpy)
-		 */
-		public void disconnected(final OmegleSpy src) {
-			printStatusLog(currentConvo, src.getName() + " disconnected");
-			final int index = controller.indexOf(src);
-
-			// A stranger disconnected, hide his typing label
-			((JLabel) result.get(MessageFormat.format(ControlNameConstants.LBL_STRANGER_TYPING, String.valueOf(index))))
-					.setVisible(false);
-			// disable his disconnect button and set the text of his disconnect
-			// button to neutral.
-			final String targetedDisconnectButtonName = MessageFormat.format(
-					ControlNameConstants.BTN_DISCONNECT_STRANGER, String.valueOf(index));
-			final JButton targetedDisconnectButton = (JButton) result.get(targetedDisconnectButtonName);
-			targetedDisconnectButton.setText(SwingJavaBuilder.getConfig().getResource(
-					ResourceConstants.BUTTON_DISCONNECT_STRANGER_NEUTRAL));
-			targetedDisconnectButton.setEnabled(false);
-			// disable his txtbox.
-			((JTextField) result.get(MessageFormat.format(ControlNameConstants.TXT_TO_STRANGER, String.valueOf(index))))
-					.setEnabled(false);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.darkimport.omeglespy.OmegleSpyListener#messageBlocked(org.darkimport
-		 * .omeglespy.OmegleSpy, java.lang.String)
-		 */
-		public void messageBlocked(final OmegleSpy src, final String msg) {
-			printBlockedMsg(src, msg);
-			((JLabel) result.get(MessageFormat.format(ControlNameConstants.LBL_STRANGER_TYPING,
-					String.valueOf(getStrangerIndex())))).setVisible(false);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.darkimport.omeglespy.OmegleSpyListener#externalMessageSent(org
-		 * .darkimport .omeglespy.OmegleSpy, java.lang.String)
-		 */
-		public void externalMessageSent(final OmegleSpy src, final String msg) {
-			printSecretMsg(src, msg);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.darkimport.omeglespy.OmegleSpyListener#isTyping(org.darkimport
-		 * .omeglespy .OmegleSpy)
-		 */
-		public void isTyping(final OmegleSpy src) {
-			((JLabel) result.get(MessageFormat.format(ControlNameConstants.LBL_STRANGER_TYPING,
-					String.valueOf(getStrangerIndex())))).setVisible(true);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.darkimport.omeglespy.OmegleSpyListener#stoppedTyping(org.darkimport
-		 * .omeglespy.OmegleSpy)
-		 */
-		public void stoppedTyping(final OmegleSpy src) {
-			((JLabel) result.get(MessageFormat.format(ControlNameConstants.LBL_STRANGER_TYPING,
-					String.valueOf(getStrangerIndex())))).setVisible(false);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.darkimport.omeglespy.OmegleSpyListener#recaptchaRejected(java
-		 * .lang.String)
-		 */
-		public void recaptchaRejected(final OmegleSpy src, final String id) {
-			final OmegleSpyRecaptchaWindow recaptchaWindow = new OmegleSpyRecaptchaWindow(src, id);
-			recaptchaWindow.setVisible(true);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.darkimport.omeglespy.OmegleSpyListener#recaptcha(java.lang.String
-		 * )
-		 */
-		public void recaptcha(final OmegleSpy src, final String id) {
-			final OmegleSpyRecaptchaWindow recaptchaWindow = new OmegleSpyRecaptchaWindow(src, id);
-			recaptchaWindow.setVisible(true);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.darkimport.omeglespy.OmegleSpyListener#messageFiltered(org.darkimport
-		 * .omeglespy.OmegleSpy, java.lang.String)
-		 */
-		public void messageFiltered(final OmegleSpy omegleSpy, final String msg) {
-			final int targetIndex = controller.indexOf(omegleSpy);
-			disconnectStranger(targetIndex);
-		}
-
 	}
 
 	/**

@@ -10,8 +10,9 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import org.apache.commons.io.IOUtils;
-import org.darkimport.omeglespy.log.LogHelper;
-import org.darkimport.omeglespy.log.LogLevel;
+import org.darkimport.omeglespy$z.CommunicationHelper;
+import org.darkimport.omeglespy$z.LogHelper;
+import org.darkimport.omeglespy$z.LogLevel;
 
 /**
  * @author user
