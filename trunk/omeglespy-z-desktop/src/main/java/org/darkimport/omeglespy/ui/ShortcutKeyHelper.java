@@ -20,10 +20,11 @@ import javax.swing.JComponent;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.darkimport.configuration.ConfigHelper;
-import org.darkimport.omeglespy.constants.ConfigConstants;
+import org.darkimport.config.ConfigHelper;
+import org.darkimport.omeglespy.ConfigConstants;
 import org.darkimport.omeglespy.ui.util.KeyEventTranslator;
 import org.darkimport.omeglespy.ui.util.KeyEventTranslator.Key;
+import org.darkimport.omeglespy_z.Shortcut;
 import org.javabuilders.BuildResult;
 
 /**
@@ -215,5 +216,10 @@ public final class ShortcutKeyHelper {
 				&& (shortcutAllowedSources.get(getShortcutString(e)) == null
 						|| shortcutAllowedSources.get(getShortcutString(e)).size() == 0 || shortcutAllowedSources.get(
 						getShortcutString(e)).contains(((JComponent) e.getSource()).getName()));
+	}
+
+	public List<Shortcut> getShortcuts() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

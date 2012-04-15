@@ -19,4 +19,5 @@ public interface ControlNameConstants {
 	public static final Object	MNU_FILTERMESSAGES		= "mnuFilterMessage";
 	public static final Object	ACTION_BLOCKMESSAGE		= "actionToggleStrangersBlocked";
 	public static final Object	ACTION_FILTERMESSAGES	= "actionToggleFilter";
+	public static final String	CONSOLE_SCROLLER	= "consoleScroller";
 }

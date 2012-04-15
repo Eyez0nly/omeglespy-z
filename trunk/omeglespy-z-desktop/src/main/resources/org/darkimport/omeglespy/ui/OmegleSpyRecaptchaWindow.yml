@@ -3,7 +3,7 @@ JDialog(name=recaptcha, title=recaptcha.main.title, modal=true, size=packed, ico
   - JTextField(name=txtResponse, font=Verdana plain 10pt, horizontalAlignment=center, onKeyPressed=[keyPressed])
   - MigLayout: |
       [grow,300]
-      |-lblCaptcha  [grow,300]
+      |-lblCaptcha  [grow,240]
       |-txtResponse
 
 bind:
