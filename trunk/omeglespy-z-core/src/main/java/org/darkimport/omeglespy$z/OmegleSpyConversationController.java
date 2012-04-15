@@ -162,6 +162,10 @@ public class OmegleSpyConversationController {
 		doWork(WorkEvent._endConversation, null);
 	}
 
+	public boolean isConversationEnded() {
+		return conversationEnded;
+	}
+
 	private void doWork(final WorkEvent workEvent, final Map<String, Object> params) {
 		if (conversationEnded) { throw new IllegalStateException("The conversation is not started."); }
 

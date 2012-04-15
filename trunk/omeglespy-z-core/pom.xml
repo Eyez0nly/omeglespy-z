@@ -4,7 +4,7 @@
 
 	<groupId>org.darkimport</groupId>
 	<artifactId>omeglespy-z-core</artifactId>
-	<version>2.0.0-BETA</version>
+	<version>2.0.0-BETA-002</version>
 	<packaging>jar</packaging>
 
 	<name>omeglespy-z-core</name>
@@ -27,6 +27,18 @@
 				<configuration>
 					<source>1.5</source>
 					<target>jsr14</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>No</mainClass>
+						</manifest>
+					</archive>
 				</configuration>
 			</plugin>
 			<plugin>
