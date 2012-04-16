@@ -17,7 +17,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy_z;
+package org.darkimport.omeglespy_z_desktop;
 
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
@@ -51,7 +51,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.darkimport.omeglespy.ResourceConstants;
 import org.darkimport.omeglespy$z.ChatHistoryHelper;
 import org.darkimport.omeglespy$z.CommunicationHelper;
 import org.darkimport.omeglespy$z.DefaultCommunicationHelper;
@@ -59,10 +58,6 @@ import org.darkimport.omeglespy$z.LogHelper;
 import org.darkimport.omeglespy$z.OmegleSpyConversationController;
 import org.darkimport.omeglespy$z.OmegleSpyConversationListener;
 import org.darkimport.omeglespy$z.OmegleSpyEvent;
-import org.darkimport.omeglespy.log.CommonsLoggingLogHelper;
-import org.darkimport.omeglespy.ui.ControlNameConstants;
-import org.darkimport.omeglespy.ui.OmegleSpyRecaptchaWindow;
-import org.darkimport.omeglespy.ui.ShortcutKeyHelper;
 import org.javabuilders.BuildResult;
 import org.javabuilders.swing.SwingAction;
 import org.javabuilders.swing.SwingJavaBuilder;

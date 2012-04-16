@@ -25,7 +25,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy;
+package org.darkimport.omeglespy_z_desktop;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -35,8 +35,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.darkimport.config.ConfigHelper;
 import org.darkimport.omeglespy$z.LogHelper;
-import org.darkimport.omeglespy.log.CommonsLoggingLogHelper;
-import org.darkimport.omeglespy_z.OmegleSpyZMainWindow;
 import org.javabuilders.swing.SwingJavaBuilder;
 
 /**

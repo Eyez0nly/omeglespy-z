@@ -22,7 +22,7 @@
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
-package org.darkimport.omeglespy;
+package org.darkimport.omeglespy_z_desktop;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -47,8 +47,6 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.darkimport.omeglespy.ui.util.ChatHistoryHelper;
-import org.darkimport.omeglespy.ui.util.UrlHelper;
 
 public class DesperationWindow extends JFrame implements ListSelectionListener, HyperlinkListener, ActionListener {
 	/**
@@ -124,7 +122,7 @@ public class DesperationWindow extends JFrame implements ListSelectionListener, 
 		final Object src = ev.getSource();
 		if (src == save) {
 			try {
-				ChatHistoryHelper.guiWriteHtmlFile(currentEp.getText(), this);
+				LogViewerHelper.guiWriteHtmlFile(currentEp.getText(), this);
 			} catch (final IOException ex) {
 				showError(this, "Could not save file: " + ex.getMessage());
 			}

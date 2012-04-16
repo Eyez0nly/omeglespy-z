@@ -22,7 +22,7 @@
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
-package org.darkimport.omeglespy.ui.util;
+package org.darkimport.omeglespy_z_desktop;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -30,7 +30,6 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.darkimport.config.ConfigHelper;
-import org.darkimport.omeglespy.ConfigConstants;
 import org.darkimport.omeglespy$z.LogHelper;
 import org.darkimport.omeglespy$z.LogLevel;
 

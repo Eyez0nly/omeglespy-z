@@ -17,7 +17,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy_z;
+package org.darkimport.omeglespy_z_desktop;
 
 import java.text.DateFormat;
 import java.util.Date;

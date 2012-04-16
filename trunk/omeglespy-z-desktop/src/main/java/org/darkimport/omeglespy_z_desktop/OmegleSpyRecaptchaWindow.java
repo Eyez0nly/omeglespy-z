@@ -25,7 +25,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy.ui;
+package org.darkimport.omeglespy_z_desktop;
 
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;

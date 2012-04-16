@@ -25,7 +25,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy.network;
+package org.darkimport.omeglespy_z_desktop;
 
 import java.io.InputStream;
 import java.io.OutputStream;
