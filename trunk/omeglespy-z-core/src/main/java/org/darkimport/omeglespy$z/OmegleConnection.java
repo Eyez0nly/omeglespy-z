@@ -84,9 +84,26 @@ class OmegleConnection extends Observable implements Runnable {
 	 * event occurs, observers are notified.
 	 */
 	public void run() {
-		// TODO Auto-generated method stub
-		init();
-		final String startr = CommunicationHelper.wget(start_url, true);
+		try {
+			init();
+		} catch (final Exception e) {
+			LogHelper.log(OmegleConnection.class, LogLevel.WARN, "An error occurred during initialization.", e);
+			setChanged();
+			notifyObservers(new OmegleEvent(OmegleEventType._initializationFailure, null));
+			return;
+		}
+
+		String startr;
+		try {
+			startr = CommunicationHelper.wget(start_url, true);
+		} catch (final Exception e) {
+			LogHelper.log(OmegleConnection.class, LogLevel.WARN,
+					"An error occurred while attempting to start a conversation.", e);
+			setChanged();
+			notifyObservers(new OmegleEvent(OmegleEventType._conversationStartFailure, null));
+			return;
+		}
+
 		Matcher m = STR_REGEX.matcher(startr);
 		if (m.matches()) {
 			chatId = m.group(2); // 2 is the actual string - Listner(sky) has
@@ -95,8 +112,26 @@ class OmegleConnection extends Observable implements Runnable {
 		}
 
 		while (chatId != null) {
+			try {
+				// TODO experimenting with randomized sleep time.
+				Thread.sleep(50 + (int) (Math.random() * 100));
+			} catch (final InterruptedException e) {
+				LogHelper.log(OmegleConnection.class, LogLevel.WARN, "Thread error.", e);
+			}
+
 			if (!paused) {
-				final String eventr = CommunicationHelper.wget(events_url, true, "id", chatId);
+				String eventr;
+				try {
+					eventr = CommunicationHelper.wget(events_url, true, "id", chatId);
+				} catch (final Exception e) {
+					LogHelper.log(OmegleConnection.class, LogLevel.WARN, "An error occurred during event polling.", e);
+					setChanged();
+					// TODO Establish threshold for general communication
+					// failure tolerance.
+					notifyObservers(new OmegleEvent(OmegleEventType._generalCommunicationFailure, null));
+					continue;
+				}
+
 				if (eventr == null || eventr.equals("null")) {
 					break;
 				}
@@ -125,12 +160,6 @@ class OmegleConnection extends Observable implements Runnable {
 				LogHelper.log(OmegleConnection.class, LogLevel.TRACE, "The connection with " + conversantName
 						+ " is paused.");
 			}
-			try {
-				// TODO experimenting with randomized sleep time.
-				Thread.sleep(50 + (int) (Math.random() * 100));
-			} catch (final InterruptedException e) {
-				LogHelper.log(OmegleConnection.class, LogLevel.WARN, "Thread error.", e);
-			}
 		}
 		if (chatId != null) {
 			// We left the loop because the server no longer recognizes our chat
@@ -142,21 +171,18 @@ class OmegleConnection extends Observable implements Runnable {
 		}
 	}
 
-	public void init() {
+	public void init() throws Exception {
 		LogHelper.log(OmegleConnection.class, LogLevel.INFO, "-- Initializing, Please wait...");
 		LogHelper.log(OmegleConnection.class, LogLevel.INFO, "* Chat server selected: " + serverName);
-		try {
-			final URL init_1 = new URL("http://www.omegle.com");
-			final URL init_2 = new URL("http://www.omegle.com/static/frameset.js?1");
-			final URL init_3 = new URL(PROTOCOL, serverName, "/static/style.css?25");
-			final URL init_4 = new URL(PROTOCOL, serverName, "/static/omegle.js?83");
-			CommunicationHelper.wget(init_1, false, true);
-			CommunicationHelper.wget(init_2, false, true);
-			CommunicationHelper.wget(init_3, false, true);
-			CommunicationHelper.wget(init_4, false, true);
-		} catch (final Exception e) {
-			LogHelper.log(OmegleConnection.class, LogLevel.WARN, "An error occurred during initialization.", e);
-		}
+
+		final URL init_1 = new URL("http://www.omegle.com");
+		final URL init_2 = new URL("http://www.omegle.com/static/frameset.js?1");
+		final URL init_3 = new URL(PROTOCOL, serverName, "/static/style.css?25");
+		final URL init_4 = new URL(PROTOCOL, serverName, "/static/omegle.js?83");
+		CommunicationHelper.wget(init_1, false, true);
+		CommunicationHelper.wget(init_2, false, true);
+		CommunicationHelper.wget(init_3, false, true);
+		CommunicationHelper.wget(init_4, false, true);
 
 		LogHelper.log(OmegleConnection.class, LogLevel.INFO, "-- Initialization process has been completed.");
 	}
@@ -216,28 +242,76 @@ class OmegleConnection extends Observable implements Runnable {
 	}
 
 	public boolean sendTypingNotification() {
-		final String r = CommunicationHelper.wget(type_url, true, "id", chatId);
+		String r = null;
+		try {
+			r = CommunicationHelper.wget(type_url, true, "id", chatId);
+		} catch (final Exception e) {
+			LogHelper.log(OmegleConnection.class, LogLevel.WARN, "An error occurred during event polling.", e);
+			setChanged();
+			// TODO Establish threshold for general communication
+			// failure tolerance.
+			notifyObservers(new OmegleEvent(OmegleEventType._generalCommunicationFailure, null));
+		}
 		return COMMUNICATION_SUCCESS_STRING.equals(r);
 	}
 
 	public boolean sendMesssage(final String msg) {
-		final String sendr = CommunicationHelper.wget(send_url, true, "id", chatId, "msg", msg);
+		String sendr = null;
+		try {
+			sendr = CommunicationHelper.wget(send_url, true, "id", chatId, "msg", msg);
+		} catch (final Exception e) {
+			LogHelper.log(OmegleConnection.class, LogLevel.WARN, "An error occurred during event polling.", e);
+			setChanged();
+			// TODO Establish threshold for general communication
+			// failure tolerance.
+			notifyObservers(new OmegleEvent(OmegleEventType._generalCommunicationFailure, null));
+		}
 		return COMMUNICATION_SUCCESS_STRING.equals(sendr);
 	}
 
 	public boolean sendStoppedTypingNotification() {
-		final String r = CommunicationHelper.wget(stoptype_url, true, "id", chatId);
+		String r = null;
+		try {
+			r = CommunicationHelper.wget(stoptype_url, true, "id", chatId);
+		} catch (final Exception e) {
+			LogHelper.log(OmegleConnection.class, LogLevel.WARN, "An error occurred during event polling.", e);
+			setChanged();
+			// TODO Establish threshold for general communication
+			// failure tolerance.
+			notifyObservers(new OmegleEvent(OmegleEventType._generalCommunicationFailure, null));
+		}
 		return COMMUNICATION_SUCCESS_STRING.equals(r);
 	}
 
 	public boolean disconnect() {
-		final String d = CommunicationHelper.wget(disconnect_url, true, "id", chatId);
-		chatId = null;
+		String d = null;
+		if (chatId != null) {
+			try {
+				d = CommunicationHelper.wget(disconnect_url, true, "id", chatId);
+			} catch (final Exception e) {
+				LogHelper.log(OmegleConnection.class, LogLevel.WARN, "An error occurred during event polling.", e);
+				setChanged();
+				// TODO Establish threshold for general communication
+				// failure tolerance.
+				notifyObservers(new OmegleEvent(OmegleEventType._generalCommunicationFailure, null));
+			}
+			chatId = null;
+		} else {
+			LogHelper.log(OmegleConnection.class, LogLevel.WARN, "Disconnect was invoked without having a connection.");
+		}
 		return d != null && d.equals(COMMUNICATION_SUCCESS_STRING);
 	}
 
 	public void sendRecaptchaResponse(final String challenge, final String response) {
-		CommunicationHelper.wget(recaptcha_url, true, "id", chatId, "challenge", challenge, "response", response);
+		try {
+			CommunicationHelper.wget(recaptcha_url, true, "id", chatId, "challenge", challenge, "response", response);
+		} catch (final Exception e) {
+			LogHelper.log(OmegleConnection.class, LogLevel.WARN, "An error occurred during event polling.", e);
+			setChanged();
+			// TODO Establish threshold for general communication
+			// failure tolerance.
+			notifyObservers(new OmegleEvent(OmegleEventType._generalCommunicationFailure, null));
+		}
 		paused = false;
 		LogHelper.log(OmegleConnection.class, LogLevel.DEBUG, "Unpaused the event pinger.");
 	}

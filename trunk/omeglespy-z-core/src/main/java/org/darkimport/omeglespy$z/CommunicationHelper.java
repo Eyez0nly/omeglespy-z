@@ -32,13 +32,15 @@ public abstract class CommunicationHelper {
 		_instance = communicationHelper;
 	}
 
-	public static String wget(final URL url, final boolean post, final String... post_data) {
+	public static String wget(final URL url, final boolean post, final String... post_data) throws Exception {
 		return wget(url, post, false, post_data);
 	}
 
-	public static String wget(final URL url, final boolean post, final boolean ignore, final String... post_data) {
+	public static String wget(final URL url, final boolean post, final boolean ignore, final String... post_data)
+			throws Exception {
 		return _instance.doWget(url, post, ignore, post_data);
 	}
 
-	protected abstract String doWget(final URL url, final boolean post, final boolean ignore, final String... post_data);
+	protected abstract String doWget(final URL url, final boolean post, final boolean ignore, final String... post_data)
+			throws Exception;
 }

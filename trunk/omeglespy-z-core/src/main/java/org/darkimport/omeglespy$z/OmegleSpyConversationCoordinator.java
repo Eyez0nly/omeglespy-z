@@ -52,7 +52,7 @@ class OmegleSpyConversationCoordinator implements Observer {
 	 * @param conversantNames
 	 *            A list of conversants. Each of the names must be unique or
 	 *            unexpected results may occur. We do not check for uniqueness.
-	 *            TODO We should, though.
+	 * 
 	 * @param serverNames
 	 *            A list of host names or IP addresses to which to connect. This
 	 *            list does not have to be equal in size with the
@@ -110,13 +110,15 @@ class OmegleSpyConversationCoordinator implements Observer {
 		final OmegleEvent omegleEvent = (OmegleEvent) arg;
 		final OmegleSpyEvent evt = new OmegleSpyEvent(connection);
 		if (LogHelper.isLogLevelEnabled(LogLevel.DEBUG, OmegleSpyConversationCoordinator.class)) {
-			String argslist = "";
+			final StringBuffer argslist = new StringBuffer();
 			final String argstake[] = omegleEvent.getArgs();
-			if (argstake.length > 0) {
-				argslist = "ARGS";
+			if (argstake != null && argstake.length > 0) {
+				argslist.append("ARGS");
 				for (final String s : argstake) {
-					argslist += "[" + s + "]";
+					argslist.append("[").append(s).append("]");
 				}
+			} else {
+				argslist.append("No arguments.");
 			}
 			LogHelper.log(OmegleSpyConversationCoordinator.class, LogLevel.DEBUG, "* eventFire Request EVENT["
 					+ omegleEvent.getSource() + "] " + argslist);
@@ -127,6 +129,13 @@ class OmegleSpyConversationCoordinator implements Observer {
 			case waiting:
 				break;
 			case connected:
+				// The notifying conversant has connected.
+
+				// Send chatStarted notification to the
+				// OmegleSpyConversationListeners
+				for (final OmegleSpyConversationListener conversationListener : activeListeners) {
+					conversationListener.chatStarted(evt);
+				}
 				break;
 			case typing:
 				// The notifying conversant is typing.
@@ -214,13 +223,20 @@ class OmegleSpyConversationCoordinator implements Observer {
 				// we failed to correctly answer the previous challenge. Notify
 				// the OmegleSpyListeners. Once we get back the challenge
 				// response, all should be well.
-				// TODO We should pause the event pinging queue at this point
-				// until we get back a response.
 
+				connection.pause();
 				for (final OmegleSpyConversationListener conversationListener : activeListeners) {
 					final String id = omegleEvent.getArgs()[0];
 					conversationListener.recaptchaRejected(evt, id);
 				}
+				break;
+			case _initializationFailure:
+			case _conversationStartFailure:
+				for (final OmegleSpyConversationListener conversationListener : activeListeners) {
+					conversationListener.initializationFailed(evt);
+				}
+				break;
+			case _generalCommunicationFailure:
 				break;
 			default:
 				break;
@@ -294,7 +310,7 @@ class OmegleSpyConversationCoordinator implements Observer {
 	}
 
 	/**
-	 * TODO Use the fromName in some way or remove it.
+	 * 
 	 * 
 	 * @param targetName
 	 * @param fromName
@@ -304,7 +320,7 @@ class OmegleSpyConversationCoordinator implements Observer {
 		final OmegleConnection connection = connections.get(targetName);
 		connection.sendMesssage(message);
 		for (final OmegleSpyConversationListener conversationListener : activeListeners) {
-			conversationListener.externalMessageSent(new OmegleSpyEvent(connection), message);
+			conversationListener.externalMessageSent(new OmegleSpyEvent(connection), fromName, message);
 		}
 	}
 
