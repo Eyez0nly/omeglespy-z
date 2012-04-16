@@ -31,7 +31,7 @@ import java.util.Set;
  * @author user
  * 
  */
-class OmegleSpyConversationCoordinator implements Observer {
+public class OmegleSpyConversationCoordinator implements Observer {
 	private final List<OmegleSpyConversationListener>	activeListeners;
 
 	/**
