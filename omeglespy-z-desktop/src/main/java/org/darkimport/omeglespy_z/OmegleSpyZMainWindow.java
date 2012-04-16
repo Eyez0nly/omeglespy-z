@@ -1,3 +1,19 @@
+/*
+ * #%L omeglespy-z-desktop
+ * 
+ * $Id$ $HeadURL$ %% Copyright (C) 2011 - 2012 darkimport %% This program is
+ * free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation,
+ * either version 2 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/gpl-2.0.html>. #L%
+ */
 /**
  * 
  */
@@ -343,7 +359,9 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 			helpWindow.setVisible(false);
 			helpWindow.dispose();
 
-			controller.endConversation();
+			if (!controller.isConversationEnded()) {
+				controller.endConversation();
+			}
 		} catch (final Throwable e) {
 			log.warn("An error occurred while attempting to end the conversation during application exit.", e);
 		} finally {
@@ -423,8 +441,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 */
 	public void messageBlocked(final OmegleSpyEvent evt, final String msg) {
 		final String conversantName = evt.getConversantName();
-		ChatHistoryHelper.printLabelledMessage(
-				MessageFormat.format(ResourceConstants.LABEL_STRANGER_BLOCKED, conversantName), msg);
+		ChatHistoryHelper.printLabelledMessage(MessageFormat.format(
+				result.getConfig().getResource(ResourceConstants.LABEL_STRANGER_BLOCKED), conversantName), msg);
 	}
 
 	/**
@@ -442,10 +460,11 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * org.darkimport.omeglespy$z.OmegleSpyConversationListener#externalMessageSent
 	 * (org.darkimport.omeglespy$z.OmegleSpyEvent, java.lang.String)
 	 */
-	public void externalMessageSent(final OmegleSpyEvent evt, final String msg) {
+	public void externalMessageSent(final OmegleSpyEvent evt, final String fromName, final String msg) {
 		final String conversantName = evt.getConversantName();
-		ChatHistoryHelper.printLabelledMessage(
-				MessageFormat.format(ResourceConstants.LABEL_STRANGER_SECRET, conversantName), msg);
+		ChatHistoryHelper
+				.printLabelledMessage(MessageFormat.format(
+						result.getConfig().getResource(ResourceConstants.LABEL_STRANGER_SECRET), fromName), msg);
 		strangerTextFields.get(conversantName).setText(StringUtils.EMPTY);
 		((JTextArea) result.get(MessageFormat.format(ControlNameConstants.TXT_TO_STRANGER, StringUtils.EMPTY)))
 				.setText(StringUtils.EMPTY);
@@ -497,6 +516,9 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 				result.getConfig().getResource(ResourceConstants.MESSAGE_STRANGER_CONNECTED), conversantName));
 		strangerDisconnectButtons.get(conversantName).setEnabled(true);
 		strangerTextFields.get(conversantName).setEnabled(true);
+		strangerTypingControls.get(conversantName).setText(
+				MessageFormat.format(result.getConfig().getResource(ResourceConstants.LABEL_STRANGER_TYPING),
+						conversantName));
 	}
 
 	/**
@@ -557,8 +579,14 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	public void messageFiltered(final OmegleSpyEvent evt, final String msg) {
 		controller.disconnectStranger(evt.getConversantName());
 		ChatHistoryHelper.printStatusMessage(MessageFormat.format(
-				SwingJavaBuilder.getConfig().getResource(ResourceConstants.MESSAGE_FILTER_DISCONNECT),
-				evt.getConversantName(), msg));
+				result.getConfig().getResource(ResourceConstants.MESSAGE_FILTER_DISCONNECT), evt.getConversantName(),
+				msg));
+	}
+
+	public void initializationFailed(final OmegleSpyEvent evt) {
+		ChatHistoryHelper.printStatusMessage(MessageFormat.format(
+				result.getConfig().getResource(ResourceConstants.MESSAGE_CONVERSATION_INITIALIZATION_FAILURE),
+				evt.getConversantName()));
 	}
 
 	/**
@@ -605,5 +633,4 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	public void setAutoScrollEnabled(final boolean autoScrollEnabled) {
 		this.autoScrollEnabled = autoScrollEnabled;
 	}
-
 }
