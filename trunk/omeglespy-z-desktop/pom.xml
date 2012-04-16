@@ -9,6 +9,10 @@
 
 	<name>omeglespy-z-desktop</name>
 	<url>https://code.google.com/p/omeglespy-z</url>
+	<inceptionYear>2011</inceptionYear>
+	<organization>
+		<name>darkimport</name>
+	</organization>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,6 +28,30 @@
 					<source>1.5</source>
 					<target>jsr14</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.0</version>
+				<configuration>
+					<licenseFile>${basedir}/COPYING</licenseFile>
+					<licenseName>gpl_v2</licenseName>
+					<addSvnKeyWords>true</addSvnKeyWords>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>update-file-header</goal>
+						</goals>
+						<phase>process-sources</phase>
+						<configuration>
+							<roots>
+								<root>src/main/java</root>
+								<root>src/test/java</root>
+							</roots>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -47,7 +75,7 @@
 				<version>1.6</version>
 				<executions>
 					<execution>
-						<phase>package</phase>
+<!-- 						<phase>package</phase> -->
 						<goals>
 							<goal>shade</goal>
 						</goals>
@@ -121,6 +149,7 @@
 				<includes>
 					<include>**/*.html</include>
 					<include>**/*.yml</include>
+					<include>**/*.properties</include>
 				</includes>
 			</resource>
 			<resource>
@@ -129,6 +158,7 @@
 				<excludes>
 					<exclude>**/*.html</exclude>
 					<exclude>**/*.yml</exclude>
+					<exclude>**/*.properties</exclude>
 				</excludes>
 			</resource>
 			<resource>
@@ -140,6 +170,43 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											license-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0,)
+										</versionRange>
+										<goals>
+											<goal>
+												update-file-header
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<dependencies>
