@@ -25,7 +25,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy.ui.util;
+package org.darkimport.omeglespy_z_desktop;
 
 import java.awt.Component;
 import java.io.File;
@@ -53,8 +53,8 @@ import org.apache.commons.logging.LogFactory;
  * @author user
  * 
  */
-public class ChatHistoryHelper {
-	private static final Log			log				= LogFactory.getLog(ChatHistoryHelper.class);
+public class LogViewerHelper {
+	private static final Log			log				= LogFactory.getLog(LogViewerHelper.class);
 
 	public static final String[]		CLASS_NAMES		= { "youmsg", "strangermsg" };
 	public static final String			BTN_LINK		= "btn-link";

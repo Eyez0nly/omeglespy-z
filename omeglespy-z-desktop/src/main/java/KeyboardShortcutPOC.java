@@ -31,8 +31,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import org.apache.commons.lang.StringUtils;
-import org.darkimport.omeglespy.ui.util.KeyEventTranslator;
-import org.darkimport.omeglespy.ui.util.KeyEventTranslator.Key;
+import org.darkimport.omeglespy_z_desktop.KeyEventTranslator;
+import org.darkimport.omeglespy_z_desktop.KeyEventTranslator.Key;
 
 /**
  * 

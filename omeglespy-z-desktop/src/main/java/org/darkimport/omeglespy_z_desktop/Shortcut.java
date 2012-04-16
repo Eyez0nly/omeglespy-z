@@ -25,7 +25,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy_z;
+package org.darkimport.omeglespy_z_desktop;
 
 /**
  * @author user

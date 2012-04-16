@@ -25,7 +25,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy.log;
+package org.darkimport.omeglespy_z_desktop;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

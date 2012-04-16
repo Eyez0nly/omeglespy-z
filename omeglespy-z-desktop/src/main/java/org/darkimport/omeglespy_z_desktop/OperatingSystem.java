@@ -42,7 +42,7 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-package org.darkimport.omeglespy.ui.util;
+package org.darkimport.omeglespy_z_desktop;
 
 
 /**

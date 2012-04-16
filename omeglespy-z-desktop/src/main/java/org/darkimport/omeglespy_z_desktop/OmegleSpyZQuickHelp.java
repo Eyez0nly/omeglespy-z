@@ -25,7 +25,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy_z;
+package org.darkimport.omeglespy_z_desktop;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -36,8 +36,6 @@ import javax.swing.JFrame;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.darkimport.omeglespy.ResourceConstants;
-import org.darkimport.omeglespy.ui.ShortcutKeyHelper;
 import org.javabuilders.BuildResult;
 import org.javabuilders.swing.SwingJavaBuilder;
 

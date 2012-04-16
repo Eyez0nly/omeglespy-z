@@ -25,7 +25,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy.ui;
+package org.darkimport.omeglespy_z_desktop;
 
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -45,10 +45,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.darkimport.config.ConfigHelper;
-import org.darkimport.omeglespy.ConfigConstants;
-import org.darkimport.omeglespy.ui.util.KeyEventTranslator;
-import org.darkimport.omeglespy.ui.util.KeyEventTranslator.Key;
-import org.darkimport.omeglespy_z.Shortcut;
+import org.darkimport.omeglespy_z_desktop.KeyEventTranslator.Key;
 import org.javabuilders.BuildResult;
 
 /**
