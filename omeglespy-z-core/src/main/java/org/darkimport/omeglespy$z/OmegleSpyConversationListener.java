@@ -1,26 +1,18 @@
 /*
- * #%L
- * omeglespy-z-core
+ * #%L omeglespy-z-core
  * 
- * $Id$
- * $HeadURL$
- * %%
- * Copyright (C) 2011 - 2012 darkimport
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 2 of the 
- * License, or (at your option) any later version.
+ * $Id$ $HeadURL$ %% Copyright (C) 2011 - 2012 darkimport %% This program is
+ * free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation,
+ * either version 2 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU General Public 
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/gpl-2.0.html>.
- * #L%
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/gpl-2.0.html>. #L%
  */
 /**
  * 
@@ -62,10 +54,13 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 * 
 	 * @param src
 	 *            The conversant to whom we sent the message
-	 * @param msg
+	 * @param fromName
+	 *            The conversant as whom we sent the message.
+	 * 
+	 * @param message
 	 *            The message we sent
 	 */
-	public void externalMessageSent(OmegleSpyEvent evt, String msg);
+	public void externalMessageSent(OmegleSpyEvent evt, String fromName, String message);
 
 	/**
 	 * A conversant is typing.
@@ -128,4 +123,6 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 *            The message they sent.
 	 */
 	public void messageFiltered(OmegleSpyEvent evt, String msg);
+
+	public void initializationFailed(OmegleSpyEvent evt);
 }
