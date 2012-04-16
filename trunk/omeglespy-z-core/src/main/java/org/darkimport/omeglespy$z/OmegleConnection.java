@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  * @author user
  * 
  */
-class OmegleConnection extends Observable implements Runnable {
+public class OmegleConnection extends Observable implements Runnable {
 	private static final String	COMMUNICATION_SUCCESS_STRING	= "win";
 	private static final String	PROTOCOL						= "http";
 	public static final Pattern	STR_REGEX						= Pattern
