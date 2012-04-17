@@ -201,7 +201,11 @@ public class OmegleSpyConversationCoordinator implements Observer {
 				// The notifying conversant has disconnected. Ensure that the
 				// connection is closed and then notify the
 				// OmegleSpyListeners.
-				connection.disconnect();
+				try {
+					connection.disconnect();
+				} catch (final Exception e) {
+					LogHelper.log(OmegleSpyConversationCoordinator.class, LogLevel.WARN, "Disconnection error.", e);
+				}
 
 				for (final OmegleSpyConversationListener conversationListener : activeListeners) {
 					conversationListener.disconnected(evt);
@@ -261,29 +265,17 @@ public class OmegleSpyConversationCoordinator implements Observer {
 	}
 
 	/**
-	 * Attempts to end the conversation.
-	 * 
-	 * @param force
-	 *            true if we should ignore Exceptions. False if we should stop
-	 *            on an Exception.
+	 * Attempt to end the conversation. Stops on an Exception.
 	 */
-	public void endConversation(final boolean force) {
+	public void endConversation() {
 		for (final OmegleConnection connection : connections.values()) {
 			try {
 				connection.disconnect();
 			} catch (final Exception e) {
 				LogHelper.log(OmegleSpyConversationCoordinator.class, LogLevel.WARN,
 						"An exception occurred while disconnecting from " + connection.getConversantName() + ".", e);
-				if (!force) { throw new RuntimeException(e); }
 			}
 		}
-	}
-
-	/**
-	 * Attempt to end the conversation. Stops on an Exception.
-	 */
-	public void endConversation() {
-		endConversation(false);
 	}
 
 	public void setConversationFiltered(final boolean filtered) {
