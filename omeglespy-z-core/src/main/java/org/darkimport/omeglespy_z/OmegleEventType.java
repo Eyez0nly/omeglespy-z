@@ -17,30 +17,12 @@
 /**
  * 
  */
-package org.darkimport.omeglespy$z;
-
-import java.net.URL;
+package org.darkimport.omeglespy_z;
 
 /**
  * @author user
  * 
  */
-public abstract class CommunicationHelper {
-	private static CommunicationHelper	_instance	= new DefaultCommunicationHelper();
-
-	public static void initialize(final CommunicationHelper communicationHelper) {
-		_instance = communicationHelper;
-	}
-
-	public static String wget(final URL url, final boolean post, final String... post_data) throws Exception {
-		return wget(url, post, false, post_data);
-	}
-
-	public static String wget(final URL url, final boolean post, final boolean ignore, final String... post_data)
-			throws Exception {
-		return _instance.doWget(url, post, ignore, post_data);
-	}
-
-	protected abstract String doWget(final URL url, final boolean post, final boolean ignore, final String... post_data)
-			throws Exception;
+public enum OmegleEventType {
+	connecting, waiting, connected, typing, gotMessage, stoppedTyping, strangerDisconnected, recaptchaRequired, recaptchaRejected, count, _initializationFailure, _conversationStartFailure, _generalCommunicationFailure;
 }

@@ -25,14 +25,26 @@
 /**
  * 
  */
-package org.darkimport.omeglespy$z;
+package org.darkimport.omeglespy_z;
+
+import java.util.Arrays;
 
 /**
  * @author user
  * 
  */
-public interface NameGenerator {
+public class DefaultServerNameGenerator implements NameGenerator {
+	private final String	serverName	= "promenade.omegle.com";
 
-	String[] next(int numberOfNames, boolean uniqueNames);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.darkimport.omeglespy_z.NameGenerator#next(int, boolean)
+	 */
+	public String[] next(final int numberOfNames, final boolean uniqueNames) {
+		final String[] servers = new String[numberOfNames];
+		Arrays.fill(servers, serverName);
+		return servers;
+	}
 
 }

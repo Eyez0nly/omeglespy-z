@@ -25,26 +25,28 @@
 /**
  * 
  */
-package org.darkimport.omeglespy$z;
-
-import java.util.Arrays;
+package org.darkimport.omeglespy_z;
 
 /**
  * @author user
  * 
  */
-public class DefaultServerNameGenerator implements NameGenerator {
-	private final String	serverName	= "promenade.omegle.com";
+public abstract class ChatHistoryHelper {
+	private static ChatHistoryHelper	_instance;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.darkimport.omeglespy$z.NameGenerator#next(int, boolean)
-	 */
-	public String[] next(final int numberOfNames, final boolean uniqueNames) {
-		final String[] servers = new String[numberOfNames];
-		Arrays.fill(servers, serverName);
-		return servers;
+	public static void initialize(final ChatHistoryHelper chatHistoryHelper) {
+		_instance = chatHistoryHelper;
 	}
 
+	public static void printLabelledMessage(final String label, final String message) {
+		_instance.doPrintLabelledMessage(label, message);
+	}
+
+	public static void printStatusMessage(final String message) {
+		_instance.doPrintStatusMessage(message);
+	}
+
+	protected abstract void doPrintLabelledMessage(String label, String message);
+
+	protected abstract void doPrintStatusMessage(String message);
 }
