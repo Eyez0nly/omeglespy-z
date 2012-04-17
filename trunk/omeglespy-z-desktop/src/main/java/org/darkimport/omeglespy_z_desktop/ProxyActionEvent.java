@@ -22,22 +22,30 @@
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
-package org.darkimport.omeglespy_z_desktop;
 /**
  * 
  */
+package org.darkimport.omeglespy_z_desktop;
 
+import java.awt.event.ActionEvent;
 
 /**
  * @author user
  * 
  */
-public interface ConfigConstants {
-	public static final String	GROUP_MAIN				= "main";
-	public static final String	GROUP_SHORTCUTS			= "shortcuts";
+public class ProxyActionEvent extends ActionEvent {
 
-	public static final String	MAIN_NAMESFILE			= "namesfile";
-	public static final String	MAIN_SERVERNAMESFILE	= "servernamesfile";
-	public static final String	MAIN_BROWSERSFILE		= "browsersfile";
-	public static final String	MAIN_FILTERFILE			= "filterfile";
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= -2983625974372831628L;
+
+	/**
+	 * @param source
+	 * @param id
+	 * @param command
+	 */
+	public ProxyActionEvent(final Object source) {
+		super(source, 0, "shortcutkeyhelper");
+	}
 }

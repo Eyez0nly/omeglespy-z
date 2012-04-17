@@ -14,45 +14,23 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/gpl-2.0.html>. #L%
  */
+package org.darkimport.omeglespy_z_desktop.constants;
+
 /**
  * 
  */
-package org.darkimport.omeglespy_z_desktop;
-
-import java.lang.reflect.Method;
 
 /**
  * @author user
  * 
  */
-public class Shortcut {
-	public String		name;
-	public String		function;
-	public String		eventType;
-	public String		emulatedSource;
-	public String		chord;
-	public String		description;
-	private Method		method;
-	private Object[]	args;
+public interface ConfigConstants {
+	public static final String	GROUP_MAIN					= "main";
+	public static final String	GROUP_SHORTCUTS				= "shortcuts";
 
-	public String getHumanReadableShortcutString() {
-		// TODO How to convert for real?
-		return chord;
-	}
-
-	public Method getMethod() {
-		return method;
-	}
-
-	public void setMethod(final Method method) {
-		this.method = method;
-	}
-
-	public Object[] getArgs() {
-		return args;
-	}
-
-	public void setArgs(final Object[] args) {
-		this.args = args;
-	}
+	public static final String	MAIN_NAMESFILE				= "namesfile";
+	public static final String	MAIN_SERVERNAMESFILE		= "servernamesfile";
+	public static final String	MAIN_BROWSERSFILE			= "browsersfile";
+	public static final String	MAIN_FILTERFILE				= "filterfile";
+	public static final String	MAIN_KEYBOARDSHORTCUTSFILE	= "keyboardshortcutsfile";
 }

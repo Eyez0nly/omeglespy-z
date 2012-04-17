@@ -51,6 +51,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.darkimport.config.ConfigHelper;
 import org.darkimport.omeglespy$z.ChatHistoryHelper;
 import org.darkimport.omeglespy$z.CommunicationHelper;
 import org.darkimport.omeglespy$z.DefaultCommunicationHelper;
@@ -58,9 +59,15 @@ import org.darkimport.omeglespy$z.LogHelper;
 import org.darkimport.omeglespy$z.OmegleSpyConversationController;
 import org.darkimport.omeglespy$z.OmegleSpyConversationListener;
 import org.darkimport.omeglespy$z.OmegleSpyEvent;
+import org.darkimport.omeglespy_z_desktop.constants.ConfigConstants;
+import org.darkimport.omeglespy_z_desktop.constants.ControlNameConstants;
+import org.darkimport.omeglespy_z_desktop.constants.ResourceConstants;
 import org.javabuilders.BuildResult;
 import org.javabuilders.swing.SwingAction;
 import org.javabuilders.swing.SwingJavaBuilder;
+import org.jibx.runtime.BindingDirectory;
+import org.jibx.runtime.IBindingFactory;
+import org.jibx.runtime.IUnmarshallingContext;
 
 /**
  * @author user
@@ -94,7 +101,9 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 
 	private final JFrame							helpWindow;
 
-	private final ShortcutKeyHelper					shortcutKeyHelper;
+	IBindingFactory									bindingFactory;
+	IUnmarshallingContext							unmarshallingContext;
+	private ShortcutKeyHelper						shortcutKeyHelper;
 
 	private final OmegleSpyConversationController	controller;
 
@@ -118,7 +127,23 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 			throw new RuntimeException(ex);
 		}
 		chatHistoryHelper = new HtmlChatHistoryHelper(baseHtml, LOGBOX, (HTMLDocument) console.getDocument());
-		shortcutKeyHelper = new ShortcutKeyHelper(this, result);
+		try {
+			bindingFactory = BindingDirectory.getFactory(ShortcutKeyHelper.class);
+			unmarshallingContext = bindingFactory.createUnmarshallingContext();
+			shortcutKeyHelper = (ShortcutKeyHelper) unmarshallingContext.unmarshalDocument(
+					Thread.currentThread()
+							.getContextClassLoader()
+							.getResourceAsStream(
+									ConfigHelper.getGroup(ConfigConstants.GROUP_MAIN).getProperty(
+											ConfigConstants.MAIN_KEYBOARDSHORTCUTSFILE)), null);
+			shortcutKeyHelper.setRecipient(this);
+			shortcutKeyHelper.setBuildContext(result);
+			shortcutKeyHelper.initialize();
+		} catch (final Exception e) {
+			log.warn("Unable to get keyboard shortcut configuration. Expert mode is disabled.", e);
+			((Action) result.get(ControlNameConstants.ACTION_TOGGLE_EXPERT_MODE)).setEnabled(false);
+		}
+
 		helpWindow = new OmegleSpyZQuickHelp(this, shortcutKeyHelper);
 
 		// Instantiate the scrollbar used when autoscrolling.
@@ -321,7 +346,7 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * @param action
 	 * @param evt
 	 */
-	public void swapStranger(final SwingAction action, final ActionEvent evt) {
+	public void swapStranger(final ActionEvent evt) {
 		final JButton button = (JButton) evt.getSource();
 		log.debug("Swap stranger initiated by " + button.getName());
 		final int targetIndex = new Integer(button.getName().substring(button.getName().length() - 1));
