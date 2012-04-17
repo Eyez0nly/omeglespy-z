@@ -30,8 +30,8 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.darkimport.config.ConfigHelper;
-import org.darkimport.omeglespy$z.LogHelper;
-import org.darkimport.omeglespy$z.LogLevel;
+import org.darkimport.omeglespy_z.LogHelper;
+import org.darkimport.omeglespy_z.LogLevel;
 import org.darkimport.omeglespy_z_desktop.constants.ConfigConstants;
 
 public class UrlHelper {

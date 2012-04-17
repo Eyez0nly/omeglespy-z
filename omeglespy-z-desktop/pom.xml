@@ -82,6 +82,7 @@
 						<exclude>**/server_names.txt</exclude>
 						<exclude>**/browsers.txt</exclude>
 						<exclude>**/filter.txt</exclude>
+						<exclude>**/keyboard-shortcuts.xml</exclude>
 						<exclude>**/settings.properties</exclude>
 						<exclude>**/omeglespy-z</exclude>
 						<exclude>**/omeglespy-z.bat</exclude>
@@ -124,6 +125,18 @@
 								</filter>
 								<filter>
 									<artifact>commons-logging:commons-logging</artifact>
+									<includes>
+										<include>**</include>
+									</includes>
+								</filter>
+								<filter>
+									<artifact>xpp3:xpp3</artifact>
+									<includes>
+										<include>**</include>
+									</includes>
+								</filter>
+								<filter>
+									<artifact>org.jibx:jibx-run</artifact>
 									<includes>
 										<include>**</include>
 									</includes>
@@ -297,6 +310,11 @@
 			<groupId>org.jibx</groupId>
 			<artifactId>jibx-run</artifactId>
 			<version>1.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>xpp3</groupId>
+			<artifactId>xpp3</artifactId>
+			<version>1.1.3.4.O</version>
 		</dependency>
 	</dependencies>
 	<repositories>

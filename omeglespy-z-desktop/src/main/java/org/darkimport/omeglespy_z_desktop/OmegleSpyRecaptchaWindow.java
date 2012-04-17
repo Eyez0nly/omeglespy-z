@@ -40,7 +40,7 @@ import javax.swing.JTextField;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.darkimport.omeglespy$z.RecaptchaHelper;
+import org.darkimport.omeglespy_z.RecaptchaHelper;
 import org.javabuilders.BuildResult;
 import org.javabuilders.swing.SwingJavaBuilder;
 

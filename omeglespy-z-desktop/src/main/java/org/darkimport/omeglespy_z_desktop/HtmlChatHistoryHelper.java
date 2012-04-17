@@ -33,7 +33,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.darkimport.omeglespy$z.ChatHistoryHelper;
+import org.darkimport.omeglespy_z.ChatHistoryHelper;
 
 /**
  * @author user
@@ -71,7 +71,7 @@ public class HtmlChatHistoryHelper extends ChatHistoryHelper {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.darkimport.omeglespy$z.ChatHistoryHelper#doPrintLabelledMessage(java
+	 * org.darkimport.omeglespy_z.ChatHistoryHelper#doPrintLabelledMessage(java
 	 * .lang.String, java.lang.String)
 	 */
 	@Override
@@ -101,7 +101,7 @@ public class HtmlChatHistoryHelper extends ChatHistoryHelper {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.darkimport.omeglespy$z.ChatHistoryHelper#doPrintStatusMessage(java
+	 * org.darkimport.omeglespy_z.ChatHistoryHelper#doPrintStatusMessage(java
 	 * .lang.String)
 	 */
 	@Override
