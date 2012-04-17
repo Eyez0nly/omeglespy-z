@@ -82,26 +82,26 @@ Where activeListeners is a List<OmegleSpyConversationListener>.
 	    
 Optional steps:
 
-	1.) Initialize org.darkimport.omeglespy$z.LogHelper with a concrete instance. The default
-		implementation (org.darkimport.omeglespy$z.DefaultLogHelper) writes log output to
+	1.) Initialize org.darkimport.omeglespy_z.LogHelper with a concrete instance. The default
+		implementation (org.darkimport.omeglespy_z.DefaultLogHelper) writes log output to
 		System.out. Another implementation might utilize the java logging framework or SLF4J or
 		log4j.
 		
-	2.) Implement org.darkimport.omeglespy$z.NameGenerator -- one each for server-name generation
+	2.) Implement org.darkimport.omeglespy_z.NameGenerator -- one each for server-name generation
 		and conversant name generation.
 		
 		If you don't do this, the default implementations provide promenade.omegle.com as the
 		server name for all connections and Stranger1 and Stranger2 as the names of the
 		conversants.
 		
-	3.) Implement org.darkimport.omeglespy$z.FilterHelper with a concrete instance. The default
+	3.) Implement org.darkimport.omeglespy_z.FilterHelper with a concrete instance. The default
 		implementation should actually be adequate for most filtering needs. However, in its
 		default configuration, it simply has no "bad phrase" list.
 		
 		Also, the default implementation does whole-phrase matching. A more robust implementation
 		might utilize regular expressions instead.
 		
-	4.) Initialize org.darkimport.omeglespy$z.CommunicationHelper with a concrete instance. The
+	4.) Initialize org.darkimport.omeglespy_z.CommunicationHelper with a concrete instance. The
 		Default implementation should be adequate for most scenarios. However it is changeable for
 		those who want more control or those who are dealing with a subset of the core java IO API.
 

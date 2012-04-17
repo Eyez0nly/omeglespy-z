@@ -17,12 +17,27 @@
 /**
  * 
  */
-package org.darkimport.omeglespy$z;
+package org.darkimport.omeglespy_z;
+
+import java.util.Arrays;
 
 /**
  * @author user
  * 
  */
-public enum OmegleEventType {
-	connecting, waiting, connected, typing, gotMessage, stoppedTyping, strangerDisconnected, recaptchaRequired, recaptchaRejected, count, _initializationFailure, _conversationStartFailure, _generalCommunicationFailure;
+public class DefaultConversantNameGenerator implements NameGenerator {
+	public static String[]	CONVERSANT_NAMES	= new String[] { "Stranger1", "Stranger2" };
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.darkimport.omeglespy_z.NameGenerator#next(int, boolean)
+	 */
+	public String[] next(final int numberOfNames, final boolean uniqueNames) {
+		if (numberOfNames > CONVERSANT_NAMES.length) { throw new IllegalArgumentException(
+				"The number of names requested exceeds the available number of names"); }
+
+		return Arrays.copyOfRange(CONVERSANT_NAMES, 0, numberOfNames);
+	}
+
 }

@@ -17,7 +17,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy$z;
+package org.darkimport.omeglespy_z;
 
 import java.net.MalformedURLException;
 import java.net.URL;

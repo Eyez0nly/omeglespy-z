@@ -25,12 +25,14 @@
 /**
  * 
  */
-package org.darkimport.omeglespy$z;
+package org.darkimport.omeglespy_z;
 
 /**
  * @author user
  * 
  */
-public enum LogLevel {
-	WARN, DEBUG, INFO, FATAL, ERROR, TRACE;
+public interface NameGenerator {
+
+	String[] next(int numberOfNames, boolean uniqueNames);
+
 }

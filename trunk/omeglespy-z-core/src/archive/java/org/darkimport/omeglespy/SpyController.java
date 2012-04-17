@@ -14,8 +14,8 @@ import java.util.Set;
 import org.darkimport.configuration.ConfigConstants;
 import org.darkimport.configuration.ConfigHelper;
 import org.darkimport.io.IOUtils;
-import org.darkimport.omeglespy$z.LogHelper;
-import org.darkimport.omeglespy$z.LogLevel;
+import org.darkimport.omeglespy_z.LogHelper;
+import org.darkimport.omeglespy_z.LogLevel;
 
 /**
  * @author user

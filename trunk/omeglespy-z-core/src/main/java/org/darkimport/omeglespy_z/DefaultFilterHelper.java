@@ -25,28 +25,27 @@
 /**
  * 
  */
-package org.darkimport.omeglespy$z;
+package org.darkimport.omeglespy_z;
+
+import java.util.List;
 
 /**
+ * For now, we just do string matching on some known bot tells.
+ * 
+ * The tells are loaded from filter.txt at the first invokation of isBadMessage.
+ * 
  * @author user
  * 
  */
-public abstract class ChatHistoryHelper {
-	private static ChatHistoryHelper	_instance;
+public class DefaultFilterHelper extends FilterHelper {
+	private final List<String>	badMessages;
 
-	public static void initialize(final ChatHistoryHelper chatHistoryHelper) {
-		_instance = chatHistoryHelper;
+	public DefaultFilterHelper(final List<String> badMessages) {
+		this.badMessages = badMessages;
 	}
 
-	public static void printLabelledMessage(final String label, final String message) {
-		_instance.doPrintLabelledMessage(label, message);
+	@Override
+	protected boolean checkIsBadMessage(final String msg) {
+		return badMessages != null && badMessages.contains(msg.trim());
 	}
-
-	public static void printStatusMessage(final String message) {
-		_instance.doPrintStatusMessage(message);
-	}
-
-	protected abstract void doPrintLabelledMessage(String label, String message);
-
-	protected abstract void doPrintStatusMessage(String message);
 }
