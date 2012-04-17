@@ -57,13 +57,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.darkimport.config.ConfigHelper;
-import org.darkimport.omeglespy$z.ChatHistoryHelper;
-import org.darkimport.omeglespy$z.CommunicationHelper;
-import org.darkimport.omeglespy$z.DefaultCommunicationHelper;
-import org.darkimport.omeglespy$z.LogHelper;
-import org.darkimport.omeglespy$z.OmegleSpyConversationController;
-import org.darkimport.omeglespy$z.OmegleSpyConversationListener;
-import org.darkimport.omeglespy$z.OmegleSpyEvent;
+import org.darkimport.omeglespy_z.ChatHistoryHelper;
+import org.darkimport.omeglespy_z.CommunicationHelper;
+import org.darkimport.omeglespy_z.DefaultCommunicationHelper;
+import org.darkimport.omeglespy_z.LogHelper;
+import org.darkimport.omeglespy_z.OmegleSpyConversationController;
+import org.darkimport.omeglespy_z.OmegleSpyConversationListener;
+import org.darkimport.omeglespy_z.OmegleSpyEvent;
 import org.darkimport.omeglespy_z_desktop.constants.ConfigConstants;
 import org.darkimport.omeglespy_z_desktop.constants.ControlNameConstants;
 import org.darkimport.omeglespy_z_desktop.constants.ResourceConstants;
@@ -487,8 +487,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.darkimport.omeglespy$z.OmegleSpyConversationListener#messageTransferred
-	 * (org.darkimport.omeglespy$z.OmegleSpyEvent, java.lang.String)
+	 * org.darkimport.omeglespy_z.OmegleSpyConversationListener#messageTransferred
+	 * (org.darkimport.omeglespy_z.OmegleSpyEvent, java.lang.String)
 	 */
 	public void messageTransferred(final OmegleSpyEvent evt, final String msg) {
 		final String conversantName = evt.getConversantName();
@@ -507,8 +507,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.darkimport.omeglespy$z.OmegleSpyConversationListener#messageBlocked
-	 * (org.darkimport.omeglespy$z.OmegleSpyEvent, java.lang.String)
+	 * org.darkimport.omeglespy_z.OmegleSpyConversationListener#messageBlocked
+	 * (org.darkimport.omeglespy_z.OmegleSpyEvent, java.lang.String)
 	 */
 	public void messageBlocked(final OmegleSpyEvent evt, final String msg) {
 		final String conversantName = evt.getConversantName();
@@ -528,8 +528,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.darkimport.omeglespy$z.OmegleSpyConversationListener#externalMessageSent
-	 * (org.darkimport.omeglespy$z.OmegleSpyEvent, java.lang.String)
+	 * org.darkimport.omeglespy_z.OmegleSpyConversationListener#externalMessageSent
+	 * (org.darkimport.omeglespy_z.OmegleSpyEvent, java.lang.String)
 	 */
 	public void externalMessageSent(final OmegleSpyEvent evt, final String fromName, final String msg) {
 		final String conversantName = evt.getConversantName();
@@ -549,7 +549,7 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.darkimport.omeglespy$z.OmegleSpyConversationListener#isTyping(org
+	 * org.darkimport.omeglespy_z.OmegleSpyConversationListener#isTyping(org
 	 * .darkimport.omeglespy$z.OmegleSpyEvent)
 	 */
 	public void isTyping(final OmegleSpyEvent evt) {
@@ -563,8 +563,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.darkimport.omeglespy$z.OmegleSpyConversationListener#stoppedTyping
-	 * (org.darkimport.omeglespy$z.OmegleSpyEvent)
+	 * org.darkimport.omeglespy_z.OmegleSpyConversationListener#stoppedTyping
+	 * (org.darkimport.omeglespy_z.OmegleSpyEvent)
 	 */
 	public void stoppedTyping(final OmegleSpyEvent evt) {
 		strangerTypingControls.get(evt.getConversantName()).setVisible(false);
@@ -579,8 +579,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.darkimport.omeglespy$z.OmegleSpyConversationListener#chatStarted(
-	 * org.darkimport.omeglespy$z.OmegleSpyEvent)
+	 * org.darkimport.omeglespy_z.OmegleSpyConversationListener#chatStarted(
+	 * org.darkimport.omeglespy_z.OmegleSpyEvent)
 	 */
 	public void chatStarted(final OmegleSpyEvent evt) {
 		final String conversantName = evt.getConversantName();
@@ -602,8 +602,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.darkimport.omeglespy$z.OmegleSpyConversationListener#disconnected
-	 * (org.darkimport.omeglespy$z.OmegleSpyEvent)
+	 * org.darkimport.omeglespy_z.OmegleSpyConversationListener#disconnected
+	 * (org.darkimport.omeglespy_z.OmegleSpyEvent)
 	 */
 	public void disconnected(final OmegleSpyEvent evt) {
 		final String conversantName = evt.getConversantName();
@@ -618,8 +618,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.darkimport.omeglespy$z.OmegleSpyConversationListener#recaptchaRejected
-	 * (org.darkimport.omeglespy$z.OmegleSpyEvent, java.lang.String)
+	 * org.darkimport.omeglespy_z.OmegleSpyConversationListener#recaptchaRejected
+	 * (org.darkimport.omeglespy_z.OmegleSpyEvent, java.lang.String)
 	 */
 	public void recaptchaRejected(final OmegleSpyEvent evt, final String id) {
 		ChatHistoryHelper.printStatusMessage(SwingJavaBuilder.getConfig().getResource(
@@ -631,7 +631,7 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.darkimport.omeglespy$z.OmegleSpyConversationListener#recaptcha(org
+	 * org.darkimport.omeglespy_z.OmegleSpyConversationListener#recaptcha(org
 	 * .darkimport.omeglespy$z.OmegleSpyEvent, java.lang.String)
 	 */
 	public void recaptcha(final OmegleSpyEvent evt, final String id) {
@@ -645,8 +645,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.darkimport.omeglespy$z.OmegleSpyConversationListener#messageFiltered
-	 * (org.darkimport.omeglespy$z.OmegleSpyEvent, java.lang.String)
+	 * org.darkimport.omeglespy_z.OmegleSpyConversationListener#messageFiltered
+	 * (org.darkimport.omeglespy_z.OmegleSpyEvent, java.lang.String)
 	 */
 	public void messageFiltered(final OmegleSpyEvent evt, final String msg) {
 		controller.disconnectStranger(evt.getConversantName());

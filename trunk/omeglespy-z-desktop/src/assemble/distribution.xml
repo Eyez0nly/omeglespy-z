@@ -11,6 +11,7 @@
 			<directory>src/main/config</directory>
 			<includes>
 				<include>*.txt</include>
+				<include>*.xml</include>
 			</includes>
 			<outputDirectory>/conf</outputDirectory>
 		</fileSet>

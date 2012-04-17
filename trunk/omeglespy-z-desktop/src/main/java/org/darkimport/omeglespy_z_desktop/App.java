@@ -26,7 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.darkimport.config.ConfigHelper;
-import org.darkimport.omeglespy$z.LogHelper;
+import org.darkimport.omeglespy_z.LogHelper;
 import org.javabuilders.swing.SwingJavaBuilder;
 
 /**
