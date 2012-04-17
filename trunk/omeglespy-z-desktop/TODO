@@ -1,5 +1,6 @@
-Implement name generators for servers and strangers.
-
 Clear TODOs.
+- Setup logviewer
 
 Sending external messages in expert mode.
+
+Ending the conversation when one of the strangers is disconnected results in an inconsistent state.
