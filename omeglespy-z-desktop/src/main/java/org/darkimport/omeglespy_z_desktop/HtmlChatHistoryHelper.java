@@ -51,15 +51,20 @@ public class HtmlChatHistoryHelper extends ChatHistoryHelper {
 
 	private static final String			SYSTEM					= "System";
 
+	private static final String			SYSTEM_CLASS			= "system";
+
 	private final Map<String, String>	labelStyleAssociations	= new HashMap<String, String>();
 	private final String				baseHtml;
 	private final String				baseElementId;
 	private final HTMLDocument			htmlDocument;
 
+	private final Map<Date, String>		currentChat;
+
 	public HtmlChatHistoryHelper(final String baseHtml, final String baseElementId, final HTMLDocument htmlDocument) {
 		this.baseHtml = baseHtml;
 		this.baseElementId = baseElementId;
 		this.htmlDocument = htmlDocument;
+		currentChat = new HashMap<Date, String>();
 	}
 
 	/*
@@ -101,7 +106,7 @@ public class HtmlChatHistoryHelper extends ChatHistoryHelper {
 	 */
 	@Override
 	protected void doPrintStatusMessage(final String message) {
-		printLogItem(SYSTEM, message, DEFAULT_CLASS);
+		printLogItem(SYSTEM, message, SYSTEM_CLASS);
 	}
 
 	/**
@@ -113,14 +118,23 @@ public class HtmlChatHistoryHelper extends ChatHistoryHelper {
 	private void printLogItem(final String label, final String finalMessage, final String className) {
 		final Element element = htmlDocument.getElement(baseElementId);
 		final DateFormat timestamp = DateFormat.getTimeInstance(DateFormat.SHORT);
-		String htmlText = null;
+		final Date date = new Date();
+		final String htmlText = "<div class='logitem'>" + "<span class='timestamp'>[" + timestamp.format(date)
+				+ "]</span>" + " " + "<span class='" + className + "'>" + label + ":</span> " + finalMessage + "</div>";
+		currentChat.put(date, htmlText);
 		try {
-			htmlText = "<div class='logitem'>" + "<span class='timestamp'>[" + timestamp.format(new Date())
-					+ "]</span>" + " " + "<span class='" + className + "'>" + label + ":</span> " + finalMessage
-					+ "</div>";
 			htmlDocument.insertBeforeEnd(element, htmlText);
 		} catch (final Exception e) {
 			log.warn("Unable to print a log item, " + htmlText + " into " + baseElementId, e);
+		}
+	}
+
+	public void printRaw(final String rawText) {
+		final Element element = htmlDocument.getElement(baseElementId);
+		try {
+			htmlDocument.insertBeforeEnd(element, rawText);
+		} catch (final Exception e) {
+			log.warn("Unable to print raw text, " + rawText + " into " + baseElementId, e);
 		}
 	}
 
@@ -132,8 +146,15 @@ public class HtmlChatHistoryHelper extends ChatHistoryHelper {
 		labelStyleAssociations.put(label, styleToUse);
 	}
 
+	public void clearCurrentChat() {
+		currentChat.clear();
+	}
+
+	public Map<Date, String> getCurrentChat() {
+		return currentChat;
+	}
+
 	public String getBaseHtml() {
 		return baseHtml;
 	}
-
 }

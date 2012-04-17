@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,9 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.Element;
 import javax.swing.text.html.HTMLDocument;
 
 import org.apache.commons.io.IOUtils;
@@ -115,6 +119,10 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 
 	int												conversationNumber;
 
+	private int										convoNum;
+
+	private final Map<Integer, Map<Date, String>>	conversations				= new HashMap<Integer, Map<Date, String>>();
+
 	public OmegleSpyZMainWindow() {
 		result = SwingJavaBuilder.build(this);
 
@@ -169,6 +177,26 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 				}
 			}
 		});
+		console.addHyperlinkListener(new HyperlinkListener() {
+
+			public void hyperlinkUpdate(final HyperlinkEvent ev) {
+				if (ev.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+					log.debug("Clicked a link: " + ev.getURL());
+					try {
+						final Element e = ev.getSourceElement();
+						if (LogViewerHelper.saveLog(e, chatHistoryHelper.getBaseHtml(), conversations) == null) {
+							try {
+								UrlHelper.openURL(ev.getURL().toString());
+							} catch (final Exception ex) {
+								log.warn("Unable to open the URL in the browser.", ex);
+							}
+						}
+					} catch (final Exception e) {
+						log.warn("Could not save file.", e);
+					}
+				}
+			}
+		});
 		addWindowListener(new WindowAdapter() {
 
 			/*
@@ -190,7 +218,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 
 		final List<OmegleSpyConversationListener> activeListeners = new ArrayList<OmegleSpyConversationListener>();
 		activeListeners.add(this);
-		controller = new OmegleSpyConversationController(activeListeners);
+		controller = new OmegleSpyConversationController(activeListeners, new FileListBasedNameGenerator(
+				ConfigConstants.MAIN_NAMESFILE), new FileListBasedNameGenerator(ConfigConstants.MAIN_SERVERNAMESFILE));
 	}
 
 	/**
@@ -244,6 +273,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 			strangerSwapButtons.clear();
 			strangerDisconnectButtons.clear();
 			chatHistoryHelper.clearAssociations();
+			chatHistoryHelper.clearCurrentChat();
+			convoNum++;
 
 			for (int i = 0; i < conversantNames.length; i++) {
 				// create the associations and enable the swap controls
@@ -287,7 +318,11 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 			ChatHistoryHelper.printStatusMessage(result.getConfig().getResource(
 					ResourceConstants.MESSAGE_CONVERSATION_ENDED));
 
-			// TODO Print link to save conversation
+			conversations.put(convoNum, chatHistoryHelper.getCurrentChat());
+
+			final String conversationSaveLink = "<div>** Would you like to <a href='#' class='" + BTN_LINK
+					+ "' id='save-convo-" + convoNum + "'>save this conversation</a>? **</div><br><hr>";
+			chatHistoryHelper.printRaw(conversationSaveLink);
 		}
 
 	}
