@@ -285,6 +285,7 @@ public class OmegleConnection extends Observable implements Runnable {
 	public boolean disconnect() {
 		String d = null;
 		if (chatId != null) {
+			chatId = null;
 			try {
 				d = CommunicationHelper.wget(disconnect_url, true, "id", chatId);
 			} catch (final Exception e) {
@@ -294,7 +295,6 @@ public class OmegleConnection extends Observable implements Runnable {
 				// failure tolerance.
 				notifyObservers(new OmegleEvent(OmegleEventType._generalCommunicationFailure, null));
 			}
-			chatId = null;
 		} else {
 			LogHelper.log(OmegleConnection.class, LogLevel.WARN, "Disconnect was invoked without having a connection.");
 		}

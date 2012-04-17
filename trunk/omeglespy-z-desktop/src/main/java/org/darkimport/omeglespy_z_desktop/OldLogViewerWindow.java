@@ -1,26 +1,18 @@
 /*
- * #%L
- * omeglespy-z-desktop
+ * #%L omeglespy-z-desktop
  * 
- * $Id$
- * $HeadURL$
- * %%
- * Copyright (C) 2011 - 2012 darkimport
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 2 of the 
- * License, or (at your option) any later version.
+ * $Id$ $HeadURL$ %% Copyright (C) 2011 - 2012 darkimport %% This program is
+ * free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation,
+ * either version 2 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU General Public 
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/gpl-2.0.html>.
- * #L%
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/gpl-2.0.html>. #L%
  */
 package org.darkimport.omeglespy_z_desktop;
 
@@ -30,7 +22,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -47,8 +41,7 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-
-public class DesperationWindow extends JFrame implements ListSelectionListener, HyperlinkListener, ActionListener {
+public class OldLogViewerWindow extends JFrame implements ListSelectionListener, HyperlinkListener, ActionListener {
 	/**
 	 * 
 	 */
@@ -61,7 +54,7 @@ public class DesperationWindow extends JFrame implements ListSelectionListener, 
 	private JEditorPane				currentEp;
 	private final JButton			save;
 
-	public DesperationWindow() {
+	public OldLogViewerWindow() {
 		super("Session Logs");
 
 		convoList = new JList(lister = new DefaultComboBoxModel());
@@ -94,7 +87,8 @@ public class DesperationWindow extends JFrame implements ListSelectionListener, 
 		}
 	}
 
-	public void addHTML(final String baseHTML, final String html) {
+	public void addHTML(final String baseHTML, final Map<Date, String> timestampedConversationParts) {
+		final String html = LogViewerHelper.generateWholeConversation(timestampedConversationParts).toString();
 		final String all = baseHTML.replace("<!--%s-->", html);
 		final JEditorPane ep = new JEditorPane("text/html", all);
 		ep.addHyperlinkListener(this);
