@@ -163,8 +163,7 @@ public class OmegleConnection extends Observable implements Runnable {
 		}
 		if (chatId != null) {
 			// We left the loop because the server no longer recognizes our chat
-			// ID. TODO Or does it? Is it possible that there was a transmission
-			// error?
+			// ID.
 			LogHelper.log(OmegleConnection.class, LogLevel.WARN,
 					"Session nullification detected without accompanying strangerDisconnect event.");
 			chatId = null;

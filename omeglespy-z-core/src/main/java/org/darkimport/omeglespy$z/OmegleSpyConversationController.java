@@ -94,7 +94,7 @@ public class OmegleSpyConversationController {
 			LogHelper.log(OmegleSpyConversationController.class, LogLevel.WARN,
 					"A previous conversation was not properly ended. Attempting to end it now.");
 			try {
-				conversationCoordinator.endConversation(true);
+				conversationCoordinator.endConversation();
 				LogHelper.log(OmegleSpyConversationController.class, LogLevel.INFO,
 						"Successfully forced the ending of the previous conversation.");
 			} catch (final Exception e) {
