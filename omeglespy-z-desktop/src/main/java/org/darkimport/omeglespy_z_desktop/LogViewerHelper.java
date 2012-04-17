@@ -103,12 +103,7 @@ public class LogViewerHelper {
 			if ((m = SAVCON_REGEX.matcher(id)).matches()) {
 				final int ci = Integer.parseInt(m.group(1));
 				final Map<Date, String> conversation = conversations.get(ci);
-				final List<Date> sortedTimestamps = new ArrayList<Date>(conversation.keySet());
-				Collections.sort(sortedTimestamps);
-				final StringBuffer conversationBuffer = new StringBuffer();
-				for (final Date timestamp : sortedTimestamps) {
-					conversationBuffer.append(conversation.get(timestamp));
-				}
+				final StringBuffer conversationBuffer = generateWholeConversation(conversation);
 				final String ct = baseHtml.replace("<!--%s-->", conversationBuffer.toString());
 				return guiWriteHtmlFile(ct, null);
 			}
@@ -116,6 +111,20 @@ public class LogViewerHelper {
 		// If className is null, we probably clicked on the link to the project
 		// site in the start.html.
 		return null;
+	}
+
+	/**
+	 * @param conversation
+	 * @return
+	 */
+	public static StringBuffer generateWholeConversation(final Map<Date, String> conversation) {
+		final List<Date> sortedTimestamps = new ArrayList<Date>(conversation.keySet());
+		Collections.sort(sortedTimestamps);
+		final StringBuffer conversationBuffer = new StringBuffer();
+		for (final Date timestamp : sortedTimestamps) {
+			conversationBuffer.append(conversation.get(timestamp));
+		}
+		return conversationBuffer;
 	}
 
 	public static boolean guiWriteHtmlFile(final String text, final Component p) throws IOException {

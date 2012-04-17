@@ -197,6 +197,7 @@ public class OmegleSpyConversationCoordinator implements Observer {
 					conversationListener.stoppedTyping(evt);
 				}
 				break;
+			// TODO Handle generalcommunicationfailure in its own block.
 			case strangerDisconnected:
 				// The notifying conversant has disconnected. Ensure that the
 				// connection is closed and then notify the
@@ -206,7 +207,7 @@ public class OmegleSpyConversationCoordinator implements Observer {
 				} catch (final Exception e) {
 					LogHelper.log(OmegleSpyConversationCoordinator.class, LogLevel.WARN, "Disconnection error.", e);
 				}
-
+			case _generalCommunicationFailure:
 				for (final OmegleSpyConversationListener conversationListener : activeListeners) {
 					conversationListener.disconnected(evt);
 				}
@@ -239,8 +240,6 @@ public class OmegleSpyConversationCoordinator implements Observer {
 				for (final OmegleSpyConversationListener conversationListener : activeListeners) {
 					conversationListener.initializationFailed(evt);
 				}
-				break;
-			case _generalCommunicationFailure:
 				break;
 			default:
 				break;
