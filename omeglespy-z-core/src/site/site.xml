@@ -5,7 +5,7 @@
 	<bannerLeft>
 		<name>omeglespy-z-core</name>
 		<src>images/spyboticon.png</src>
-		<href>https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-core</href>
+		<href>https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-core/index.html</href>
 	</bannerLeft>
 	<bannerRight>
 		<name>omeglespy-z-core</name>
@@ -24,9 +24,9 @@
 		</menu>
 		
 		<menu name="known implementations">
-			<item name="omeglespy-z-desktop" href="https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-desktop" />
-			<item name="omeglespy-z-mobile" href="https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-mobile" />
-			<item name="omeglespy-z-cl" href="https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-cl" />
+			<item name="omeglespy-z-desktop" href="https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-desktop/index.html" />
+			<item name="omeglespy-z-mobile" href="https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-mobile/index.html" />
+			<item name="omeglespy-z-cl" href="https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-cl/index.html" />
 		</menu>
 
 		<menu ref="reports" />
