@@ -1,38 +1,25 @@
 /*
- * #%L
- * omeglespy-z-cl
+ * #%L omeglespy-z-cl
  * 
- * $Id$
- * $HeadURL$
- * %%
- * Copyright (C) 2011 - 2012 darkimport
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 2 of the 
- * License, or (at your option) any later version.
+ * $Id$ $HeadURL$ %% Copyright (C) 2011 - 2012 darkimport %% This program is
+ * free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation,
+ * either version 2 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU General Public 
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/gpl-2.0.html>.
- * #L%
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/gpl-2.0.html>. #L%
  */
 package org.darkimport.omeglespy_z;
 
-import java.awt.AWTException;
-import java.awt.BorderLayout;
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,10 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -73,9 +56,10 @@ public class App {
 	private static boolean						filtered;
 	private static final Map<String, String>	outstandingRecaptchaChallenges	= new HashMap<String, String>();
 	private static final Map<String, String>	outstandingRecaptchas			= new HashMap<String, String>();
+	private static CLChatHistoryHelper			clChatHistoryHelper				= new CLChatHistoryHelper();
 
 	public static void main(final String[] args) {
-		ChatHistoryHelper.initialize(new CLChatHistoryHelper());
+		ChatHistoryHelper.initialize(clChatHistoryHelper);
 		LogHelper.initialize(new CommonsLoggingLogHelper());
 		CommunicationHelper.initialize(new DefaultCommunicationHelper());
 
@@ -330,50 +314,19 @@ public class App {
 		}
 
 		final String target = targets[0];
-		final JDialog recaptchaDialog = new JDialog();
-		JLabel imageLabel;
 		try {
 			final String challengeAssetUrlString = RecaptchaHelper
 					.getChallengeAssetUrlString(outstandingRecaptchaChallenges.get(target));
-			imageLabel = new JLabel(new ImageIcon(new URL(challengeAssetUrlString)));
-		} catch (final MalformedURLException e) {
+			final URL recaptchaImageLocation = new URL(challengeAssetUrlString);
+			// Load and ASCII-ify the image
+			final String ascii_fiedImage = Image2Ascii.assciiFyImage(recaptchaImageLocation);
+			clChatHistoryHelper.getOut().println(ascii_fiedImage);
+		} catch (final Exception e) {
 			log.warn("Unable to get recaptcha image", e);
 			ChatHistoryHelper.printStatusMessage("An error occurred while loading recaptcha image");
 			return;
 		}
-		recaptchaDialog.getContentPane().setLayout(new BorderLayout());
-		recaptchaDialog.getContentPane().add(imageLabel, BorderLayout.CENTER);
-		recaptchaDialog.setSize(300, 240);
-		recaptchaDialog.setAlwaysOnTop(true);
-		recaptchaDialog.setFocusable(false);
-		new Thread(new Runnable() {
-			public void run() {
-				recaptchaDialog.setVisible(true);
-				Robot r;
-				try {
-					r = new Robot();
-					r.keyPress(KeyEvent.VK_ALT);
-					r.keyPress(KeyEvent.VK_TAB);
-					try {
-						Thread.sleep(500);
-					} catch (final InterruptedException e) {
-						log.warn("Thread no sleep.", e);
-					}
-					r.keyRelease(KeyEvent.VK_TAB);
-					r.keyRelease(KeyEvent.VK_ALT);
-				} catch (final AWTException e) {
-					log.warn("No robot for you.", e);
-				}
 
-				try {
-					Thread.sleep(20 * 1000);
-				} catch (final InterruptedException e) {
-					log.warn("Thread no sleep.", e);
-				}
-				recaptchaDialog.setVisible(false);
-				recaptchaDialog.dispose();
-			}
-		}).start();
 	}
 
 	protected static void _toggleBlock(final Map<String, Object> args) {
