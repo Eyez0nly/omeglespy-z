@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="omeglespy-z-desktop" xmlns="http://maven.apache.org/DECORATION/1.0.0"
+<project name="omeglespy-z-cl" xmlns="http://maven.apache.org/DECORATION/1.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
 	<bannerLeft>
-		<name>omeglespy-z-desktop</name>
+		<name>omeglespy-z-cl</name>
 		<src>images/spyboticon.png</src>
-		<href>https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-desktop</href>
+		<href>https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-cl/index.html</href>
 	</bannerLeft>
 	<bannerRight>
-		<name>omeglespy-z-desktop</name>
+		<name>omeglespy-z-cl</name>
 	</bannerRight>
 	<body>
 		<links>
@@ -16,7 +16,7 @@
 			<item name="omeglespy-z on google code" href="http://code.google.com/p/omeglespy-z/" />
 		</links>
 
-		<menu name="omeglespy-z-desktop">
+		<menu name="omeglespy-z-cl">
 			<item name="Introduction" href="index.html" />
 			<item name="Download" href="download.html" />
 			<item name="Release Notes" href="release-notes.html" />

@@ -16,6 +16,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<projectVersion>${project.version}</projectVersion>
 	</properties>
 
 	<build>
@@ -169,6 +170,28 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	
+	<licenses>
+		<license>
+			<name>GNU General Public License (GPL) v2</name>
+			<url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Dark Import</name>
+			<id>darkimport</id>
+			<email>darkimport@gmail.com</email>
+			<roles>
+				<role>admin</role>
+				<role>developer</role>
+				<role>Build master</role>
+			</roles>
+			<timezone>-12</timezone>
+		</developer>
+	</developers>
 
 	<dependencies>
 		<dependency>
