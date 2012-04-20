@@ -1,0 +1,26 @@
+          ---
+          about
+          ---
+
+omeglespy-z-mobile
+
+  omeglespy-z-mobile will be an Android and iOS version of
+  {{https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-desktop/index.html}omeglespy-z-desktop}}.
+  omeglespy-z-cl is also written in java, and it shares many of the same
+  features as its desktop counterpart, allowing you to "spy" on  strangers
+  chatting on {{http://www.omegle.com}}, to  impersonate either of the
+  strangers, to disconnect either stranger, and to replace either stranger
+  with a brand new stranger.
+  
+  There are some differences, though. Since omeglespy-z-cl is a command-line
+  application, it's fully text-based. Even the recaptcha images are converted
+  to ASCII art prior to being displayed.\*
+  
+* system requirements
+
+  * <<OS>>: Android or iOS (versions unknown at this time).
+  
+  * <<Device>>: Unknown at this time. Probably, it will work on most Android
+  and iOS devices.
+
+  []  
