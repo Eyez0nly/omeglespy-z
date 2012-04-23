@@ -24,5 +24,5 @@ package org.darkimport.omeglespy_z;
  * 
  */
 public enum OmegleEventType {
-	connecting, waiting, connected, typing, gotMessage, stoppedTyping, strangerDisconnected, recaptchaRequired, recaptchaRejected, count, _initializationFailure, _conversationStartFailure, _generalCommunicationFailure;
+	connecting, waiting, connected, typing, gotMessage, stoppedTyping, strangerDisconnected, recaptchaRequired, recaptchaRejected, count, _initializationFailure, _conversationStartFailure, _generalCommunicationFailure, _userDisconnected;
 }
