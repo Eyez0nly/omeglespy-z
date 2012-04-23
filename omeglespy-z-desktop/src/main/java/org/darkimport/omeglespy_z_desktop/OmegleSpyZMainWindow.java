@@ -375,7 +375,7 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 		log.debug("Disconnect stranger initiated by " + button.getName());
 		final int targetIndex = new Integer(button.getName().substring(button.getName().length() - 1));
 		final String strangerName = conversantNames[targetIndex];
-		log.debug("Disconnecting Stranger " + targetIndex + 1 + " identified as " + strangerName + ".");
+		log.debug("Disconnecting Stranger " + (targetIndex + 1) + " identified as " + strangerName + ".");
 
 		controller.disconnectStranger(strangerName);
 	}
