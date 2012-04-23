@@ -123,6 +123,7 @@ public class OmegleSpyConversationCoordinator implements Observer {
 			LogHelper.log(OmegleSpyConversationCoordinator.class, LogLevel.DEBUG, "* eventFire Request EVENT["
 					+ omegleEvent.getSource() + "] " + argslist);
 		}
+
 		switch (omegleEvent.getSource()) {
 			case connecting:
 				break;
@@ -197,17 +198,16 @@ public class OmegleSpyConversationCoordinator implements Observer {
 					conversationListener.stoppedTyping(evt);
 				}
 				break;
-			// TODO Handle generalcommunicationfailure in its own block.
+			// TODO Handle _generalCommunicationFailure and _userDisconnected in
+			// their own blocks.
+			case _userDisconnected:
+				LogHelper.log(OmegleSpyConversationCoordinator.class, LogLevel.DEBUG, "User initiated disconnect.");
 			case strangerDisconnected:
+			case _generalCommunicationFailure:
 				// The notifying conversant has disconnected. Ensure that the
 				// connection is closed and then notify the
 				// OmegleSpyListeners.
-				try {
-					connection.disconnect();
-				} catch (final Exception e) {
-					LogHelper.log(OmegleSpyConversationCoordinator.class, LogLevel.WARN, "Disconnection error.", e);
-				}
-			case _generalCommunicationFailure:
+				connection.stop();
 				for (final OmegleSpyConversationListener conversationListener : activeListeners) {
 					conversationListener.disconnected(evt);
 				}
