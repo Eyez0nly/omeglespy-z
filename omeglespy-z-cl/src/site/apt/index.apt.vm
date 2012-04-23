@@ -5,7 +5,7 @@
 omeglespy-z-cl
 
   omeglespy-z-cl is a command-line version of
-  {{https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-desktop/index.html}omeglespy-z-desktop}}.
+  {{{https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-desktop/index.html}omeglespy-z-desktop}}.
   omeglespy-z-cl is also written in java, and it shares many of the same
   features as its desktop counterpart, allowing you to "spy" on  strangers
   chatting on {{http://www.omegle.com}}, to  impersonate either of the
@@ -99,6 +99,3 @@ omeglespy-z-cl
   
 ===============================================================================
   \* This makes recaptchas harder to read :(
-  
-
-  
