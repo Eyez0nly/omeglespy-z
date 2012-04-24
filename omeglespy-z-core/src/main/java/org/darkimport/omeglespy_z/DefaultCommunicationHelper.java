@@ -26,10 +26,14 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 
 /**
- * @author user
+ * This is the trivial default implementation of the {@link CommunicationHelper}
+ * .
  * 
+ * @author user
+ * @version $Id: $
  */
 public class DefaultCommunicationHelper extends CommunicationHelper {
+	/** {@inheritDoc} */
 	@Override
 	protected String doWget(final URL url, final boolean post, final boolean ignore, final String... post_data)
 			throws Exception {

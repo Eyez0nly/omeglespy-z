@@ -22,16 +22,32 @@ package org.darkimport.omeglespy_z;
 import java.util.Arrays;
 
 /**
- * @author user
+ * This is the default trivial implementation of the {@link NameGenerator} used
+ * for generating strangers' names.
  * 
+ * The only names that will be returned are Stranger1 and Stranger2.
+ * 
+ * @author user
+ * @version $Id: $
  */
 public class DefaultConversantNameGenerator implements NameGenerator {
+	/**
+	 * Constant
+	 * <code>CONVERSANT_NAMES="new String[] { Stranger1, Stranger2 }"</code>
+	 */
 	public static String[]	CONVERSANT_NAMES	= new String[] { "Stranger1", "Stranger2" };
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.darkimport.omeglespy_z.NameGenerator#next(int, boolean)
+	 */
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * If the requested number of names exceeds the number of elements in
+	 * {@link DefaultConversantNameGenerator#CONVERSANT_NAMES}, an Exception
+	 * will be thrown.
 	 */
 	public String[] next(final int numberOfNames, final boolean uniqueNames) {
 		if (numberOfNames > CONVERSANT_NAMES.length) { throw new IllegalArgumentException(

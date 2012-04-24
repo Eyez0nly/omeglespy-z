@@ -22,10 +22,11 @@ package org.darkimport.omeglespy_z;
 import java.util.EventObject;
 
 /**
- * An event that is generated to (typically) guide a UI.
+ * An event that is generated in the mediation-style context to (typically)
+ * guide a UI.
  * 
  * @author user
- * 
+ * @version $Id: $
  */
 public class OmegleSpyEvent extends EventObject {
 
@@ -34,10 +35,25 @@ public class OmegleSpyEvent extends EventObject {
 	 */
 	private static final long	serialVersionUID	= 5472355439436372275L;
 
+	/**
+	 * <p>
+	 * Constructor for OmegleSpyEvent.
+	 * </p>
+	 * 
+	 * @param source
+	 *            a {@link org.darkimport.omeglespy_z.OmegleConnection} object.
+	 */
 	public OmegleSpyEvent(final OmegleConnection source) {
 		super(source);
 	}
 
+	/**
+	 * <p>
+	 * getConversantName
+	 * </p>
+	 * 
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getConversantName() {
 		return source != null ? ((OmegleConnection) source).getConversantName() : null;
 	}
