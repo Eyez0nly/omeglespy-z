@@ -17,7 +17,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy_z;
+package org.darkimport.omeglespy_z.mediation;
 
 import java.util.EventListener;
 
@@ -36,7 +36,8 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 * @param msg
 	 *            The message content
 	 * @param evt
-	 *            a {@link org.darkimport.omeglespy_z.OmegleSpyEvent} object.
+	 *            a {@link org.darkimport.omeglespy_z.mediation.OmegleSpyEvent}
+	 *            object.
 	 */
 	public void messageTransferred(OmegleSpyEvent evt, String msg);
 
@@ -48,7 +49,8 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 * @param msg
 	 *            The message that the conversant sent.
 	 * @param evt
-	 *            a {@link org.darkimport.omeglespy_z.OmegleSpyEvent} object.
+	 *            a {@link org.darkimport.omeglespy_z.mediation.OmegleSpyEvent}
+	 *            object.
 	 */
 	public void messageBlocked(OmegleSpyEvent evt, String msg);
 
@@ -60,7 +62,8 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 * @param message
 	 *            The message we sent
 	 * @param evt
-	 *            a {@link org.darkimport.omeglespy_z.OmegleSpyEvent} object.
+	 *            a {@link org.darkimport.omeglespy_z.mediation.OmegleSpyEvent}
+	 *            object.
 	 */
 	public void externalMessageSent(OmegleSpyEvent evt, String fromName, String message);
 
@@ -68,7 +71,8 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 * A conversant is typing.
 	 * 
 	 * @param evt
-	 *            a {@link org.darkimport.omeglespy_z.OmegleSpyEvent} object.
+	 *            a {@link org.darkimport.omeglespy_z.mediation.OmegleSpyEvent}
+	 *            object.
 	 */
 	public void isTyping(OmegleSpyEvent evt);
 
@@ -76,7 +80,8 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 * A conversant has stopped typing.
 	 * 
 	 * @param evt
-	 *            a {@link org.darkimport.omeglespy_z.OmegleSpyEvent} object.
+	 *            a {@link org.darkimport.omeglespy_z.mediation.OmegleSpyEvent}
+	 *            object.
 	 */
 	public void stoppedTyping(OmegleSpyEvent evt);
 
@@ -84,7 +89,8 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 * A connection with a conversant has been made.
 	 * 
 	 * @param evt
-	 *            a {@link org.darkimport.omeglespy_z.OmegleSpyEvent} object.
+	 *            a {@link org.darkimport.omeglespy_z.mediation.OmegleSpyEvent}
+	 *            object.
 	 */
 	public void chatStarted(OmegleSpyEvent evt);
 
@@ -92,9 +98,10 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 * The connection with a conversant has been closed or lost.
 	 * 
 	 * @param evt
-	 *            a {@link org.darkimport.omeglespy_z.OmegleSpyEvent} object.
+	 *            a {@link org.darkimport.omeglespy_z.mediation.OmegleSpyEvent}
+	 *            object.
 	 */
-	public void disconnected(OmegleSpyEvent evt);
+	public void strangerDisconnected(OmegleSpyEvent evt);
 
 	/**
 	 * A recaptcha solution that we proposed was rejected.
@@ -102,7 +109,8 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 * @param id
 	 *            The id of the new recaptcha challenge.
 	 * @param evt
-	 *            a {@link org.darkimport.omeglespy_z.OmegleSpyEvent} object.
+	 *            a {@link org.darkimport.omeglespy_z.mediation.OmegleSpyEvent}
+	 *            object.
 	 */
 	public void recaptchaRejected(OmegleSpyEvent evt, String id);
 
@@ -112,7 +120,8 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 * @param id
 	 *            The id of the recaptcha challenge.
 	 * @param evt
-	 *            a {@link org.darkimport.omeglespy_z.OmegleSpyEvent} object.
+	 *            a {@link org.darkimport.omeglespy_z.mediation.OmegleSpyEvent}
+	 *            object.
 	 */
 	public void recaptcha(OmegleSpyEvent evt, String id);
 
@@ -122,7 +131,8 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 * @param msg
 	 *            The message they sent.
 	 * @param evt
-	 *            a {@link org.darkimport.omeglespy_z.OmegleSpyEvent} object.
+	 *            a {@link org.darkimport.omeglespy_z.mediation.OmegleSpyEvent}
+	 *            object.
 	 */
 	public void messageFiltered(OmegleSpyEvent evt, String msg);
 
@@ -132,7 +142,12 @@ public interface OmegleSpyConversationListener extends EventListener {
 	 * </p>
 	 * 
 	 * @param evt
-	 *            a {@link org.darkimport.omeglespy_z.OmegleSpyEvent} object.
+	 *            a {@link org.darkimport.omeglespy_z.mediation.OmegleSpyEvent}
+	 *            object.
 	 */
 	public void initializationFailed(OmegleSpyEvent evt);
+
+	public void userDisconnected(OmegleSpyEvent evt);
+
+	public void generalCommunicationFailure(OmegleSpyEvent evt);
 }

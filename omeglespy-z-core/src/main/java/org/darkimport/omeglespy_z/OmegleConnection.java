@@ -29,6 +29,8 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.darkimport.omeglespy_z.mediation.OmegleSpyConversationCoordinator;
+
 /**
  * This class represents a single connection to omegle.
  * 
@@ -63,7 +65,7 @@ public class OmegleConnection extends Observable implements Runnable {
 	private static final Pattern	ESCAPE_REGEX					= Pattern.compile("\\\\([\'\"\\\\bfnrt]|u(....))");
 
 	private String					conversantName;
-	private final String			serverName;
+	private String					serverName;
 
 	private String					chatId;
 
@@ -90,15 +92,6 @@ public class OmegleConnection extends Observable implements Runnable {
 	public OmegleConnection(final String conversantName, final String serverName) {
 		this.conversantName = conversantName;
 		this.serverName = serverName;
-		try {
-			start_url = new URL(PROTOCOL, serverName, "/start?rcs=1&spid=");
-			events_url = new URL(PROTOCOL, serverName, "/events");
-			send_url = new URL(PROTOCOL, serverName, "/send");
-			disconnect_url = new URL(PROTOCOL, serverName, "/disconnect");
-			type_url = new URL(PROTOCOL, serverName, "/typing");
-			stoptype_url = new URL(PROTOCOL, serverName, "/stoppedtyping");
-			recaptcha_url = new URL(PROTOCOL, serverName, "/recaptcha");
-		} catch (final MalformedURLException ex) {}
 	}
 
 	/**
@@ -158,7 +151,7 @@ public class OmegleConnection extends Observable implements Runnable {
 
 		while (chatId != null) {
 			try {
-				// TODO experimenting with randomized sleep time.
+				// Randomized sleep time.
 				Thread.sleep(50 + (int) (Math.random() * 100));
 			} catch (final InterruptedException e) {
 				LogHelper.log(OmegleConnection.class, LogLevel.WARN, "Thread error.", e);
@@ -216,7 +209,7 @@ public class OmegleConnection extends Observable implements Runnable {
 	}
 
 	/**
-	 * This initialization code may not be necessary.
+	 * Initialize the various resources that we will be using.
 	 * 
 	 * @throws java.lang.Exception
 	 *             if any.
@@ -224,6 +217,16 @@ public class OmegleConnection extends Observable implements Runnable {
 	private void init() throws Exception {
 		LogHelper.log(OmegleConnection.class, LogLevel.INFO, "-- Initializing, Please wait...");
 		LogHelper.log(OmegleConnection.class, LogLevel.INFO, "* Chat server selected: " + serverName);
+
+		try {
+			start_url = new URL(PROTOCOL, serverName, "/start?rcs=1&spid=");
+			events_url = new URL(PROTOCOL, serverName, "/events");
+			send_url = new URL(PROTOCOL, serverName, "/send");
+			disconnect_url = new URL(PROTOCOL, serverName, "/disconnect");
+			type_url = new URL(PROTOCOL, serverName, "/typing");
+			stoptype_url = new URL(PROTOCOL, serverName, "/stoppedtyping");
+			recaptcha_url = new URL(PROTOCOL, serverName, "/recaptcha");
+		} catch (final MalformedURLException ex) {}
 
 		final URL init_1 = new URL("http://www.omegle.com");
 		final URL init_2 = new URL("http://www.omegle.com/static/frameset.js?1");
@@ -427,5 +430,9 @@ public class OmegleConnection extends Observable implements Runnable {
 	public void pause() {
 		paused = true;
 		LogHelper.log(OmegleConnection.class, LogLevel.DEBUG, "Paused the event pinger.");
+	}
+
+	public void setServer(final String serverName) {
+		this.serverName = serverName;
 	}
 }
