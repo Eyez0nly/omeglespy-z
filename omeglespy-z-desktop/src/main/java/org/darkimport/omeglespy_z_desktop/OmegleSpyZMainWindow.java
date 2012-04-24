@@ -61,9 +61,9 @@ import org.darkimport.omeglespy_z.ChatHistoryHelper;
 import org.darkimport.omeglespy_z.CommunicationHelper;
 import org.darkimport.omeglespy_z.DefaultCommunicationHelper;
 import org.darkimport.omeglespy_z.LogHelper;
-import org.darkimport.omeglespy_z.OmegleSpyConversationController;
-import org.darkimport.omeglespy_z.OmegleSpyConversationListener;
-import org.darkimport.omeglespy_z.OmegleSpyEvent;
+import org.darkimport.omeglespy_z.mediation.OmegleSpyConversationController;
+import org.darkimport.omeglespy_z.mediation.OmegleSpyConversationListener;
+import org.darkimport.omeglespy_z.mediation.OmegleSpyEvent;
 import org.darkimport.omeglespy_z_desktop.constants.ConfigConstants;
 import org.darkimport.omeglespy_z_desktop.constants.ControlNameConstants;
 import org.darkimport.omeglespy_z_desktop.constants.ResourceConstants;
@@ -341,7 +341,7 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 */
 	public void toggleStrangersBlocked(final ActionEvent evt) {
 		final AbstractButton button = (AbstractButton) evt.getSource();
-		controller.toggleStrangersBlock(button.isSelected());
+		controller.setStrangersBlock(button.isSelected());
 		ChatHistoryHelper.printStatusMessage(MessageFormat.format(
 				SwingJavaBuilder.getConfig().getResource(ResourceConstants.MESSAGE_TOGGLE_BLOCKED),
 				button.isSelected() ? SwingJavaBuilder.getConfig().getResource(ResourceConstants.MESSAGE_ENABLED)
@@ -355,7 +355,7 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 */
 	public void toggleFilter(final ActionEvent evt) {
 		final AbstractButton button = (AbstractButton) evt.getSource();
-		controller.toggleFilter(button.isSelected());
+		controller.setFilter(button.isSelected());
 		ChatHistoryHelper.printStatusMessage(MessageFormat.format(
 				SwingJavaBuilder.getConfig().getResource(ResourceConstants.MESSAGE_TOGGLE_FILTERED), button
 						.isSelected() ? SwingJavaBuilder.getConfig().getResource(ResourceConstants.MESSAGE_ENABLED)
@@ -605,13 +605,23 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	 * org.darkimport.omeglespy_z.OmegleSpyConversationListener#disconnected
 	 * (org.darkimport.omeglespy_z.OmegleSpyEvent)
 	 */
-	public void disconnected(final OmegleSpyEvent evt) {
+	public void strangerDisconnected(final OmegleSpyEvent evt) {
 		final String conversantName = evt.getConversantName();
 		ChatHistoryHelper.printStatusMessage(MessageFormat.format(
 				result.getConfig().getResource(ResourceConstants.MESSAGE_STRANGER_DISCONNECTED), conversantName));
 		strangerDisconnectButtons.get(conversantName).setEnabled(false);
 		strangerTextFields.get(conversantName).setEnabled(false);
 		strangerTypingControls.get(conversantName).setVisible(false);
+	}
+
+	public void userDisconnected(final OmegleSpyEvent evt) {
+		// Has the same effect as the stranger disconnecting, so...
+		strangerDisconnected(evt);
+	}
+
+	public void generalCommunicationFailure(final OmegleSpyEvent evt) {
+		// Handling it as if the stranger has disconnected.
+		strangerDisconnected(evt);
 	}
 
 	/*
