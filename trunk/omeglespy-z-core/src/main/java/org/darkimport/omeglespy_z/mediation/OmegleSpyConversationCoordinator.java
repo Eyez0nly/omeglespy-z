@@ -17,7 +17,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy_z;
+package org.darkimport.omeglespy_z.mediation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +26,12 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
+
+import org.darkimport.omeglespy_z.FilterHelper;
+import org.darkimport.omeglespy_z.LogHelper;
+import org.darkimport.omeglespy_z.LogLevel;
+import org.darkimport.omeglespy_z.OmegleConnection;
+import org.darkimport.omeglespy_z.OmegleEvent;
 
 /**
  * This class does the work of managing connections, interpreting omegle events
@@ -199,18 +205,32 @@ public class OmegleSpyConversationCoordinator implements Observer {
 					conversationListener.stoppedTyping(evt);
 				}
 				break;
-			// TODO Handle _generalCommunicationFailure and _userDisconnected in
-			// their own blocks.
 			case _userDisconnected:
-				LogHelper.log(OmegleSpyConversationCoordinator.class, LogLevel.DEBUG, "User initiated disconnect.");
+				// The user has disconnected. Ensure that the
+				// connection is closed and then notify the
+				// OmegleSpyListeners.
+				connection.stop();
+				for (final OmegleSpyConversationListener conversationListener : activeListeners) {
+					conversationListener.userDisconnected(evt);
+				}
+				break;
 			case strangerDisconnected:
-			case _generalCommunicationFailure:
 				// The notifying conversant has disconnected. Ensure that the
 				// connection is closed and then notify the
 				// OmegleSpyListeners.
 				connection.stop();
 				for (final OmegleSpyConversationListener conversationListener : activeListeners) {
-					conversationListener.disconnected(evt);
+					conversationListener.strangerDisconnected(evt);
+				}
+				break;
+			case _generalCommunicationFailure:
+				// There was a general communication failure. Probably the
+				// connection was closed remotely. Ensure that the
+				// connection is closed and then notify the
+				// OmegleSpyListeners.
+				connection.stop();
+				for (final OmegleSpyConversationListener conversationListener : activeListeners) {
+					conversationListener.generalCommunicationFailure(evt);
 				}
 				break;
 			case recaptchaRequired:
@@ -304,7 +324,7 @@ public class OmegleSpyConversationCoordinator implements Observer {
 
 	/**
 	 * Swaps the specified conversant, establishing a new connection with the
-	 * specified server name (TODO connections are reusable).
+	 * specified server name.
 	 * 
 	 * @param strangerName
 	 *            a {@link java.lang.String} object.
@@ -312,11 +332,13 @@ public class OmegleSpyConversationCoordinator implements Observer {
 	 *            a {@link java.lang.String} object.
 	 */
 	public void swapConversant(final String strangerName, final String serverName) {
-		OmegleConnection connection = connections.remove(strangerName);
+		// OmegleConnection connection = connections.remove(strangerName);
+		final OmegleConnection connection = connections.get(strangerName);
 		connection.disconnect();
-		connection = new OmegleConnection(strangerName, serverName);
-		connections.put(strangerName, connection);
-		connection.addObserver(this);
+		connection.setServer(serverName);
+		// connection = new OmegleConnection(strangerName, serverName);
+		// connections.put(strangerName, connection);
+		// connection.addObserver(this);
 
 		// Connection established here.
 		new Thread(connection).start();

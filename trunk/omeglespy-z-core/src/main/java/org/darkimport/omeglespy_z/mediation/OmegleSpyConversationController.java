@@ -17,7 +17,7 @@
 /**
  * 
  */
-package org.darkimport.omeglespy_z;
+package org.darkimport.omeglespy_z.mediation;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -25,6 +25,12 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.darkimport.omeglespy_z.DefaultConversantNameGenerator;
+import org.darkimport.omeglespy_z.DefaultServerNameGenerator;
+import org.darkimport.omeglespy_z.LogHelper;
+import org.darkimport.omeglespy_z.LogLevel;
+import org.darkimport.omeglespy_z.NameGenerator;
 
 /**
  * The entry point into the omeglespy-z application framework for connection
@@ -200,12 +206,10 @@ public class OmegleSpyConversationController {
 	 * Sets whether or not the messages sent by one stranger are passed on to
 	 * the other stranger.
 	 * 
-	 * TODO rename this method to setStrangersBlock
-	 * 
 	 * @param selected
 	 *            a boolean.
 	 */
-	public void toggleStrangersBlock(final boolean selected) {
+	public void setStrangersBlock(final boolean selected) {
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put(IS_BLOCKED, selected);
 		doWork(WorkEvent._toggleStrangersBlock, params);
@@ -215,12 +219,10 @@ public class OmegleSpyConversationController {
 	 * Sets whether or not filtering should be applied to messages sent by
 	 * strangers.
 	 * 
-	 * TODO rename this method to setFilter
-	 * 
 	 * @param selected
 	 *            a boolean.
 	 */
-	public void toggleFilter(final boolean selected) {
+	public void setFilter(final boolean selected) {
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put(IS_FILTERED, selected);
 		doWork(WorkEvent._toggleFilter, params);

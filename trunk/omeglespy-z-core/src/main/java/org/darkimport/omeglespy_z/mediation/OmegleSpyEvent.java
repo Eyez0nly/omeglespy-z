@@ -17,9 +17,11 @@
 /**
  * 
  */
-package org.darkimport.omeglespy_z;
+package org.darkimport.omeglespy_z.mediation;
 
 import java.util.EventObject;
+
+import org.darkimport.omeglespy_z.OmegleConnection;
 
 /**
  * An event that is generated in the mediation-style context to (typically)
