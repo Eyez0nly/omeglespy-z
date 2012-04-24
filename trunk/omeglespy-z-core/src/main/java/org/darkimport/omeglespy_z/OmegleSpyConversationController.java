@@ -27,13 +27,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The entry point into the omeglespy-z application framework.
+ * The entry point into the omeglespy-z application framework for connection
+ * mediation.
  * 
  * Implementing applications will use an instance of this class to interact with
  * the framework.
  * 
  * @author user
- * 
+ * @version $Id: $
  */
 public class OmegleSpyConversationController {
 	private static final String							TARGET_STRANGER_NAME	= "targetStrangerName";
@@ -68,9 +69,16 @@ public class OmegleSpyConversationController {
 	private final Map<Long, WorkEvent>					workQueue				= new Hashtable<Long, WorkEvent>();
 
 	/**
+	 * <p>
+	 * Constructor for OmegleSpyConversationController.
+	 * </p>
+	 * 
 	 * @param activeListeners
+	 *            a {@link java.util.List} object.
 	 * @param conversantNameGenerator
+	 *            a {@link org.darkimport.omeglespy_z.NameGenerator} object.
 	 * @param serverNameGenerator
+	 *            a {@link org.darkimport.omeglespy_z.NameGenerator} object.
 	 */
 	public OmegleSpyConversationController(final List<OmegleSpyConversationListener> activeListeners,
 			final NameGenerator conversantNameGenerator, final NameGenerator serverNameGenerator) {
@@ -79,13 +87,21 @@ public class OmegleSpyConversationController {
 		this.serverNameGenerator = serverNameGenerator;
 	}
 
+	/**
+	 * <p>
+	 * Constructor for OmegleSpyConversationController.
+	 * </p>
+	 * 
+	 * @param activeListeners
+	 *            a {@link java.util.List} object.
+	 */
 	public OmegleSpyConversationController(final List<OmegleSpyConversationListener> activeListeners) {
 		this(activeListeners, new DefaultConversantNameGenerator(), new DefaultServerNameGenerator());
 	}
 
 	/**
 	 * Start a conversation. The unique names used to identify the conversants
-	 * is returned.
+	 * are returned.
 	 * 
 	 * @return an array containing the names of the conversants.
 	 */
@@ -118,18 +134,41 @@ public class OmegleSpyConversationController {
 		return conversantNames;
 	}
 
+	/**
+	 * Disconnects the named stranger.
+	 * 
+	 * @param strangerName
+	 *            a {@link java.lang.String} object.
+	 */
 	public void disconnectStranger(final String strangerName) {
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put(TARGET_STRANGER_NAME, strangerName);
 		doWork(WorkEvent._disconnectStranger, params);
 	}
 
+	/**
+	 * Swaps the named stranger.
+	 * 
+	 * @param strangerName
+	 *            a {@link java.lang.String} object.
+	 */
 	public void swapStranger(final String strangerName) {
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put(TARGET_STRANGER_NAME, strangerName);
 		doWork(WorkEvent._swapStranger, params);
 	}
 
+	/**
+	 * Sends a message as the stranger specified in fromName to the stranger
+	 * specified in targetName.
+	 * 
+	 * @param targetName
+	 *            a {@link java.lang.String} object.
+	 * @param fromName
+	 *            a {@link java.lang.String} object.
+	 * @param message
+	 *            a {@link java.lang.String} object.
+	 */
 	public void sendSecretMessage(final String targetName, final String fromName, final String message) {
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put(TARGET_STRANGER_NAME, targetName);
@@ -138,6 +177,17 @@ public class OmegleSpyConversationController {
 		doWork(WorkEvent._sendSecretMessage, params);
 	}
 
+	/**
+	 * Sends a recaptcha response for the conversation associate with the target
+	 * stranger.
+	 * 
+	 * @param targetName
+	 *            a {@link java.lang.String} object.
+	 * @param challenge
+	 *            a {@link java.lang.String} object.
+	 * @param response
+	 *            a {@link java.lang.String} object.
+	 */
 	public void sendRecaptchaResponse(final String targetName, final String challenge, final String response) {
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put(TARGET_STRANGER_NAME, targetName);
@@ -146,22 +196,49 @@ public class OmegleSpyConversationController {
 		doWork(WorkEvent._sendRecaptchaResponse, params);
 	}
 
+	/**
+	 * Sets whether or not the messages sent by one stranger are passed on to
+	 * the other stranger.
+	 * 
+	 * TODO rename this method to setStrangersBlock
+	 * 
+	 * @param selected
+	 *            a boolean.
+	 */
 	public void toggleStrangersBlock(final boolean selected) {
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put(IS_BLOCKED, selected);
 		doWork(WorkEvent._toggleStrangersBlock, params);
 	}
 
+	/**
+	 * Sets whether or not filtering should be applied to messages sent by
+	 * strangers.
+	 * 
+	 * TODO rename this method to setFilter
+	 * 
+	 * @param selected
+	 *            a boolean.
+	 */
 	public void toggleFilter(final boolean selected) {
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put(IS_FILTERED, selected);
 		doWork(WorkEvent._toggleFilter, params);
 	}
 
+	/**
+	 * Ends the current conversation. All underlying connections are
+	 * disconnected where appropriate.
+	 */
 	public void endConversation() {
 		doWork(WorkEvent._endConversation, null);
 	}
 
+	/**
+	 * Tells whether or not a conversation is in progress.
+	 * 
+	 * @return a boolean. True if the conversation is not in progress.
+	 */
 	public boolean isConversationEnded() {
 		return conversationEnded;
 	}

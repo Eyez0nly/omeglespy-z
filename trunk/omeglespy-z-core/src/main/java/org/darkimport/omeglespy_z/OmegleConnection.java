@@ -25,34 +25,68 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author user
+ * This class represents a single connection to omegle.
  * 
+ * In order to start the connection process, run an instance of this class as a
+ * Runnable
+ * 
+ * <code>new Thread(new OmegleConnection("foo", "blah.omegle.com")).start();</code>
+ * 
+ * The connection is closed cleanly by invoking
+ * {@link OmegleConnection#disconnect()}. However, the connection can be halted
+ * unconditionally by invoking {@link OmegleConnection#stop()};
+ * 
+ * Notice that this class extends {@link Observable}. In order to be notified of
+ * events associated with this connection, you must
+ * {@link OmegleConnection#addObserver(java.util.Observer)} with your own
+ * implementation of the {@link Observer} interface. Additionally, your
+ * implementation will need to know how to parse events. See
+ * {@link OmegleSpyConversationCoordinator} for an example implementation.
+ * 
+ * TODO Provide an implementation of the {@link Observable} interface that knows
+ * about connection related events.
+ * 
+ * @author user
+ * @version $Id: $
  */
 public class OmegleConnection extends Observable implements Runnable {
-	private static final String	COMMUNICATION_SUCCESS_STRING	= "win";
-	private static final String	PROTOCOL						= "http";
-	public static final Pattern	STR_REGEX						= Pattern
-																		.compile("(\")((?>(?:(?>[^\"\\\\]+)|\\\\.)*))\\1");
-	public static final Pattern	ESCAPE_REGEX					= Pattern.compile("\\\\([\'\"\\\\bfnrt]|u(....))");
+	private static final String		COMMUNICATION_SUCCESS_STRING	= "win";
+	private static final String		PROTOCOL						= "http";
 
-	private String				conversantName;
-	private final String		serverName;
+	private static final Pattern	STR_REGEX						= Pattern
+																			.compile("(\")((?>(?:(?>[^\"\\\\]+)|\\\\.)*))\\1");
+	private static final Pattern	ESCAPE_REGEX					= Pattern.compile("\\\\([\'\"\\\\bfnrt]|u(....))");
 
-	private String				chatId;
+	private String					conversantName;
+	private final String			serverName;
 
-	private URL					type_url;
-	private URL					stoptype_url;
-	private URL					disconnect_url;
-	private URL					send_url;
-	private URL					events_url;
-	private URL					start_url;
-	private URL					recaptcha_url;
-	private boolean				paused;
+	private String					chatId;
 
+	private URL						type_url;
+	private URL						stoptype_url;
+	private URL						disconnect_url;
+	private URL						send_url;
+	private URL						events_url;
+	private URL						start_url;
+	private URL						recaptcha_url;
+	private boolean					paused;
+
+	/**
+	 * <p>
+	 * Constructor for OmegleConnection. You provide a "name" for the connection
+	 * and the name of the server to which this connection should connect.
+	 * </p>
+	 * 
+	 * @param conversantName
+	 *            a {@link java.lang.String} object.
+	 * @param serverName
+	 *            a {@link java.lang.String} object.
+	 */
 	public OmegleConnection(final String conversantName, final String serverName) {
 		this.conversantName = conversantName;
 		this.serverName = serverName;
@@ -67,11 +101,22 @@ public class OmegleConnection extends Observable implements Runnable {
 		} catch (final MalformedURLException ex) {}
 	}
 
+	/**
+	 * <p>
+	 * Getter for the field <code>conversantName</code>.
+	 * </p>
+	 * 
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getConversantName() {
 		return conversantName;
 	}
 
 	/**
+	 * <p>
+	 * Setter for the field <code>conversantName</code>.
+	 * </p>
+	 * 
 	 * @param conversantName
 	 *            the name to set
 	 */
@@ -170,7 +215,13 @@ public class OmegleConnection extends Observable implements Runnable {
 		}
 	}
 
-	public void init() throws Exception {
+	/**
+	 * This initialization code may not be necessary.
+	 * 
+	 * @throws java.lang.Exception
+	 *             if any.
+	 */
+	private void init() throws Exception {
 		LogHelper.log(OmegleConnection.class, LogLevel.INFO, "-- Initializing, Please wait...");
 		LogHelper.log(OmegleConnection.class, LogLevel.INFO, "* Chat server selected: " + serverName);
 
@@ -240,6 +291,11 @@ public class OmegleConnection extends Observable implements Runnable {
 		return sb.toString();
 	}
 
+	/**
+	 * Sends a notification to the omegle server that the user is typing.
+	 * 
+	 * @return a boolean. True if the notification was sent successfully.
+	 */
 	public boolean sendTypingNotification() {
 		String r = null;
 		if (chatId != null) {
@@ -256,6 +312,13 @@ public class OmegleConnection extends Observable implements Runnable {
 		return COMMUNICATION_SUCCESS_STRING.equals(r);
 	}
 
+	/**
+	 * Sends a chat message to the server.
+	 * 
+	 * @param msg
+	 *            a {@link java.lang.String} object.
+	 * @return a boolean. True if the message was sent successfully.
+	 */
 	public boolean sendMesssage(final String msg) {
 		String sendr = null;
 		if (chatId != null) {
@@ -272,6 +335,11 @@ public class OmegleConnection extends Observable implements Runnable {
 		return COMMUNICATION_SUCCESS_STRING.equals(sendr);
 	}
 
+	/**
+	 * Sends a notification to the server that the user has ceased typing.
+	 * 
+	 * @return a boolean. True if the notification was sent successfully.
+	 */
 	public boolean sendStoppedTypingNotification() {
 		String r = null;
 		if (chatId != null) {
@@ -288,6 +356,13 @@ public class OmegleConnection extends Observable implements Runnable {
 		return COMMUNICATION_SUCCESS_STRING.equals(r);
 	}
 
+	/**
+	 * Tells the server that the user wishes to disconnect. This connection will
+	 * cease event pinging regardless of the success or failure of the
+	 * notification submission.
+	 * 
+	 * @return a boolean. True if the notification was sent successfully.
+	 */
 	public boolean disconnect() {
 		String d = null;
 		if (chatId != null) {
@@ -313,10 +388,23 @@ public class OmegleConnection extends Observable implements Runnable {
 		return COMMUNICATION_SUCCESS_STRING.equals(d);
 	}
 
+	/**
+	 * Tells this connection to stop event pinging. No notification is sent to
+	 * the server.
+	 */
 	public void stop() {
 		chatId = null;
 	}
 
+	/**
+	 * Sends a recaptcha response to the server.
+	 * 
+	 * @param challenge
+	 *            a {@link java.lang.String} object. The id of the challenge
+	 *            associated with this response.
+	 * @param response
+	 *            a {@link java.lang.String} object. The actual response.
+	 */
 	public void sendRecaptchaResponse(final String challenge, final String response) {
 		try {
 			CommunicationHelper.wget(recaptcha_url, true, "id", chatId, "challenge", challenge, "response", response);
@@ -331,6 +419,11 @@ public class OmegleConnection extends Observable implements Runnable {
 		LogHelper.log(OmegleConnection.class, LogLevel.DEBUG, "Unpaused the event pinger.");
 	}
 
+	/**
+	 * Tells this connection to pause event pinging. Event pinging is resumed
+	 * implicitly by invoking
+	 * {@link OmegleConnection#sendRecaptchaResponse(String, String)}.
+	 */
 	public void pause() {
 		paused = true;
 		LogHelper.log(OmegleConnection.class, LogLevel.DEBUG, "Paused the event pinger.");

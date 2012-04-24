@@ -28,8 +28,13 @@ import java.util.Observer;
 import java.util.Set;
 
 /**
- * @author user
+ * This class does the work of managing connections, interpreting omegle events
+ * and translating {@link OmegleEvent}s into {@link OmegleSpyEvent}s and passing
+ * the {@link OmegleSpyEvent}s onto interested
+ * {@link OmegleSpyConversationListener}s.
  * 
+ * @author user
+ * @version $Id: $
  */
 public class OmegleSpyConversationCoordinator implements Observer {
 	private final List<OmegleSpyConversationListener>	activeListeners;
@@ -52,7 +57,6 @@ public class OmegleSpyConversationCoordinator implements Observer {
 	 * @param conversantNames
 	 *            A list of conversants. Each of the names must be unique or
 	 *            unexpected results may occur. We do not check for uniqueness.
-	 * 
 	 * @param serverNames
 	 *            A list of host names or IP addresses to which to connect. This
 	 *            list does not have to be equal in size with the
@@ -95,15 +99,12 @@ public class OmegleSpyConversationCoordinator implements Observer {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
 	 * Called when a connection generates an {@link OmegleEvent} (not to be
 	 * confused with an {@link OmegleSpyEvent}). The event is then translated
 	 * into an {@link OmegleSpyEvent}, passed on to the other connection, or
 	 * both.
-	 * 
-	 * @param o
-	 *            The {@link OmegleConnection} that generated an event
-	 * @param arg
-	 *            The OmegleEvent that was generated
 	 */
 	public void update(final Observable o, final Object arg) {
 		final OmegleConnection connection = (OmegleConnection) o;
@@ -264,7 +265,7 @@ public class OmegleSpyConversationCoordinator implements Observer {
 	}
 
 	/**
-	 * Attempt to end the conversation. Stops on an Exception.
+	 * Ends the conversation, disconnecting all underlying connections.
 	 */
 	public void endConversation() {
 		for (final OmegleConnection connection : connections.values()) {
@@ -277,14 +278,39 @@ public class OmegleSpyConversationCoordinator implements Observer {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Setter for the field <code>conversationFiltered</code>.
+	 * </p>
+	 * 
+	 * @param filtered
+	 *            a boolean.
+	 */
 	public void setConversationFiltered(final boolean filtered) {
 		conversationFiltered = filtered;
 	}
 
+	/**
+	 * <p>
+	 * Setter for the field <code>conversantsBlocked</code>.
+	 * </p>
+	 * 
+	 * @param blocked
+	 *            a boolean.
+	 */
 	public void setConversantsBlocked(final boolean blocked) {
 		conversantsBlocked = blocked;
 	}
 
+	/**
+	 * Swaps the specified conversant, establishing a new connection with the
+	 * specified server name (TODO connections are reusable).
+	 * 
+	 * @param strangerName
+	 *            a {@link java.lang.String} object.
+	 * @param serverName
+	 *            a {@link java.lang.String} object.
+	 */
 	public void swapConversant(final String strangerName, final String serverName) {
 		OmegleConnection connection = connections.remove(strangerName);
 		connection.disconnect();
@@ -296,16 +322,27 @@ public class OmegleSpyConversationCoordinator implements Observer {
 		new Thread(connection).start();
 	}
 
+	/**
+	 * Disconnects the specified conversant.
+	 * 
+	 * @param strangerName
+	 *            a {@link java.lang.String} object.
+	 */
 	public void disconnectConversant(final String strangerName) {
 		connections.get(strangerName).disconnect();
 	}
 
 	/**
-	 * 
+	 * Tells the coordinator that the user is sending a message to the
+	 * conversant specified in the targetName AS the conversant specified in the
+	 * fromName.
 	 * 
 	 * @param targetName
+	 *            a {@link java.lang.String} object.
 	 * @param fromName
+	 *            a {@link java.lang.String} object.
 	 * @param message
+	 *            a {@link java.lang.String} object.
 	 */
 	public void sendExternalMessage(final String targetName, final String fromName, final String message) {
 		final OmegleConnection connection = connections.get(targetName);
@@ -315,6 +352,16 @@ public class OmegleSpyConversationCoordinator implements Observer {
 		}
 	}
 
+	/**
+	 * Sends a recaptcha response for the specified connection.
+	 * 
+	 * @param targetName
+	 *            a {@link java.lang.String} object.
+	 * @param challenge
+	 *            a {@link java.lang.String} object.
+	 * @param response
+	 *            a {@link java.lang.String} object.
+	 */
 	public void sendRecaptchaResponse(final String targetName, final String challenge, final String response) {
 		final OmegleConnection connection = connections.get(targetName);
 		connection.sendRecaptchaResponse(challenge, response);
