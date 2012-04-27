@@ -120,7 +120,7 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 	private JEditorPane								console;
 	private boolean									autoScrollEnabled			= true;
 	private final HtmlChatHistoryHelper				chatHistoryHelper;
-	private final OldLogViewerWindow				logViewer					= new OldLogViewerWindow();
+	private final OldLogViewerWindow				logViewer;
 
 	int												conversationNumber;
 
@@ -158,6 +158,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 		}
 
 		helpWindow = new OmegleSpyZQuickHelp(this, shortcutKeyHelper);
+		logViewer = new OldLogViewerWindow();
+		logViewer.setSize(800, 350);
 
 		// Instantiate the scrollbar used when autoscrolling.
 		final JScrollBar autoScrollBar = ((JScrollPane) result.get(ControlNameConstants.CONSOLE_SCROLLER))
@@ -214,6 +216,23 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 			@Override
 			public void windowClosed(final WindowEvent e) {
 				exit();
+			}
+		});
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(final ComponentEvent e) {
+				moveHelpWindow();
+			}
+
+			@Override
+			public void componentMoved(final ComponentEvent e) {
+				moveHelpWindow();
+			}
+
+			private void moveHelpWindow() {
+				if (helpWindow.isVisible()) {
+					helpWindow.requestFocus();
+				}
 			}
 		});
 
