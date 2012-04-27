@@ -20,7 +20,7 @@ JFrame(name=frame, title=frame.main.title, size=packed, iconImage=/spyboticon.pn
     - JMenu(text=menu.view):
       - JMenuItem(action=actionViewLogs)
       - JMenuItem(action=actionClearScreen)
-      - JCheckBoxMenuItem(name=cbxmnuAutoScroll,text=action.toggleAutoScroll,toolTipText=action.toggleAutoScroll.tooltip)
+      - JCheckBoxMenuItem(name=cbxmnuAutoScroll,text=action.toggleAutoScroll,toolTipText=action.toggleAutoScroll.tooltip,selected=true)
       - JSeparator()
       - JCheckBoxMenuItem(action=actionToggleExpertMode)
     - JMenu(text=menu.help):
