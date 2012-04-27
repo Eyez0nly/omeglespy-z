@@ -58,6 +58,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.darkimport.config.ConfigHelper;
 import org.darkimport.omeglespy_z.ChatHistoryHelper;
+import org.darkimport.omeglespy_z.CommonsLoggingLogHelper;
 import org.darkimport.omeglespy_z.CommunicationHelper;
 import org.darkimport.omeglespy_z.DefaultCommunicationHelper;
 import org.darkimport.omeglespy_z.LogHelper;
