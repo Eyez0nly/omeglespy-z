@@ -1,2 +1,0 @@
-Implement "error codes" in CommunicationHelper
-Only show stacktraces in logs when debugging is enabled
