@@ -19,6 +19,11 @@
  */
 package org.darkimport.omeglespy_z_desktop;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -83,6 +88,39 @@ public class OmegleSpyZQuickHelp extends JFrame {
 		}
 
 		helpText.setText(helpHtml);
-		parent.requestFocus();
+
+		addWindowFocusListener(new WindowAdapter() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see
+			 * java.awt.event.WindowAdapter#windowGainedFocus(java.awt.event
+			 * .WindowEvent)
+			 */
+			@Override
+			public void windowGainedFocus(final WindowEvent e) {
+				final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+				final Dimension parentSize = parent.getSize();
+				final Point parentLocation = parent.getLocation();
+				final Point myLocation = new Point();
+				final Dimension mySize = getSize();
+				myLocation.x = parentLocation.x + parentSize.width;
+				myLocation.y = parentLocation.y;
+				if (myLocation.x + mySize.width > screenSize.width) {
+					myLocation.x = screenSize.width - mySize.width;
+				}
+
+				setLocation(myLocation);
+				if (parent.getBounds().intersects(getBounds())) {
+					setAlwaysOnTop(false);
+				} else {
+					setAlwaysOnTop(true);
+				}
+
+				parent.requestFocus();
+				parent.toFront();
+			}
+		});
 	}
 }

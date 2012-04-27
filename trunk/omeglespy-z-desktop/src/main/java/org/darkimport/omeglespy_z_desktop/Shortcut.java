@@ -19,7 +19,12 @@
  */
 package org.darkimport.omeglespy_z_desktop;
 
+import java.awt.event.KeyEvent;
 import java.lang.reflect.Method;
+
+import javax.swing.KeyStroke;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author user
@@ -36,8 +41,22 @@ public class Shortcut {
 	private Object[]	args;
 
 	public String getHumanReadableShortcutString() {
-		// TODO How to convert for real?
-		return chord;
+		final KeyStroke keyStroke = KeyEventTranslator.parseKeyStroke(chord);
+		final int modifiers = keyStroke.getModifiers();
+		final int keyCode = keyStroke.getKeyCode();
+		final char keyChar = keyStroke.getKeyChar();
+
+		final StringBuffer humanReadableShortcutString = new StringBuffer();
+		final String keyModifiersText = KeyEvent.getKeyModifiersText(modifiers);
+		if (StringUtils.isNotBlank(keyModifiersText)) {
+			humanReadableShortcutString.append(keyModifiersText).append('+');
+		}
+		if (keyCode != 0) {
+			humanReadableShortcutString.append(KeyEvent.getKeyText(keyCode));
+		} else {
+			humanReadableShortcutString.append(Character.toString(keyChar).toUpperCase());
+		}
+		return humanReadableShortcutString.toString();
 	}
 
 	public Method getMethod() {
