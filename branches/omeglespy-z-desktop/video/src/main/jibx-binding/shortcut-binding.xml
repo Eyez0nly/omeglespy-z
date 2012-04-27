@@ -1,0 +1,16 @@
+<binding>
+	<mapping name="shortcuts"
+		class="org.darkimport.omeglespy_z_desktop.ShortcutKeyHelper">
+		<collection field="shortcuts" create-type="java.util.ArrayList">
+			<structure name="shortcut"
+				type="org.darkimport.omeglespy_z_desktop.Shortcut">
+				<value name="name" field="name" />
+				<value name="function" field="function" />
+				<value name="eventType" field="eventType" />
+				<value name="emulatedSource" field="emulatedSource" />
+				<value name="chord" field="chord" />
+				<value name="description" field="description" />
+			</structure>
+		</collection>
+	</mapping>
+</binding>
