@@ -1,0 +1,10 @@
+firefox
+opera
+konqueror
+epiphany
+seamonkey
+galeon
+kazehakase
+mozilla
+netscape
+chrome
