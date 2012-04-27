@@ -1,0 +1,50 @@
+<shortcuts>
+	<shortcut>
+		<name>disconnectStranger1</name>
+		<function>disconnectStranger</function>
+		<eventType>org.darkimport.omeglespy_z_desktop.ProxyActionEvent</eventType>
+		<emulatedSource>btnDisconnectStranger0</emulatedSource>
+		<chord>C+d</chord>
+		<description>Disconnect Stranger1.</description>
+	</shortcut>
+	<shortcut>
+		<name>disconnectStranger2</name>
+		<function>disconnectStranger</function>
+		<eventType>org.darkimport.omeglespy_z_desktop.ProxyActionEvent</eventType>
+		<emulatedSource>btnDisconnectStranger1</emulatedSource>
+		<chord>CS+d</chord>
+		<description>Disconnect Stranger2.</description>
+	</shortcut>
+	<shortcut>
+		<name>swapStranger1</name>
+		<function>swapStranger</function>
+		<eventType>org.darkimport.omeglespy_z_desktop.ProxyActionEvent</eventType>
+		<emulatedSource>btnSwapStranger0</emulatedSource>
+		<chord>C+r</chord>
+		<description>Swap Stranger1.</description>
+	</shortcut>
+	<shortcut>
+		<name>swapStranger2</name>
+		<function>swapStranger</function>
+		<eventType>org.darkimport.omeglespy_z_desktop.ProxyActionEvent</eventType>
+		<emulatedSource>btnSwapStranger1</emulatedSource>
+		<chord>C+r</chord>
+		<description>Swap Stranger2.</description>
+	</shortcut>
+	<shortcut>
+		<name>sendSecretMessage1</name>
+		<function>sendSecretMessage</function>
+		<eventType />
+		<emulatedSource>txtToStranger0</emulatedSource>
+		<chord>38</chord>
+		<description>Send a secret message to Stranger1.</description>
+	</shortcut>
+	<shortcut>
+		<name>sendSecretMessage2</name>
+		<function>sendSecretMessage</function>
+		<eventType />
+		<emulatedSource>txtToStranger1</emulatedSource>
+		<chord>40</chord>
+		<description>Send a secret message to Stranger2.</description>
+	</shortcut>
+</shortcuts>
