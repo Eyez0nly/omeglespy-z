@@ -39,6 +39,10 @@
 			<outputDirectory>/bin</outputDirectory>
 		</file>
 		<file>
+			<source>${project.build.outputDirectory}/omeglespy-z-alt.bat</source>
+			<outputDirectory>/bin</outputDirectory>
+		</file>
+		<file>
 			<source>${project.build.directory}/${project.artifactId}-${project.version}.jar</source>
 			<outputDirectory>/lib</outputDirectory>
 		</file>
