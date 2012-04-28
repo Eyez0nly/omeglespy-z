@@ -14,19 +14,16 @@
 @REM along with omeglespy-z.  If not, see <http://www.gnu.org/licenses/>.
 
 @echo off
-if "%JAVA_HOME%"=="" call:FIND_JAVA_HOME
+if %JAVA_HOME%=="" call:FIND_JAVA_HOME
 echo "Java home: %JAVA_HOME%"
+set JAVACMD="%JAVA_HOME%\bin\java"
+echo "JAVA CMD: %JAVACMD%"
 rem Start your java application or perform other actions here
 goto:END
 
 :FIND_JAVA_HOME
-FOR /F "skip=2 tokens=2*" %%A IN 
-    ('REG QUERY "HKLM\Software\JavaSoft\Java Runtime Environment" 
-    /v CurrentVersion') DO set CurVer=%%B
-
-FOR /F "skip=2 tokens=2*" %%A IN 
-    ('REG QUERY "HKLM\Software\JavaSoft\Java Runtime Environment\%CurVer%" 
-    /v JavaHome') DO set JAVA_HOME=%%B
+FOR /F "skip=2 tokens=2*" %%A IN ('REG QUERY "HKLM\Software\JavaSoft\Java Runtime Environment" /v CurrentVersion') DO set CurVer=%%B
+FOR /F "skip=2 tokens=2*" %%A IN ('REG QUERY "HKLM\Software\JavaSoft\Java Runtime Environment\%CurVer%" /v JavaHome') DO set JAVA_HOME=%%B
 goto:EOF
 
 :END
@@ -78,8 +75,7 @@ set BASEDIR=%~dp0\..
 
 :repoSetup
 
-if "%JAVACMD%"=="" set JAVACMD="%JAVA_HOME%\bin\java"
-
+if %JAVACMD%=="" set JAVACMD="java"
 if "%REPO%"=="" set REPO=%BASEDIR%\lib
 
 set CLASSPATH="%BASEDIR%"\conf;"%REPO%"\${project.artifactId}-${project.version}.jar
