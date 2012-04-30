@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="omeglespy-z-core" xmlns="http://maven.apache.org/DECORATION/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+	<bannerLeft>
+		<name>omeglespy-z-core</name>
+		<src>images/spyboticon.png</src>
+		<href>https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-core/index.html</href>
+	</bannerLeft>
+	<bannerRight>
+		<name>omeglespy-z-core</name>
+	</bannerRight>
+	<body>
+		<links>
+			<item name="Omegle" href="http://www.omegle.com/" />
+			<item name="omeglespy-z on google code" href="http://code.google.com/p/omeglespy-z/" />
+		</links>
+
+		<menu name="omeglespy-z-core">
+			<item name="Introduction" href="index.html" />
+			<item name="Examples" href="examples.html" />
+			<item name="Download" href="download.html" />
+			<item name="Release Notes" href="release-notes.html" />
+		</menu>
+		
+		<menu name="known implementations">
+			<item name="omeglespy-z-desktop" href="https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-desktop/index.html" />
+			<item name="omeglespy-z-mobile" href="https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-mobile/index.html" />
+			<item name="omeglespy-z-cl" href="https://omeglespy-z.googlecode.com/svn/sites/omeglespy-z-cl/index.html" />
+		</menu>
+
+		<menu ref="reports" />
+	</body>
+</project>
