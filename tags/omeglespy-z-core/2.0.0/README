@@ -1,0 +1,149 @@
+//////////////////////////////////////////////////////////////////////////////////
+//      ${project.artifactId} ${project.version}
+//////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+    IMPORTANT: READ THIS FILE THOROUGHLY BEFORE USING ${project.artifactId}
+
+
+
+0. Table of Contents
+==================================================================================
+
+0. Table of Contents
+1. ${project.artifactId} ${project.version} Introduction
+2. Installation/Upgrade Instruction
+3. Implementation Instructions
+4. Build Instructions
+5. ${project.artifactId} Development
+6. ${project.artifactId} License Agreement
+
+
+
+1. ${project.artifactId} ${project.version} Introduction
+==================================================================================
+
+Thank you for downloading ${project.artifactId} from https://code.google.com/p/omeglespy-z. If you
+downloaded this jar-file from another site, please check https://code.google.com/p/omeglespy-z for
+the latest official release.
+
+This version has a lot of new exciting features, such as:
+
+ * support for bad phrase filtering.
+ * support for swapping disconnected strangers without ending the conversation.
+ * retooling the connection script to reduce the occurrence of recaptcha challenges
+ * miscellaneous other fun stuff. 
+
+At this point of development, we need your help with testing, bug report and feature
+discussion, please post your feedback, comments and bugs to:
+
+https://code.google.com/p/omeglespy-z/issues/list
+
+${project.artifactId} is supported on any Windows (98x, ME, XP, Vista, 7), Mac OSX (10.4+), or
+Linux (tested on openJDK) box with the Java 1.4.2+ runtime installed.
+
+Developed by
+- Dark Import <darkimport at gmail d0t com>
+
+Based on code developed by
+- BrentBXR (former owner of https://code.google.com/p/omeglespyx/) <BrentBXR at gmail d0t com>
+- sfoley1988 (owner of the defunct original https://code.google.com/p/omegle-spy/) <sfoley1988 at gmail d0t com>
+
+
+2. Installation/Upgrade Instructions
+==================================================================================
+For new installs, simply copy ${project.artifactId}-${project.version}.jar to your application lib
+directory. Or use mvn install to copy the lib to your local maven repository. At some point in the
+near future (hopefully prior to release), I'll be copying the artifact to an external maven repo.
+
+For upgrades... well, this is the first public version...
+
+
+
+3. Implementation Instructions
+==================================================================================
+This core library was designed to be an application-agnostic interface to omegle. However, there are
+some common steps that every implementing application must perform. This is a list of the required
+steps:
+
+	1.) Implement OmegleSpyConversationListener interface.
+	
+		Your implementation will usually just adjust the UI state in response to events.
+
+	2.) Invoke the controller:
+	
+		final OmegleSpyConversationController conversationController =
+					new OmegleSpyConversationController(activeListeners);
+		conversationController.startConversation();
+				
+Where activeListeners is a List<OmegleSpyConversationListener>.
+	    
+Optional steps:
+
+	1.) Initialize org.darkimport.omeglespy_z.LogHelper with a concrete instance. The default
+		implementation (org.darkimport.omeglespy_z.DefaultLogHelper) writes log output to
+		System.out. Another implementation might utilize the java logging framework or SLF4J or
+		log4j.
+		
+	2.) Implement org.darkimport.omeglespy_z.NameGenerator -- one each for server-name generation
+		and conversant name generation.
+		
+		If you don't do this, the default implementations provide promenade.omegle.com as the
+		server name for all connections and Stranger1 and Stranger2 as the names of the
+		conversants.
+		
+	3.) Implement org.darkimport.omeglespy_z.FilterHelper with a concrete instance. The default
+		implementation should actually be adequate for most filtering needs. However, in its
+		default configuration, it simply has no "bad phrase" list.
+		
+		Also, the default implementation does whole-phrase matching. A more robust implementation
+		might utilize regular expressions instead.
+		
+	4.) Initialize org.darkimport.omeglespy_z.CommunicationHelper with a concrete instance. The
+		Default implementation should be adequate for most scenarios. However it is changeable for
+		those who want more control or those who are dealing with a subset of the core java IO API.
+
+
+
+4. Build Instructions
+==================================================================================
+Please read https://code.google.com/p/omeglespy-z/wiki/BuildInstructionsCore for detailed information
+on how to build ${project.artifactId}. These instructions are for source pulled down from the
+subversion repository of ${project.artifactId}.
+
+
+
+5. ${project.artifactId} Development
+==================================================================================
+If you would like to join the ${project.artifactId} development team and contribute your
+code/patch, please feel free to attach your code/patch to an existing or new issue on
+https://code.google.com/p/omeglespy-z/issues/list
+
+
+
+6. ${project.artifactId} License Agreement
+==================================================================================
+You MUST agree to the "${project.artifactId} License Agreement" before using ${project.artifactId}:
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+STOP USING ${project.artifactId} NOW IF YOU DO NOT AGREE TO THE ABOVE LICENSE
+
+
+==================================================================================
+
+Cheers!
+
+Dark Import
+https://code.google.com/p/omeglespy-z
+darkimport at gmail d0t com
