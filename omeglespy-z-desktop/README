@@ -46,15 +46,18 @@ NOTE: At this ${project.version} release ${project.artifactId} supports one lang
       (If ${project.artifactId} has not been localized to your language, don't worry, you can
       translate the files LogViewerWindow.properties, OmegleSpyMainWindow.properties, and
       OmegleSpyRecaptchaWindow.properties (found in the root of
-      /lib/${project.artifactId}-${project.version}.jar) to your language, and if you would like
+      /${project.artifactId}-${project.version}.jar) to your language, and if you would like
       ${project.artifactId} to officially support your language in later releases, please email me
       your translation)
 
-${project.artifactId} should run on any Windows (98x, ME, XP, Vista, 7), Mac OSX (10.4+), or
-Linux (tested on KDE and GNOME desktops) box with the Java 1.4.2+ runtime installed.
+${project.artifactId} should run on any Windows (98x, ME, XP, Vista, 7), Mac OSX (10.5+), or
+Linux (tested on KDE and GNOME desktops) box with the Java 1.5 runtime installed.
 
 Developed by
 - Dark Import <darkimport at gmail d0t com>
+
+Tested by
+-Breckdareck
 
 Based on code developed by
 - BrentBXR (former owner of https://code.google.com/p/omeglespyx/) <BrentBXR at gmail d0t com>
@@ -74,9 +77,13 @@ will be preserved.
 
 3. Execution Instructions
 ==================================================================================
-On Linux/OSX, execute the shell script, bin/omeglespy-z.
+On Linux/OSX, execute the shell script, omeglespy-z.
 
-On Windows, execute the batch script, bin/omeglespy-z.bat.
+On Windows, execute the batch script, omeglespy-z.bat.
+
+Also, the ${project.artifactId}-${project.version}.jar file is an executable jar. On any platform,
+you can run java -jar ${project.artifactId}-${project.version}.jar from the commandline. Or, if
+your desktop supports it, you can just double-click on the jar file.
 
 
 

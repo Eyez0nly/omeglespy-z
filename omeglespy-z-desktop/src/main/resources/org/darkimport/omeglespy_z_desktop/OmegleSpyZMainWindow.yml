@@ -4,8 +4,6 @@ JFrame(name=frame, title=frame.main.title, size=packed, iconImage=/spyboticon.pn
   - Action(name=actionToggleConnectionState, text=action.connect, toolTipText=action.connect.tooltip, onAction=[toggleConnectionState])
   - Action(name=actionToggleStrangersBlocked, enabled=false, text=action.toggleStrangersBlocked, toolTipText=action.toggleStrangersBlocked.tooltip, onAction=[toggleStrangersBlocked])
   - Action(name=actionToggleFilter, enabled=false, text=action.toggleFilter, toolTipText=action.toggleFilter.tooltip, onAction=[toggleFilter])
-  - Action(name=actionDisconnectStranger, enabled=false, text=action.disconnectStranger.neutral, toolTipText=action.disconnectStranger.tooltip, onAction=[disconnectStranger])
-  - Action(name=actionSwapStranger, enabled=false, text=action.swapStranger.neutral, toolTipText=action.swapStranger.tooltip, onAction=[swapStranger])
   - Action(name=actionViewHelp, text=action.viewHelp, toolTipText=action.viewHelp.tooltip, onAction=[viewHelp])
   - Action(name=actionToggleExpertMode, text=action.toggleExpertMode, toolTipText=action.toggleExpertMode.tooltip, onAction=[toggleExpertMode])
   - Action(name=actionExit, text=action.exit, toolTipText=action.exit.tooltip, onAction=[exit])
@@ -34,10 +32,10 @@ JFrame(name=frame, title=frame.main.title, size=packed, iconImage=/spyboticon.pn
     - JPanel(name=grpSimpleSecretMessagePane):
       - JTextField(name=txtToStranger0, background=pink, enabled=false, font=Verdana plain 10pt, onAction=[sendSecretMessage])
       - JTextField(name=txtToStranger1, background=palegreen, enabled=false, font=Verdana plain 10pt, onAction=[sendSecretMessage])
-      - JButton(name=btnDisconnectStranger0, action=actionDisconnectStranger)
-      - JButton(name=btnDisconnectStranger1, action=actionDisconnectStranger)
-      - JButton(name=btnSwapStranger0, action=actionSwapStranger)
-      - JButton(name=btnSwapStranger1, action=actionSwapStranger)
+      - JButton(name=btnDisconnectStranger0, enabled=false, text=action.disconnectStranger.neutral, toolTipText=action.disconnectStranger.tooltip, onAction=[disconnectStranger])
+      - JButton(name=btnDisconnectStranger1, enabled=false, text=action.disconnectStranger.neutral, toolTipText=action.disconnectStranger.tooltip, onAction=[disconnectStranger])
+      - JButton(name=btnSwapStranger0, enabled=false, text=action.swapStranger.neutral, toolTipText=action.swapStranger.tooltip, onAction=[swapStranger])
+      - JButton(name=btnSwapStranger1, enabled=false, text=action.swapStranger.neutral, toolTipText=action.swapStranger.tooltip, onAction=[swapStranger])
       - MigLayout: |
           [grow]               [grow]                     [grow]               [grow]
           txtToStranger0+2=1                              txtToStranger1+2=1 

@@ -144,11 +144,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 			bindingFactory = BindingDirectory.getFactory(ShortcutKeyHelper.class);
 			unmarshallingContext = bindingFactory.createUnmarshallingContext();
 			shortcutKeyHelper = (ShortcutKeyHelper) unmarshallingContext.unmarshalDocument(
-					Thread.currentThread()
-							.getContextClassLoader()
-							.getResourceAsStream(
-									ConfigHelper.getGroup(ConfigConstants.GROUP_MAIN).getProperty(
-											ConfigConstants.MAIN_KEYBOARDSHORTCUTSFILE)), null);
+					ConfigHelper.getConfigurationStream(ConfigHelper.getGroup(ConfigConstants.GROUP_MAIN).getProperty(
+							ConfigConstants.MAIN_KEYBOARDSHORTCUTSFILE)), null);
 			shortcutKeyHelper.setRecipient(this);
 			shortcutKeyHelper.setBuildContext(result);
 			shortcutKeyHelper.initialize();
@@ -317,6 +314,10 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 				strangerSwapButtons.put(conversantNames[i],
 						(JButton) result.get(MessageFormat.format(ControlNameConstants.BTN_SWAP_STRANGER, i)));
 				strangerSwapButtons.get(conversantNames[i]).setEnabled(true);
+				// Set swap button text
+				strangerSwapButtons.get(conversantNames[i]).setText(
+						MessageFormat.format(result.getConfig().getResource(ResourceConstants.BUTTON_SWAP_STRANGER),
+								conversantNames[i]));
 				strangerDisconnectButtons.put(conversantNames[i],
 						(JButton) result.get(MessageFormat.format(ControlNameConstants.BTN_DISCONNECT_STRANGER, i)));
 			}
@@ -338,6 +339,8 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 			final Collection<JButton> swapButtons = strangerSwapButtons.values();
 			for (final JButton button : swapButtons) {
 				button.setEnabled(false);
+				// reset swap button text to neutral
+				button.setText(result.getConfig().getResource(ResourceConstants.BUTTON_SWAP_STRANGER_NEUTRAL));
 			}
 
 			ChatHistoryHelper.printStatusMessage(result.getConfig().getResource(
@@ -607,6 +610,10 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 		ChatHistoryHelper.printStatusMessage(MessageFormat.format(
 				result.getConfig().getResource(ResourceConstants.MESSAGE_STRANGER_CONNECTED), conversantName));
 		strangerDisconnectButtons.get(conversantName).setEnabled(true);
+		// set disconnect button text
+		strangerDisconnectButtons.get(conversantName).setText(
+				MessageFormat.format(result.getConfig().getResource(ResourceConstants.BUTTON_DISCONNECT_STRANGER),
+						conversantName));
 		strangerTextFields.get(conversantName).setEnabled(true);
 		strangerTypingControls.get(conversantName).setText(
 				MessageFormat.format(result.getConfig().getResource(ResourceConstants.LABEL_STRANGER_TYPING),
@@ -630,6 +637,9 @@ public class OmegleSpyZMainWindow extends JFrame implements OmegleSpyConversatio
 		ChatHistoryHelper.printStatusMessage(MessageFormat.format(
 				result.getConfig().getResource(ResourceConstants.MESSAGE_STRANGER_DISCONNECTED), conversantName));
 		strangerDisconnectButtons.get(conversantName).setEnabled(false);
+		// Reset disconnect button text to neutral
+		strangerDisconnectButtons.get(conversantName).setText(
+				result.getConfig().getResource(ResourceConstants.BUTTON_DISCONNECT_STRANGER_NEUTRAL));
 		strangerTextFields.get(conversantName).setEnabled(false);
 		strangerTypingControls.get(conversantName).setVisible(false);
 	}

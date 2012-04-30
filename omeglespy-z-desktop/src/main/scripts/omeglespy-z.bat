@@ -51,21 +51,21 @@ goto Win9xApp
 :Win9xGetScriptDir
 set SAVEDIR=%CD%
 %0\
-cd %0\..\.. 
+REM cd %0\..\.. 
 set BASEDIR=%CD%
 cd %SAVEDIR%
 set SAVE_DIR=
 goto repoSetup
 
 :WinNTGetScriptDir
-set BASEDIR=%~dp0\..
+set BASEDIR=%~dp0
 
 :repoSetup
 
 
 if "%JAVACMD%"=="" set JAVACMD=java
 
-if "%REPO%"=="" set REPO=%BASEDIR%\lib
+if "%REPO%"=="" set REPO=%BASEDIR%\.
 
 set CLASSPATH="%BASEDIR%"\conf;"%REPO%"\${project.artifactId}-${project.version}.jar
 set EXTRA_JVM_ARGUMENTS=

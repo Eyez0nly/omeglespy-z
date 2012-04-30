@@ -151,7 +151,7 @@ public final class ShortcutKeyHelper {
 		if (input != 0) {
 			shortcutBuffer.append(input);
 		} else {
-			shortcutBuffer.append(key);
+			shortcutBuffer.append(KeyEvent.getKeyText(key).toUpperCase());
 		}
 		return shortcutBuffer.toString();
 	}
