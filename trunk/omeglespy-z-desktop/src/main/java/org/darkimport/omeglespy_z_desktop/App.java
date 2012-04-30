@@ -33,7 +33,7 @@ import org.javabuilders.swing.SwingJavaBuilder;
  * 
  */
 public class App {
-	private static final String	SETTINGS_PROPERTIES	= "settings.properties";
+	private static final String	SETTINGS_PROPERTIES	= "conf/settings.properties";
 	private static final Log	log					= LogFactory.getLog(App.class);
 
 	/**

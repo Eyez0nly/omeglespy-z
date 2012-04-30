@@ -32,19 +32,19 @@
 		</file>
 		<file>
 			<source>${project.build.outputDirectory}/omeglespy-z</source>
-			<outputDirectory>/bin</outputDirectory>
+			<outputDirectory>/</outputDirectory>
 		</file>
 		<file>
 			<source>${project.build.outputDirectory}/omeglespy-z.bat</source>
-			<outputDirectory>/bin</outputDirectory>
+			<outputDirectory>/</outputDirectory>
 		</file>
 		<file>
 			<source>${project.build.outputDirectory}/omeglespy-z-alt.bat</source>
-			<outputDirectory>/bin</outputDirectory>
+			<outputDirectory>/</outputDirectory>
 		</file>
 		<file>
 			<source>${project.build.directory}/${project.artifactId}-${project.version}.jar</source>
-			<outputDirectory>/lib</outputDirectory>
+			<outputDirectory>/</outputDirectory>
 		</file>
 	</files>
 </assembly>

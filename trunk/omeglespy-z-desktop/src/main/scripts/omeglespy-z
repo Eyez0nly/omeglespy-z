@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with omeglespy-z.  If not, see <http://www.gnu.org/licenses/>.
 
-BASEDIR=`dirname $0`/..
+BASEDIR=`dirname $0`
 BASEDIR=`(cd "$BASEDIR"; pwd)`
 
 
@@ -70,7 +70,7 @@ fi
 
 if [ -z "$REPO" ]
 then
-  REPO="$BASEDIR"/lib
+  REPO="$BASEDIR"/.
 fi
 
 CLASSPATH=$CLASSPATH_PREFIX:"$BASEDIR"/conf:"$REPO"/${project.artifactId}-${project.version}.jar
